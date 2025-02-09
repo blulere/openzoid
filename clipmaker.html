@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="UTF-8">
+
+    <link rel="stylesheet" href="./pz.all-35.css" />
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Open+Sans|Source+Code+Pro">
+
+    <script src="./three.r91.min.js"></script>
+
+    <script>
+      var PZ = {};
+
+      PZ.stringHash = function (str)
+      {
+        var hash = 0, i, chr;
+        if (str.length === 0) return hash;
+        for (i = 0; i < str.length; i++) {
+          chr   = str.charCodeAt(i);
+          hash  = ((hash << 5) - hash) + chr;
+          hash |= 0; // Convert to 32bit integer
+        }
+        return hash;
+      };
+
+      PZ.apiOrigin = "https://api.panzoid.com";
+      PZ.blobOrigin = "https://blob.panzoid.com";
+      PZ.account =
+      {
+        //currentUser: undefined,
+        //csrf: undefined,
+        updatePromise: null
+      };
+
+      PZ.account.getCurrent = async function ()
+      {
+        if (typeof this.currentUser === "undefined")
+        {
+          if (!this.updatePromise)
+          {
+            this.updatePromise = PZ.account.update();
+          }
+
+          await this.updatePromise;
+        }
+
+        return this.currentUser;
+      };
+
+      PZ.account.update = async function ()
+      {
+        try
+        {
+          var response = await PZ.api("/users/me", "get");
+          if (response.status !== 200)
+          {
+            PZ.account.currentUser = null;
+          }
+          else
+          {
+            PZ.account.csrf = response.headers.get("X-CSRF-Token");
+            var json = await response.json();
+            PZ.account.currentUser = json;
+          }
+        }
+        catch (e)
+        {
+          PZ.account.currentUser = null;
+        }
+      };
+
+      PZ.api = async function (url, op, body)
+      {
+        url = PZ.apiOrigin + url;
+
+        if (op !== "get" && op !== "head")
+        {
+          var headers = new Headers();
+          var me = await PZ.account.getCurrent();
+          headers.append("x-csrf-token", PZ.account.csrf);
+
+          if (body instanceof FormData === false)
+          {
+            headers.append("Content-Type", "application/json");
+            body = JSON.stringify(body);
+          }
+        }
+
+        var params =
+        {
+          method: op,
+          headers: headers,
+          cache: 'default',
+          credentials: 'include',
+          body: body
+        };
+        return fetch(url, params);
+      };
+
+      PZ.ui = PZ.ui || {};
+      PZ.ui.ads = {};
+
+      PZ.ui.ads.init = async function ()
+      {
+        window.freestar = window.freestar || {};
+        freestar.hitTime = Date.now();
+        freestar.queue = freestar.queue || [];
+        freestar.config = freestar.config || {};
+        freestar.debug = window.location.search.indexOf('fsdebug') === -1 ? false : true;
+
+        this.adsReady = new Promise(function(resolve, reject)
+        {
+          freestar.initCallback = function ()
+          {
+            PZ.ui.ads.loaded = true;
+            resolve();
+          };
+        });
+
+        // Tag IDs set here, must match Tags served in the Body for proper setup
+        freestar.config.enabled_slots = [
+          "Panzoid_creationlist_970x90_728x90_468x60_320x50_300x75",
+          "Panzoid_discussionpost_728x90_468x60_320x50_300x75",
+          "Panzoid_tool_970x90_728x90_468x60_320x50_300x75",
+          "Panzoid_home_970x90_728x90_468x60_320x50",
+          "Panzoid_creationpost_336x280_320x50_300x250_300x100_250x250_200x200_180x150"
+        ];
+
+        let me = await PZ.account.getCurrent();
+        if ((me && me.hasSubscription))
+        {
+          return;
+        }
+
+        !function(a,b){var c=b.getElementsByTagName("script")[0],d=b.createElement("script"),e="https://a.pub.network/Panzoid-com";e+=freestar.debug?"/qa/pubfig.min.js":"/pubfig.min.js",d.async=!0,d.src=e,c.parentNode.insertBefore(d,c)}(window,document);
+      };
+
+      PZ.ui.ads.show = async function (unit, elId)
+      {
+        await PZ.ui.ads.adsReady;
+
+        if (!elId) elId = unit;
+
+        // freestar.deleteAdSlots();
+
+        freestar.newAdSlots(
+          [{
+            placementName: unit,
+            slotId: elId
+          }]
+        );
+      };
+    </script>
+</head>
+
+<body>
+    <style>
+        /* scrollbars */
+        
+         ::-webkit-scrollbar {
+            width: 12px;
+            height: 12px;
+        }
+        
+         ::-webkit-scrollbar-button {
+            display: none;
+        }
+        
+         ::-webkit-scrollbar-track {
+            background-color: #222;
+        }
+        
+         ::-webkit-scrollbar-track-piece {
+            background-color: #222;
+        }
+        
+         ::-webkit-scrollbar-thumb {
+            background-color: #555;
+            /*border: 2px solid #222;*/
+        }
+
+         ::-webkit-scrollbar-corner {
+            background-color: transparent;
+        }
+    </style>
+
+    <div id="panecontainer">
+        <div id="editorpane">
+            <div id="controls"></div>
+            <div id="elevator">
+                <div id="elevatortabs"></div>
+            </div>
+        </div>
+
+        <div id="previewpane">
+            <canvas id="c_main"></canvas>
+            <div id="previewtop">
+                <div style="text-align: center;" id="Panzoid_tool_970x90_728x90_468x60_320x50_300x75"></div>
+            </div>
+            <div id="previewbottom"></div>
+        </div>
+    </div>
+
+    <script src="./core-1.0.102.js"></script>
+    <script src="./ui-1.0.72.js"></script>
+    <script src="./clipmaker-3.0.106.js"></script>
+
+    <script>
+      PZ.ui.ads.init();
+      initTool();
+    </script>
+</body>
+
+</html>
