@@ -1,6 +1,12 @@
 const PZUIVERSION = "1.0.72";
+
 (THREE.EditorControls = function (e, t) {
-    (t = void 0 !== t ? t : document), (this.enabled = !0), (this.center = new THREE.Vector3()), (this.panSpeed = 0.001), (this.zoomSpeed = 0.001), (this.rotationSpeed = 0.005);
+    t = void 0 !== t ? t : document;
+    this.enabled = true;
+    this.center = new THREE.Vector3();
+    this.panSpeed = 0.001;
+    this.zoomSpeed = 0.001;
+    this.rotationSpeed = 0.005;
     var i = this,
         s = new THREE.Vector3(),
         n = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2 },
