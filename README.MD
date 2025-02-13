@@ -3,8 +3,11 @@
 [!NOTE]
 This is the **archive** branch.
 This code was archived entirely by-hand from panzoid.com. The task finished on 2025-02-09.
-The code is still minified, as it is on the official website. No further modifications will be made to the Panzoid code in this branch. Some other things may change.
+**The code is still minified**, as it is on the official website. No further modifications will be made to the Panzoid code in this branch. Some other things may change.
+**Do not build new features using this branch.** Use the **unminified** branch instead.
 Everything is functionally the same as what you can find on panzoid.com.
+
+[!NOTE]
 **Anything involving connecting to panzoid.com will not work** here due to CORS blocking.
 
 <!-- ## What?
