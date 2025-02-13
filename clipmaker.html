@@ -13,11 +13,11 @@
     <script>
       var PZ = {};
 
-      PZ.stringHash = function (str)
-      {
-        var hash = 0, i, chr;
-        if (str.length === 0) return hash;
-        for (i = 0; i < str.length; i++) {
+      PZ.stringHash = function(str) {
+        var hash = 0;
+        var chr;
+        if(str.length === 0) return hash;
+        for(var i = 0; i < str.length; i++) {
           chr   = str.charCodeAt(i);
           hash  = ((hash << 5) - hash) + chr;
           hash |= 0; // Convert to 32bit integer
@@ -27,75 +27,64 @@
 
       PZ.apiOrigin = "https://api.panzoid.com";
       PZ.blobOrigin = "https://blob.panzoid.com";
-      PZ.account =
-      {
+      PZ.account = {
         //currentUser: undefined,
         //csrf: undefined,
         updatePromise: null
       };
 
-      PZ.account.getCurrent = async function ()
-      {
-        if (typeof this.currentUser === "undefined")
-        {
-          if (!this.updatePromise)
-          {
+      PZ.account.getCurrent = async function() {
+        if (typeof this.currentUser === "undefined") {
+          if (!this.updatePromise) {
             this.updatePromise = PZ.account.update();
           }
-
           await this.updatePromise;
         }
-
         return this.currentUser;
       };
 
-      PZ.account.update = async function ()
-      {
-        try
-        {
+      PZ.account.update = async function() {
+        try {
           var response = await PZ.api("/users/me", "get");
-          if (response.status !== 200)
-          {
+          // Page doesn't exist in openzoid
+          // stub the API in main branch to shut it up mayb
+          // and then let it fail in others
+          // - blulere 2025-02-13
+          if (response.status !== 200) {
             PZ.account.currentUser = null;
           }
-          else
-          {
+          else {
             PZ.account.csrf = response.headers.get("X-CSRF-Token");
             var json = await response.json();
             PZ.account.currentUser = json;
           }
-        }
-        catch (e)
-        {
+        } catch (e) {
           PZ.account.currentUser = null;
         }
       };
 
-      PZ.api = async function (url, op, body)
-      {
+      PZ.api = async function(url, op, body) {
         url = PZ.apiOrigin + url;
 
-        if (op !== "get" && op !== "head")
-        {
+        if (op !== "get" && op !== "head") {
           var headers = new Headers();
           var me = await PZ.account.getCurrent();
           headers.append("x-csrf-token", PZ.account.csrf);
 
-          if (body instanceof FormData === false)
-          {
+          if (body instanceof FormData === false) {
             headers.append("Content-Type", "application/json");
             body = JSON.stringify(body);
           }
         }
 
-        var params =
-        {
+        var params = {
           method: op,
           headers: headers,
           cache: 'default',
           credentials: 'include',
           body: body
         };
+
         return fetch(url, params);
       };
 
@@ -110,10 +99,8 @@
         freestar.config = freestar.config || {};
         freestar.debug = window.location.search.indexOf('fsdebug') === -1 ? false : true;
 
-        this.adsReady = new Promise(function(resolve, reject)
-        {
-          freestar.initCallback = function ()
-          {
+        this.adsReady = new Promise(function(resolve, reject) {
+          freestar.initCallback = function() {
             PZ.ui.ads.loaded = true;
             resolve();
           };
@@ -129,26 +116,32 @@
         ];
 
         let me = await PZ.account.getCurrent();
-        if ((me && me.hasSubscription))
-        {
-          return;
+        if ((me && me.hasSubscription)) {
+          return
         }
 
-        !function(a,b){var c=b.getElementsByTagName("script")[0],d=b.createElement("script"),e="https://a.pub.network/Panzoid-com";e+=freestar.debug?"/qa/pubfig.min.js":"/pubfig.min.js",d.async=!0,d.src=e,c.parentNode.insertBefore(d,c)}(window,document);
+        !function(_window, _document) {
+          var element = _document.getElementsByTagName("script")[0];
+          var script = _document.createElement("script");
+          var url = "https://a.pub.network/Panzoid-com"; // This link doesn't exist
+          url += freestar.debug ? "/qa/pubfig.min.js" : "/pubfig.min.js";
+          script.async = true;
+          script.src = url;
+          element.parentNode.insertBefore(script,element)
+        } (window, document);
       };
 
-      PZ.ui.ads.show = async function (unit, elId)
-      {
+      PZ.ui.ads.show = async function (unit, elementID) {
         await PZ.ui.ads.adsReady;
 
-        if (!elId) elId = unit;
+        if (!elementID) elementID = unit;
 
         // freestar.deleteAdSlots();
 
         freestar.newAdSlots(
           [{
             placementName: unit,
-            slotId: elId
+            slotId: elementID
           }]
         );
       };
