@@ -1,5 +1,10 @@
 # openzoid, the Clipmaker 3 Open Source Project
 
+[!NOTE]
+This is the **main** branch.
+This branch builds off of the work being done on the **unminified** branch, which aims to make the minified Panzoid code readable enough to be worked on without issues.
+This branch may include **major functional differences** to what you can find on panzoid.com.
+
 <!-- ## What?
 
 Clipmaker 3 is an abandonware web-based video editor created by Panzoid.
