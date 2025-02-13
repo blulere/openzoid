@@ -1,87 +1,90 @@
 const PZTOOLVERSION = "3.0.106";
 var CM = new PZ.ui.editor();
 CM.name = "openzoid (Clipmaker 3)";
-var BG = {};
+var BG = {}; // What does this do ? only one use, worth removing ? - blulere 2025-02-13
 
 async function initTool() {
-    let e = await PZ.account.getCurrent();
-    CM.setUpEditor(e);
-    let t = await CM.getCreationFromUrl();
-    CM.init(t);
+    let currentAccount = await PZ.account.getCurrent();
+    CM.setUpEditor(currentAccount);
+    let loadedCreation = await CM.getCreationFromUrl();
+    CM.init(loadedCreation);
     CM.enabled = true;
 }
 
 (CM.setUpEditor = function (e) {
     CM.playback = new PZ.ui.playback(CM);
     CM.playback.loop = true;
-    let t = CM.createMainWindow();
-    let i = new PZ.ui.ad(CM);
-    let a = [
+    let mainWindow = CM.createMainWindow();
+    let adBanner = new PZ.ui.ad(CM);
+    let toolbarIcons = [
         {
             title: "new (ctrl-m)",
             icon: "new",
-            fn: function() {
-                CM.new();
-            },
+            fn: function() { CM.new(); },
         },
         {
             title: "open (ctrl-o)",
             icon: "load",
-            fn: function() {
-                CM.open();
-            },
+            fn: function() { CM.open(); },
         },
         {
             title: "save (ctrl-s)",
             icon: "save",
-            fn: function() {
-                CM.save();
-            },
+            fn: function() { CM.save(); },
         },
         { separator: !0 },
         {
             title: "undo (ctrl-z)",
             icon: "undo",
-            fn: function() {
-                CM.history.undo();
-            },
+            fn: function() { CM.history.undo(); },
         },
         {
             title: "redo (ctrl-y)",
             icon: "redo",
-            fn: function() {
-                CM.history.redo();
-            },
+            fn: function() { CM.history.redo(); },
         },
     ];
-    let toolbar = new PZ.ui.toolbar(CM, a);
+    let toolbar = new PZ.ui.toolbar(CM, toolbarIcons);
     let timeline = new PZ.ui.timeline(CM);
-    (timeline.tracks.videoTrackSize = 30), (timeline.tracks.audioTrackSize = 50), (timeline.timeFormat = 2), (timeline.zoom = 0.3);
-    let s = new PZ.ui.edit(CM, { childFilter: (e) => e instanceof PZ.propertyList, keyframePanel: timeline.keyframes });
-    (s.title = "Sequence"),
-        (s.icon = "sequence"),
-        CM.onSequenceChanged.watch(() => {
-            let e = new PZ.objectList();
-            e.push(CM.sequence), (s.objects = e);
-        });
-    let n = new PZ.ui.edit(CM, {
+
+    timeline.tracks.videoTrackSize = 30;
+    timeline.tracks.audioTrackSize = 50;
+    timeline.timeFormat = 2;
+    timeline.zoom = 0.3;
+
+    let menuBarSequence = new PZ.ui.edit(CM, {
+        childFilter: (e) => e instanceof PZ.propertyList,
+        keyframePanel: timeline.keyframes });
+    menuBarSequence.title = "Sequence";
+    menuBarSequence.icon = "sequence";
+    CM.onSequenceChanged.watch(() => {
+        let menuBarSequenceList = new PZ.objectList();
+        menuBarSequenceList.push(CM.sequence);
+        menuBarSequence.objects = menuBarSequenceList;
+    });
+    let menuBarEdit = new PZ.ui.edit(CM, {
         childFilter: (e) => e instanceof PZ.propertyList || e instanceof PZ.object || (e instanceof PZ.objectList && e.type === PZ.property.dynamic),
         emptyMessage: "select a clip",
         showListItemButtons: !1,
         keyframePanel: timeline.keyframes,
     });
-    (n.title = "Edit"), (n.icon = "edit2"), (n.objects = timeline.tracks.selection);
+    menuBarEdit.title = "Edit";
+    menuBarEdit.icon = "edit2";
+    menuBarEdit.objects = timeline.tracks.selection;
     let c = new PZ.ui.edit(CM, {
-            childFilter: (e) => e instanceof PZ.objectList && e.type === PZ.object3d,
-            columnLayout: 1,
-            showListItemButtons: !1,
-            emptyMessage: "select a clip",
-            objectFilter: (e) => !!e.object.objects,
-            objectMap: (e) => e.object.objects,
-        }),
-        l = new PZ.ui.edit(CM, { childFilter: (e) => !(e instanceof PZ.objectList) || e.type !== PZ.object3d, keyframePanel: timeline.keyframes }),
-        p = new PZ.ui.splitPanel(CM, c, l, 0.4);
-    (p.title = "Objects"), (p.icon = "objects"), (c.objects = timeline.tracks.selection), (l.objects = c.selection);
+        childFilter: (e) => e instanceof PZ.objectList && e.type === PZ.object3d,
+        columnLayout: 1,
+        showListItemButtons: false,
+        emptyMessage: "select a clip",
+        objectFilter: (e) => !!e.object.objects,
+        objectMap: (e) => e.object.objects,
+    });
+    let l = new PZ.ui.edit(CM, { childFilter: (e) => !(e instanceof PZ.objectList) || e.type !== PZ.object3d, keyframePanel: timeline.keyframes });
+    let menuBarObjects = new PZ.ui.splitPanel(CM, c, l, 0.4);
+    menuBarObjects.title = "Objects";
+    menuBarObjects.icon = "objects";
+    c.objects = timeline.tracks.selection;
+    l.objects = c.selection;
     let d = new PZ.ui.edit(CM, {
             childFilter: (e) => e instanceof PZ.objectList && e.type === PZ.effect,
             columnLayout: 1,
@@ -91,38 +94,38 @@ async function initTool() {
             objectMap: (e) => e.object.effects,
         }),
         f = new PZ.ui.edit(CM, { childFilter: (e) => !(e instanceof PZ.objectList) || e.type !== PZ.effect, keyframePanel: timeline.keyframes }),
-        y = new PZ.ui.splitPanel(CM, d, f, 0.4);
-    (y.title = "Effects"), (y.icon = "fx"), (d.objects = timeline.tracks.selection), (f.objects = d.selection);
-    let u = [new PZ.ui.media(CM), s, n, p, y, new PZ.ui.export(CM), new PZ.ui.about(CM)];
-    let k = new PZ.ui.elevator(CM, u),
-        b = new PZ.ui.viewport(CM, { helper3dObjects: c.selection, widget3dObjects: c.selection, widget2dObjects: timeline.tracks.selection });
-    (b.objects = timeline.tracks.selection), (b.edit = !0);
+        menuBarEffects = new PZ.ui.splitPanel(CM, d, f, 0.4);
+    (menuBarEffects.title = "Effects"), (menuBarEffects.icon = "fx"), (d.objects = timeline.tracks.selection), (f.objects = d.selection);
+    let menuBar = [new PZ.ui.media(CM), menuBarSequence, menuBarEdit, menuBarObjects, menuBarEffects, new PZ.ui.export(CM), new PZ.ui.about(CM)];
+    let elevator = new PZ.ui.elevator(CM, menuBar),
+        viewport = new PZ.ui.viewport(CM, { helper3dObjects: c.selection, widget3dObjects: c.selection, widget2dObjects: timeline.tracks.selection });
+    (viewport.objects = timeline.tracks.selection), (viewport.edit = !0);
     let m,
         h = [
             {
                 title: "editing camera (c)",
                 icon: "camera",
                 key: "c",
-                observable: b.onEditChanged,
+                observable: viewport.onEditChanged,
                 update: function (e) {
-                    let t = b.edit ? "#8a2828" : "#acacac";
+                    let t = viewport.edit ? "#8a2828" : "#acacac";
                     e.children[0].style.fill = t;
                 },
                 fn: function () {
-                    b.edit = !b.edit;
+                    viewport.edit = !viewport.edit;
                 },
             },
             {
                 title: "layer transform controls (t)",
                 icon: "transform",
                 key: "t",
-                observable: b.widget2d ? b.widget2d.onEditChanged : void 0,
+                observable: viewport.widget2d ? viewport.widget2d.onEditChanged : void 0,
                 update: function (e) {
-                    let t = b.widget2d.edit ? "#8a2828" : "#acacac";
+                    let t = viewport.widget2d.edit ? "#8a2828" : "#acacac";
                     e.children[0].style.fill = t;
                 },
                 fn: function () {
-                    b.widget2d.edit = !b.widget2d.edit;
+                    viewport.widget2d.edit = !viewport.widget2d.edit;
                 },
             },
             { separator: !0 },
@@ -275,13 +278,13 @@ async function initTool() {
         ],
         P = new PZ.ui.toolbar(CM, h),
         M = new PZ.ui.audioMeter(CM),
-        C = new PZ.ui.splitPanel(CM, toolbar, k, 0, 0);
-    m = e && e.hasSubscription ? b : new PZ.ui.splitPanel(CM, i, b, 0, 0);
+        C = new PZ.ui.splitPanel(CM, toolbar, elevator, 0, 0);
+    m = e && e.hasSubscription ? viewport : new PZ.ui.splitPanel(CM, adBanner, viewport, 0, 0);
     let w = new PZ.ui.splitPanel(CM, timeline, M, 1, 1),
         j = new PZ.ui.splitPanel(CM, P, w, 0, 0),
         Z = new PZ.ui.splitPanel(CM, m, j, 0.65, 0),
         g = new PZ.ui.splitPanel(CM, C, Z, 0.3, 1);
-    t.setPanel(g);
+    mainWindow.setPanel(g);
 }),
     (CM.defaultProject = {
         sequence: {
