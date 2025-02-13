@@ -1,5 +1,10 @@
 # openzoid, the Clipmaker 3 Open Source Project
 
+[!NOTE]
+This is the **unminified** branch.
+This is where code is made more readable by unminifying, and no functionality to openzoid is being added or removed.
+Everything is functionally the same as what you can find on panzoid.com.
+
 <!-- ## What?
 
 Clipmaker 3 is an abandonware web-based video editor created by Panzoid.
@@ -53,7 +58,7 @@ This version is fully functional compared to the iframe-d one (as far as I can t
 
 This project therefore aims to mirror the latter **clipmaker.html** instead of the former **tools/gen3/clipmaker**.
 
-## Quality of life version
+<!-- ## Quality of life version
 
 Once archiving cm3 is finished, there will be three versions of openzoid:
 
@@ -66,3 +71,5 @@ Once archiving cm3 is finished, there will be three versions of openzoid:
 3 will recieve updates for everything: refactors, bugfixes and more.
 
 There are no plans to archive gen4. I wanted to archive gen3 as it has been abandoned even though it is such a great editor and I refuse to let it remain as abandonware.
+
+-->
