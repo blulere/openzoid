@@ -8,13 +8,9 @@ Everything is functionally the same as what you can find on panzoid.com.
 [!NOTE]
 **Anything involving connecting to panzoid.com will not work** here due to CORS blocking.
 
-<!-- ## What?
+**Thanks to the team at (panzoid.com)[https://panzoid.com] for creating one of the best (if not the best) web-based video editors available on the Internet right now**, even if it had to be abandoned.
 
-Clipmaker 3 is an abandonware web-based video editor created by Panzoid.
-Ever since 2019, the project has allegedly been abandoned by the team in favour of gen4, which uses newer browser protocols and was completely re-written from scratch; it is likely that cm3, being based on the same code as the first ever Clipmaker, was too unwieldly to keep working on, and a new project had to take its place, comparitively to X11 and Wayland.
-While gen4 is the most up-to-date Panzoid video editor, it is (in my opinion) extremely buggy, sometimes glitchy, and performs worse than Clipmaker 3.
-
--->
+---
 
 Because **the Panzoid developers abandoned Panzoid cm3** (Clipmaker 3) sometime in 2019, openzoid is an attempt to:
 1. Firstly, make it so that it is possible to **run Panzoid cm3 locally** without going to panzoid.com
