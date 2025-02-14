@@ -325,7 +325,7 @@ async function initTool() {
     if(currentAccount && currentAccount.hasSubscription) {
         viewportOrAds = viewport;
     } else {
-        m = new PZ.ui.splitPanel(CM, adBanner, viewport, 0, 0);
+        viewportOrAds = new PZ.ui.splitPanel(CM, adBanner, viewport, 0, 0);
         // viewportOrAds = viewport; // see main branch - blulere 2025-02-14
     }
     let w = new PZ.ui.splitPanel(CM, timeline, audioMeter, 1, 1),
