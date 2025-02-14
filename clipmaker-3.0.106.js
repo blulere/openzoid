@@ -11,7 +11,7 @@ async function initTool() {
     CM.enabled = true;
 }
 
-(CM.setUpEditor = function (e) {
+(CM.setUpEditor = function (currentAccount) {
     CM.playback = new PZ.ui.playback(CM);
     CM.playback.loop = true;
     let mainWindow = CM.createMainWindow();
@@ -32,7 +32,9 @@ async function initTool() {
             icon: "save",
             fn: function() { CM.save(); },
         },
-        { separator: !0 },
+        { 
+            separator: true,
+        },
         {
             title: "undo (ctrl-z)",
             icon: "undo",
@@ -65,13 +67,13 @@ async function initTool() {
     let menuBarEdit = new PZ.ui.edit(CM, {
         childFilter: (e) => e instanceof PZ.propertyList || e instanceof PZ.object || (e instanceof PZ.objectList && e.type === PZ.property.dynamic),
         emptyMessage: "select a clip",
-        showListItemButtons: !1,
+        showListItemButtons: false,
         keyframePanel: timeline.keyframes,
     });
     menuBarEdit.title = "Edit";
     menuBarEdit.icon = "edit2";
     menuBarEdit.objects = timeline.tracks.selection;
-    let c = new PZ.ui.edit(CM, {
+    let menuBarObjectsTop = new PZ.ui.edit(CM, {
         childFilter: (e) => e instanceof PZ.objectList && e.type === PZ.object3d,
         columnLayout: 1,
         showListItemButtons: false,
@@ -79,211 +81,257 @@ async function initTool() {
         objectFilter: (e) => !!e.object.objects,
         objectMap: (e) => e.object.objects,
     });
-    let l = new PZ.ui.edit(CM, { childFilter: (e) => !(e instanceof PZ.objectList) || e.type !== PZ.object3d, keyframePanel: timeline.keyframes });
-    let menuBarObjects = new PZ.ui.splitPanel(CM, c, l, 0.4);
+    let menuBarObjectsBottom = new PZ.ui.edit(CM, { childFilter: (e) => !(e instanceof PZ.objectList) || e.type !== PZ.object3d, keyframePanel: timeline.keyframes });
+    let menuBarObjects = new PZ.ui.splitPanel(CM, menuBarObjectsTop, menuBarObjectsBottom, 0.4);
     menuBarObjects.title = "Objects";
     menuBarObjects.icon = "objects";
-    c.objects = timeline.tracks.selection;
-    l.objects = c.selection;
-    let d = new PZ.ui.edit(CM, {
-            childFilter: (e) => e instanceof PZ.objectList && e.type === PZ.effect,
-            columnLayout: 1,
-            showListItemButtons: !1,
-            emptyMessage: "select a clip",
-            objectFilter: (e) => !!e.object.effects,
-            objectMap: (e) => e.object.effects,
-        }),
-        f = new PZ.ui.edit(CM, { childFilter: (e) => !(e instanceof PZ.objectList) || e.type !== PZ.effect, keyframePanel: timeline.keyframes }),
-        menuBarEffects = new PZ.ui.splitPanel(CM, d, f, 0.4);
-    (menuBarEffects.title = "Effects"), (menuBarEffects.icon = "fx"), (d.objects = timeline.tracks.selection), (f.objects = d.selection);
-    let menuBar = [new PZ.ui.media(CM), menuBarSequence, menuBarEdit, menuBarObjects, menuBarEffects, new PZ.ui.export(CM), new PZ.ui.about(CM)];
-    let elevator = new PZ.ui.elevator(CM, menuBar),
-        viewport = new PZ.ui.viewport(CM, { helper3dObjects: c.selection, widget3dObjects: c.selection, widget2dObjects: timeline.tracks.selection });
-    (viewport.objects = timeline.tracks.selection), (viewport.edit = !0);
-    let m,
-        h = [
-            {
-                title: "editing camera (c)",
-                icon: "camera",
-                key: "c",
-                observable: viewport.onEditChanged,
-                update: function (e) {
-                    let t = viewport.edit ? "#8a2828" : "#acacac";
-                    e.children[0].style.fill = t;
-                },
-                fn: function () {
-                    viewport.edit = !viewport.edit;
-                },
+    menuBarObjectsTop.objects = timeline.tracks.selection;
+    menuBarObjectsBottom.objects = menuBarObjectsTop.selection;
+    let menuBarEffectsTop = new PZ.ui.edit(CM, {
+        childFilter: (e) => e instanceof PZ.objectList && e.type === PZ.effect,
+        columnLayout: 1,
+        showListItemButtons: false,
+        emptyMessage: "select a clip",
+        objectFilter: (e) => !!e.object.effects,
+        objectMap: (e) => e.object.effects,
+    });
+    let menuBarEffectsBottom = new PZ.ui.edit(CM, { childFilter: (e) => !(e instanceof PZ.objectList) || e.type !== PZ.effect, keyframePanel: timeline.keyframes });
+    let menuBarEffects = new PZ.ui.splitPanel(CM, menuBarEffectsTop, menuBarEffectsBottom, 0.4);
+    menuBarEffects.title = "Effects";
+    menuBarEffects.icon = "fx";
+    menuBarEffectsTop.objects = timeline.tracks.selection;
+    menuBarEffectsBottom.objects = menuBarEffectsTop.selection;
+    let menuBar = [
+        new PZ.ui.media(CM),
+        menuBarSequence,
+        menuBarEdit,
+        menuBarObjects,
+        menuBarEffects,
+        new PZ.ui.export(CM),
+        new PZ.ui.about(CM)
+    ];
+    let menuBarElevator = new PZ.ui.elevator(CM, menuBar);
+    let viewport = new PZ.ui.viewport(CM, { 
+        helper3dObjects: menuBarObjectsTop.selection,
+        widget3dObjects: menuBarObjectsTop.selection,
+        widget2dObjects: timeline.tracks.selection,
+    });
+    viewport.objects = timeline.tracks.selection;
+    viewport.edit = true;
+    let viewportOrAds;
+    let transportBar = [
+        {
+            title: "editing camera (c)",
+            icon: "camera",
+            key: "c",
+            observable: viewport.onEditChanged,
+            update: function (e) {
+                let color = viewport.edit ? "#8a2828" : "#acacac";
+                e.children[0].style.fill = color;
             },
-            {
-                title: "layer transform controls (t)",
-                icon: "transform",
-                key: "t",
-                observable: viewport.widget2d ? viewport.widget2d.onEditChanged : void 0,
-                update: function (e) {
-                    let t = viewport.widget2d.edit ? "#8a2828" : "#acacac";
-                    e.children[0].style.fill = t;
-                },
-                fn: function () {
-                    viewport.widget2d.edit = !viewport.widget2d.edit;
-                },
+            fn: function () {
+                viewport.edit = !viewport.edit;
             },
-            { separator: !0 },
-            {
-                title: "start (home)",
-                icon: "start",
-                key: "Home",
-                fn: function () {
-                    (this.editor.playback.speed = 0), (this.editor.playback.currentFrame = 0);
-                },
+        },
+        {
+            title: "layer transform controls (t)",
+            icon: "transform",
+            key: "t",
+            observable: viewport.widget2d ? viewport.widget2d.onEditChanged : void 0,
+            update: function (e) {
+                let color = viewport.widget2d.edit ? "#8a2828" : "#acacac";
+                e.children[0].style.fill = color;
             },
-            {
-                title: "skip frames back",
-                key: "ArrowLeft",
-                modifierMask: PZ.ui.toolbar.SHIFT,
-                fn: function () {
-                    (this.editor.playback.speed = 0), (this.editor.playback.currentFrame = Math.max(this.editor.playback.currentFrame - 5, 0));
-                },
+            fn: function () {
+                viewport.widget2d.edit = !viewport.widget2d.edit;
             },
-            {
-                title: "previous frame",
-                icon: "prevframe",
-                key: "ArrowLeft",
-                modifierMask: 0,
-                fn: function () {
-                    (this.editor.playback.speed = 0), (this.editor.playback.currentFrame = Math.max(this.editor.playback.currentFrame - 1, 0));
-                },
+        },
+        { separator: true },
+        {
+            title: "start (home)",
+            icon: "start",
+            key: "Home",
+            fn: function () {
+                (this.editor.playback.speed = 0), (this.editor.playback.currentFrame = 0);
             },
-            {
-                title: "play (space)",
-                icon: "play",
-                key: " ",
-                observable: CM.playback.onSpeedChanged,
-                update: function (e) {
-                    let t = 0 !== this.editor.playback.speed,
-                        i = t ? "pause" : "play",
-                        a = t ? "#8a2828" : "#acacac";
-                    PZ.ui.switchIcon(e.children[0], i), (e.children[0].style.fill = a);
-                },
-                fn: function () {
-                    var e = 0 === this.editor.playback.speed ? 1 : 0;
-                    this.editor.playback.speed = e;
-                },
+        },
+        {
+            title: "skip frames back",
+            key: "ArrowLeft",
+            modifierMask: PZ.ui.toolbar.SHIFT,
+            fn: function () {
+                (this.editor.playback.speed = 0), (this.editor.playback.currentFrame = Math.max(this.editor.playback.currentFrame - 5, 0));
             },
-            {
-                title: "next frame",
-                icon: "nextframe",
-                key: "ArrowRight",
-                modifierMask: 0,
-                fn: function () {
-                    (this.editor.playback.speed = 0), (this.editor.playback.currentFrame = Math.max(Math.min(this.editor.playback.currentFrame + 1, this.editor.playback.totalFrames - 1), 0));
-                },
+        },
+        {
+            title: "previous frame",
+            icon: "prevframe",
+            key: "ArrowLeft",
+            modifierMask: 0,
+            fn: function () {
+                (this.editor.playback.speed = 0), (this.editor.playback.currentFrame = Math.max(this.editor.playback.currentFrame - 1, 0));
             },
-            {
-                title: "skip frames forward",
-                key: "ArrowRight",
-                modifierMask: PZ.ui.toolbar.SHIFT,
-                fn: function () {
-                    (this.editor.playback.speed = 0), (this.editor.playback.currentFrame = Math.max(Math.min(this.editor.playback.currentFrame + 5, this.editor.playback.totalFrames - 1), 0));
-                },
+        },
+        {
+            title: "play (space)",
+            icon: "play",
+            key: " ",
+            observable: CM.playback.onSpeedChanged,
+            update: function (e) {
+                let paused = 0 !== this.editor.playback.speed;
+                let text = paused ? "pause" : "play";
+                let color = paused ? "#8a2828" : "#acacac";
+                PZ.ui.switchIcon(e.children[0], text);
+                e.children[0].style.fill = color;
             },
-            {
-                title: "end (end)",
-                icon: "end",
-                key: "End",
-                fn: function () {
-                    (this.editor.playback.speed = 0), (this.editor.playback.currentFrame = this.editor.playback.totalFrames - 1);
-                },
+            fn: function () {
+                var newSpeed = 0 === this.editor.playback.speed ? 1 : 0;
+                this.editor.playback.speed = newSpeed;
             },
-            {
-                title: "reverse++",
-                key: "j",
-                fn: function () {
-                    this.editor.playback.speed = this.editor.playback.speed - 0.25;
-                },
+        },
+        {
+            title: "next frame",
+            icon: "nextframe",
+            key: "ArrowRight",
+            modifierMask: 0,
+            fn: function () {
+                this.editor.playback.speed = 0;
+                this.editor.playback.currentFrame = Math.max(Math.min(this.editor.playback.currentFrame + 1, this.editor.playback.totalFrames - 1), 0);
             },
-            {
-                title: "stop",
-                key: "k",
-                fn: function () {
-                    this.editor.playback.speed = 0;
-                },
+        },
+        {
+            title: "skip frames forward",
+            key: "ArrowRight",
+            modifierMask: PZ.ui.toolbar.SHIFT,
+            fn: function () {
+                this.editor.playback.speed = 0;
+                this.editor.playback.currentFrame = Math.max(Math.min(this.editor.playback.currentFrame + 5, this.editor.playback.totalFrames - 1), 0);
             },
-            {
-                title: "forward++",
-                key: "l",
-                fn: function () {
-                    this.editor.playback.speed = this.editor.playback.speed + 0.25;
-                },
+        },
+        {
+            title: "end (end)",
+            icon: "end",
+            key: "End",
+            fn: function () {
+                this.editor.playback.speed = 0;
+                this.editor.playback.currentFrame = this.editor.playback.totalFrames - 1;
             },
-            { separator: !0 },
-            {
-                title: "loop (ctrl-l)",
-                icon: "loop",
-                key: "l",
-                modifierMask: PZ.ui.toolbar.CTRL,
-                observable: CM.playback.onLoopChanged,
-                update: function (e, t) {
-                    let i = this.editor.playback.loop ? "#8a2828" : "#acacac";
-                    e.children[0].style.fill = i;
-                },
-                fn: function () {
-                    this.editor.playback.loop = !this.editor.playback.loop;
-                },
+        },
+        {
+            title: "reverse++",
+            key: "j",
+            fn: function () {
+                this.editor.playback.speed = this.editor.playback.speed - 0.25;
             },
-            {
-                title: "toggle marker",
-                key: "m",
-                fn: function () {
-                    let e = new PZ.ui.properties(this.editor),
-                        t = this.editor.playback.currentFrame;
-                    this.editor.history.startOperation(), e.toggleKeyframe(this.editor.sequence.properties.markers, t), this.editor.history.finishOperation();
-                },
+        },
+        {
+            title: "stop",
+            key: "k",
+            fn: function () {
+                this.editor.playback.speed = 0;
             },
-            {
-                title: "previous marker",
-                key: "ArrowLeft",
-                modifierMask: PZ.ui.toolbar.CTRL,
-                fn: function () {
-                    let e = this.editor.sequence.properties.markers,
-                        t = this.editor.playback.currentFrame,
-                        i = e.frameOffset,
-                        a = e.getClosestKeyframeIndex(t);
-                    a < 0 || (e.keyframes[a].frame >= t && e.keyframes[a - 1] && (a -= 1), (this.editor.playback.currentFrame = e.keyframes[a].frame + i));
-                },
+        },
+        {
+            title: "forward++",
+            key: "l",
+            fn: function () {
+                this.editor.playback.speed = this.editor.playback.speed + 0.25;
             },
-            {
-                title: "next marker",
-                key: "ArrowRight",
-                modifierMask: PZ.ui.toolbar.CTRL,
-                fn: function () {
-                    let e = this.editor.sequence.properties.markers,
-                        t = this.editor.playback.currentFrame,
-                        i = e.frameOffset,
-                        a = e.getClosestKeyframeIndex(t);
-                    a < 0 || (e.keyframes[a].frame <= t && e.keyframes[a + 1] && (a += 1), (this.editor.playback.currentFrame = e.keyframes[a].frame + i));
-                },
+        },
+        { separator: true },
+        {
+            title: "loop (ctrl-l)",
+            icon: "loop",
+            key: "l",
+            modifierMask: PZ.ui.toolbar.CTRL,
+            observable: CM.playback.onLoopChanged,
+            update: function (e) {
+                let color = this.editor.playback.loop ? "#8a2828" : "#acacac";
+                e.children[0].style.fill = color;
             },
-            {
-                title: "graph",
-                key: "g",
-                icon: "interp_1",
-                modifierMask: PZ.ui.toolbar.CTRL,
-                fn: function () {
-                    let e = CM.createWindow({ title: "Graph editor" }),
-                        t = new PZ.ui.graphEditor(e.editor);
-                    e.setPanel(t), (e.enabled = !0);
-                },
+            fn: function () {
+                this.editor.playback.loop = !this.editor.playback.loop;
             },
-        ],
-        P = new PZ.ui.toolbar(CM, h),
-        M = new PZ.ui.audioMeter(CM),
-        C = new PZ.ui.splitPanel(CM, toolbar, elevator, 0, 0);
-    m = e && e.hasSubscription ? viewport : new PZ.ui.splitPanel(CM, adBanner, viewport, 0, 0);
-    let w = new PZ.ui.splitPanel(CM, timeline, M, 1, 1),
-        j = new PZ.ui.splitPanel(CM, P, w, 0, 0),
-        Z = new PZ.ui.splitPanel(CM, m, j, 0.65, 0),
-        g = new PZ.ui.splitPanel(CM, C, Z, 0.3, 1);
+        },
+        {
+            title: "toggle marker",
+            key: "m",
+            fn: function () {
+                let e = new PZ.ui.properties(this.editor);
+                let currentFrame = this.editor.playback.currentFrame;
+                this.editor.history.startOperation(), e.toggleKeyframe(this.editor.sequence.properties.markers, currentFrame), this.editor.history.finishOperation();
+            },
+        },
+        {
+            title: "previous marker",
+            key: "ArrowLeft",
+            modifierMask: PZ.ui.toolbar.CTRL,
+            fn: function () {
+                let markers = this.editor.sequence.properties.markers;
+                let currentFrame = this.editor.playback.currentFrame;
+                let frameOffset = markers.frameOffset;
+                let closestMarker = markers.getClosestKeyframeIndex(currentFrame);
+
+                if (closestMarker >= 0) {
+                    let currentKeyframe = markers.keyframes[closestMarker];
+                    let previousKeyframe = markers.keyframes[closestMarker - 1];
+                
+                    // If the closest keyframe is at or after the current frame and there's a previous keyframe, adjust the index
+                    if (currentKeyframe.frame >= currentFrame && previousKeyframe) {
+                        closestMarker -= 1;
+                    }
+                }
+                this.editor.playback.currentFrame = markers.keyframes[closestMarker].frame + frameOffset;
+            },
+        },
+        {
+            title: "next marker",
+            key: "ArrowRight",
+            modifierMask: PZ.ui.toolbar.CTRL,
+            fn: function () {
+                let markers = this.editor.sequence.properties.markers;
+                let currentFrame = this.editor.playback.currentFrame;
+                let frameOffset = markers.frameOffset;
+                let closestMarker = markers.getClosestKeyframeIndex(currentFrame);
+                if (closestMarker >= 0) {
+                    let currentKeyframe = markers.keyframes[closestMarker];
+                    let nextKeyframe = markers.keyframes[closestMarker + 1];
+                    
+                    // If the closest keyframe is before or at the current frame and there's a next keyframe, move forward
+                    if (currentKeyframe.frame <= currentFrame && nextKeyframe) {
+                        closestMarker += 1;
+                    }
+                }
+                this.editor.playback.currentFrame = markers.keyframes[closestMarker].frame + frameOffset;
+            },
+        },
+        {
+            title: "graph",
+            key: "g",
+            icon: "interp_1",
+            modifierMask: PZ.ui.toolbar.CTRL,
+            fn: function () {
+                let graphEditorWindow = CM.createWindow({ title: "Graph editor" });
+                let graphEditor = new PZ.ui.graphEditor(graphEditorWindow.editor);
+                graphEditorWindow.setPanel(graphEditor);
+                graphEditorWindow.enabled = true;
+            },
+        },
+    ];
+    let transportBarToolbar = new PZ.ui.toolbar(CM, transportBar);
+    let audioMeter = new PZ.ui.audioMeter(CM);
+    let toolbarMenuBarSplit = new PZ.ui.splitPanel(CM, toolbar, menuBarElevator, 0, 0);
+    
+    if(currentAccount && currentAccount.hasSubscription) {
+        viewportOrAds = viewport;
+    } else {
+        m = new PZ.ui.splitPanel(CM, adBanner, viewport, 0, 0);
+        // viewportOrAds = viewport; // see main branch - blulere 2025-02-14
+    }
+    let w = new PZ.ui.splitPanel(CM, timeline, audioMeter, 1, 1),
+        j = new PZ.ui.splitPanel(CM, transportBarToolbar, w, 0, 0),
+        Z = new PZ.ui.splitPanel(CM, viewportOrAds, j, 0.65, 0),
+        g = new PZ.ui.splitPanel(CM, toolbarMenuBarSplit, Z, 0.3, 1);
     mainWindow.setPanel(g);
 }),
     (CM.defaultProject = {
@@ -299,21 +347,21 @@ async function initTool() {
         media: [
             {
                 properties: { name: "3D Scene", icon: "objects" },
-                preset: !0,
+                preset: true,
                 assets: [],
                 data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Scene" }, object: { type: 4, effects: [], objects: [{ type: 6, objectType: 1 }] } }] }],
                 baseType: "track",
             },
             {
                 properties: { name: "Adjustment", icon: "fx" },
-                preset: !0,
+                preset: true,
                 assets: [],
                 data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Adjustment" }, object: { type: 1, effects: [] } }] }],
                 baseType: "track",
             },
             {
                 properties: { name: "Text", icon: "text" },
-                preset: !0,
+                preset: true,
                 assets: [],
                 data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Text" }, object: { type: 7, objects: [], effects: [] } }] }],
                 baseType: "track",
@@ -321,21 +369,21 @@ async function initTool() {
             {
                 properties: { name: "Preset shape", icon: "shape" },
                 assets: [],
-                preset: !0,
+                preset: true,
                 data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Shape" }, object: { type: 8, objects: [], effects: [] } }] }],
                 baseType: "track",
             },
             {
                 properties: { name: "Shape", icon: "shape" },
                 assets: [],
-                preset: !0,
+                preset: true,
                 data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Shape" }, object: { type: 6, objects: [], effects: [] } }] }],
                 baseType: "track",
             },
             {
                 properties: { name: "Composite", icon: "layers" },
                 assets: [],
-                preset: !0,
+                preset: true,
                 data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Composite" }, object: { type: 2, objects: [], effects: [] } }] }],
                 baseType: "track",
             },

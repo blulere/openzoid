@@ -91,8 +91,7 @@
       PZ.ui = PZ.ui || {};
       PZ.ui.ads = {};
 
-      PZ.ui.ads.init = async function ()
-      {
+      PZ.ui.ads.init = async function() {
         window.freestar = window.freestar || {};
         freestar.hitTime = Date.now();
         freestar.queue = freestar.queue || [];
@@ -117,7 +116,7 @@
 
         let me = await PZ.account.getCurrent();
         if ((me && me.hasSubscription)) {
-          return
+          return;
         }
 
         !function(_window, _document) {
@@ -201,7 +200,7 @@
     <script src="./clipmaker-3.0.106.js"></script>
 
     <script>
-      PZ.ui.ads.init();
+      PZ.ui.ads.init(); // this does a lot more than just init ads - blulere 2025-02-13
       initTool();
     </script>
 </body>
