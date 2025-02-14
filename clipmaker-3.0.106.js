@@ -153,7 +153,8 @@ CM.setUpEditor = function (currentAccount) {
             icon: "start",
             key: "Home",
             fn: function () {
-                (this.editor.playback.speed = 0), (this.editor.playback.currentFrame = 0);
+                this.editor.playback.speed = 0;
+                this.editor.playback.currentFrame = 0;
             },
         },
         {
@@ -161,7 +162,8 @@ CM.setUpEditor = function (currentAccount) {
             key: "ArrowLeft",
             modifierMask: PZ.ui.toolbar.SHIFT,
             fn: function () {
-                (this.editor.playback.speed = 0), (this.editor.playback.currentFrame = Math.max(this.editor.playback.currentFrame - 5, 0));
+                this.editor.playback.speed = 0;
+                this.editor.playback.currentFrame = Math.max(this.editor.playback.currentFrame - 5, 0);
             },
         },
         {
@@ -170,7 +172,8 @@ CM.setUpEditor = function (currentAccount) {
             key: "ArrowLeft",
             modifierMask: 0,
             fn: function () {
-                (this.editor.playback.speed = 0), (this.editor.playback.currentFrame = Math.max(this.editor.playback.currentFrame - 1, 0));
+                this.editor.playback.speed = 0;
+                this.editor.playback.currentFrame = Math.max(this.editor.playback.currentFrame - 1, 0);
             },
         },
         {
