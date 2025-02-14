@@ -2,6 +2,7 @@ const PZTOOLVERSION = "3.0.106";
 var CM = new PZ.ui.editor();
 CM.name = "openzoid (Clipmaker 3)";
 var BG = {}; // What does this do ? only one use, worth removing ? - blulere 2025-02-13
+// Likely a stub from Backgrounder, could be removed in unminified, definitely should be removed in main - blulere 2025-02-14
 
 async function initTool() {
     let currentAccount = await PZ.account.getCurrent();
@@ -11,7 +12,7 @@ async function initTool() {
     CM.enabled = true;
 }
 
-(CM.setUpEditor = function (currentAccount) {
+CM.setUpEditor = function (currentAccount) {
     CM.playback = new PZ.ui.playback(CM);
     CM.playback.loop = true;
     let mainWindow = CM.createMainWindow();
@@ -118,7 +119,7 @@ async function initTool() {
     });
     viewport.objects = timeline.tracks.selection;
     viewport.edit = true;
-    let viewportOrAds;
+    let splitPanelViewport;
     let transportBar = [
         {
             title: "editing camera (c)",
@@ -257,9 +258,11 @@ async function initTool() {
             title: "toggle marker",
             key: "m",
             fn: function () {
-                let e = new PZ.ui.properties(this.editor);
+                let props = new PZ.ui.properties(this.editor);
                 let currentFrame = this.editor.playback.currentFrame;
-                this.editor.history.startOperation(), e.toggleKeyframe(this.editor.sequence.properties.markers, currentFrame), this.editor.history.finishOperation();
+                this.editor.history.startOperation();
+                props.toggleKeyframe(this.editor.sequence.properties.markers, currentFrame);
+                this.editor.history.finishOperation();
             },
         },
         {
@@ -322,80 +325,88 @@ async function initTool() {
     let audioMeter = new PZ.ui.audioMeter(CM);
     let toolbarMenuBarSplit = new PZ.ui.splitPanel(CM, toolbar, menuBarElevator, 0, 0);
     
+    // show ad banner as split panel with viewport only if user has subscription
     if(currentAccount && currentAccount.hasSubscription) {
-        viewportOrAds = viewport;
+        splitPanelViewport = viewport;
     } else {
-        viewportOrAds = new PZ.ui.splitPanel(CM, adBanner, viewport, 0, 0);
+        splitPanelViewport = new PZ.ui.splitPanel(CM, adBanner, viewport, 0, 0);
         // viewportOrAds = viewport; // see main branch - blulere 2025-02-14
     }
-    let w = new PZ.ui.splitPanel(CM, timeline, audioMeter, 1, 1),
-        j = new PZ.ui.splitPanel(CM, transportBarToolbar, w, 0, 0),
-        Z = new PZ.ui.splitPanel(CM, viewportOrAds, j, 0.65, 0),
-        g = new PZ.ui.splitPanel(CM, toolbarMenuBarSplit, Z, 0.3, 1);
-    mainWindow.setPanel(g);
-}),
-    (CM.defaultProject = {
-        sequence: {
-            properties: { resolution: [1920, 1080], rate: 30 },
-            length: 180,
-            videoTracks: [
-                { type: 0, clips: [{ type: 0, start: 0, length: 180, offset: 0, relativeRate: 1, media: null, link: null, properties: { name: "Scene" }, object: { type: 4, effects: [], objects: [{ type: 6, objectType: 1 }] } }] },
-            ],
-            audioTracks: [{ type: 1, clips: [] }],
-        },
-        assets: [],
-        media: [
-            {
-                properties: { name: "3D Scene", icon: "objects" },
-                preset: true,
-                assets: [],
-                data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Scene" }, object: { type: 4, effects: [], objects: [{ type: 6, objectType: 1 }] } }] }],
-                baseType: "track",
-            },
-            {
-                properties: { name: "Adjustment", icon: "fx" },
-                preset: true,
-                assets: [],
-                data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Adjustment" }, object: { type: 1, effects: [] } }] }],
-                baseType: "track",
-            },
-            {
-                properties: { name: "Text", icon: "text" },
-                preset: true,
-                assets: [],
-                data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Text" }, object: { type: 7, objects: [], effects: [] } }] }],
-                baseType: "track",
-            },
-            {
-                properties: { name: "Preset shape", icon: "shape" },
-                assets: [],
-                preset: true,
-                data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Shape" }, object: { type: 8, objects: [], effects: [] } }] }],
-                baseType: "track",
-            },
-            {
-                properties: { name: "Shape", icon: "shape" },
-                assets: [],
-                preset: true,
-                data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Shape" }, object: { type: 6, objects: [], effects: [] } }] }],
-                baseType: "track",
-            },
-            {
-                properties: { name: "Composite", icon: "layers" },
-                assets: [],
-                preset: true,
-                data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Composite" }, object: { type: 2, objects: [], effects: [] } }] }],
-                baseType: "track",
-            },
+
+    // These names aren't and will definitely cause problems later, warned ? - blulere 2025-02-14
+    let splitPanelTimeline = new PZ.ui.splitPanel(CM, timeline, audioMeter, 1, 1);
+    let splitPanelBottom = new PZ.ui.splitPanel(CM, transportBarToolbar, splitPanelTimeline, 0, 0);
+    let splitPanelRight = new PZ.ui.splitPanel(CM, splitPanelViewport, splitPanelBottom, 0.65, 0);
+    let splitPanelLeft = new PZ.ui.splitPanel(CM, toolbarMenuBarSplit, splitPanelRight, 0.3, 1);
+    mainWindow.setPanel(splitPanelLeft);
+};
+
+CM.defaultProject = {
+    sequence: {
+        properties: { resolution: [1920, 1080], rate: 30 },
+        length: 180,
+        videoTracks: [
+            { type: 0, clips: [ { type: 0, start: 0, length: 180, offset: 0, relativeRate: 1, media: null, link: null, properties: { name: "Scene" }, object: { type: 4, effects: [], objects: [ { type: 6, objectType: 1 } ] } } ] },
         ],
-    }),
-    (BG.defaultProject = {
-        sequence: {
-            properties: { resolution: [1920, 1080], rate: 1 },
-            length: 1,
-            videoTracks: [{ clips: [{ start: 0, length: 1, offset: 0, type: 0, link: null, object: { type: 2, properties: { name: "Image" }, objects: [], effects: [] } }] }],
-            audioTracks: [],
+        audioTracks: [{ type: 1, clips: [] }],
+    },
+    assets: [],
+    media: [
+        {
+            properties: { name: "3D Scene", icon: "objects" },
+            preset: true,
+            assets: [],
+            data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Scene" }, object: { type: 4, effects: [], objects: [{ type: 6, objectType: 1 }] } }] }],
+            baseType: "track",
         },
-        assets: {},
-        media: [],
-    });
+        {
+            properties: { name: "Adjustment", icon: "fx" },
+            preset: true,
+            assets: [],
+            data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Adjustment" }, object: { type: 1, effects: [] } }] }],
+            baseType: "track",
+        },
+        {
+            properties: { name: "Text", icon: "text" },
+            preset: true,
+            assets: [],
+            data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Text" }, object: { type: 7, objects: [], effects: [] } }] }],
+            baseType: "track",
+        },
+        {
+            properties: { name: "Preset shape", icon: "shape" },
+            assets: [],
+            preset: true,
+            data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Shape" }, object: { type: 8, objects: [], effects: [] } }] }],
+            baseType: "track",
+        },
+        {
+            properties: { name: "Shape", icon: "shape" },
+            assets: [],
+            preset: true,
+            data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Shape" }, object: { type: 6, objects: [], effects: [] } }] }],
+            baseType: "track",
+        },
+        {
+            properties: { name: "Composite", icon: "layers" },
+            assets: [],
+            preset: true,
+            data: [{ type: 0, clips: [{ start: 0, length: 180, offset: 0, type: 0, link: null, properties: { name: "Composite" }, object: { type: 2, objects: [], effects: [] } }] }],
+            baseType: "track",
+        },
+    ],
+};
+
+BG.defaultProject = {
+    sequence: {
+        properties: {
+            resolution: [1920, 1080],
+            rate: 1
+        },
+        length: 1,
+        videoTracks: [{ clips: [{ start: 0, length: 1, offset: 0, type: 0, link: null, object: { type: 2, properties: { name: "Image" }, objects: [], effects: [] } }] }],
+        audioTracks: [],
+    },
+    assets: {},
+    media: [],
+};
