@@ -1,77 +1,159 @@
 const PZUIVERSION = "1.0.72";
 
 (THREE.EditorControls = function (e, t) {
-    t = void 0 !== t ? t : document;
+    if (t === undefined) {
+        t = document;
+    }
+
     this.enabled = true;
     this.center = new THREE.Vector3();
     this.panSpeed = 0.001;
     this.zoomSpeed = 0.001;
     this.rotationSpeed = 0.005;
-    var i = this,
-        s = new THREE.Vector3(),
-        n = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2 },
-        r = n.NONE,
-        a = this.center,
-        o = new THREE.Matrix3(),
-        l = new THREE.Vector2(),
-        h = new THREE.Vector2(),
-        c = new THREE.Spherical(),
-        p = { type: "change" };
-    function d(e) {
-        !1 !== i.enabled &&
-            (0 === e.button ? (r = n.ROTATE) : 1 === e.button ? (r = n.ZOOM) : 2 === e.button && (r = n.PAN), h.set(e.clientX, e.clientY), document.addEventListener("mousemove", u, !1), document.addEventListener("mouseup", m, !1));
-    }
-    function u(e) {
-        if ((e.preventDefault(), !1 !== i.enabled)) {
-            l.set(e.clientX, e.clientY);
-            var t = l.x - h.x,
-                s = l.y - h.y;
-            r === n.ROTATE ? i.rotate(new THREE.Vector3(-t * i.rotationSpeed, -s * i.rotationSpeed, 0)) : r === n.ZOOM ? i.zoom(new THREE.Vector3(0, 0, s)) : r === n.PAN && i.pan(new THREE.Vector3(-t, s, 0)), h.set(e.clientX, e.clientY);
+
+    var EC = this;
+    var ECcenter = this.center;
+    var vectorWhat = new THREE.Vector3();
+    var MouseActions = { NONE: -1, ROTATE: 0, ZOOM: 1, PAN: 2 };
+    var mouseCurrentAction = MouseActions.NONE;
+    var o = new THREE.Matrix3();
+    var mouseNewPos = new THREE.Vector2();
+    var mousePos = new THREE.Vector2();
+    var sphericalWhat = new THREE.Spherical();
+    var changeEvent = { type: "change" };
+
+    function onMouseDown(mouse) {
+        if(THREE.EditorControls.enabled === false) return;
+
+        if(mouse.button === 0) {
+            mouseCurrentAction = MouseActions.ROTATE; // Left mouse button -> Rotate
+        } else if(mouse.button === 1) {
+            mouseCurrentAction = MouseActions.ZOOM; // Middle mouse button -> Zoom
+        } else if(mouse.button === 2) {
+            mouseCurrentAction = MouseActions.PAN; // Right mouse button -> Pan
         }
+
+        // Store the starting mouse position
+        mousePos.set(mouse.clientX, mouse.clientY);
+
+        // Attach event listeners for moving and releasing the mouse
+        document.addEventListener("mousemove", onMouseMove, false);
+        document.addEventListener("mouseup", onMouseUp, false);
     }
-    function m(e) {
-        document.removeEventListener("mousemove", u, !1), document.removeEventListener("mouseup", m, !1), (r = n.NONE);
+
+    function onMouseMove(mouse) {
+        mouse.preventDefault(); // Prevents unwanted default browser behavior (e.g., text selection)
+    
+        if (EC.enabled === false) return;
+
+        // Update current mouse position
+        mouseNewPos.set(mouse.clientX, mouse.clientY);
+
+        // Calculate mouse movement delta
+        var deltaX = mouseNewPos.x - mousePos.x;
+        var deltaY = mouseNewPos.y - mousePos.y;
+
+        if (mouseCurrentAction === MouseActions.ROTATE) {
+            // Rotate the camera based on mouse movement
+            EC.rotate(new THREE.Vector3(
+                -deltaX * EC.rotationSpeed,
+                -deltaY * EC.rotationSpeed,
+                0)
+            );
+        } else if (mouseCurrentAction === MouseActions.ZOOM) {
+            // Zoom in/out based on vertical mouse movement
+            EC.zoom(new THREE.Vector3(0, 0, deltaY));
+        } else if (mouseCurrentAction === MouseActions.PAN) {
+            // Pan the camera based on mouse movement
+            EC.pan(new THREE.Vector3(-deltaX, deltaY, 0));
+        }
+
+        // Update last known mouse position
+        mousePos.set(mouse.clientX, mouse.clientY);
     }
-    function f(e) {
-        e.preventDefault(), i.zoom(new THREE.Vector3(0, 0, e.deltaY));
+
+    function onMouseUp(e) {
+        // stop listening
+        document.removeEventListener("mousemove", onMouseMove, false);
+        document.removeEventListener("mouseup", onMouseUp, false);
+        mouseCurrentAction = MouseActions.NONE;
     }
-    function y(e) {
-        e.preventDefault();
+
+    function onMouseWheel(mouse) {
+        mouse.preventDefault();
+        EC.zoom(new THREE.Vector3(0, 0, mouse.deltaY));
     }
-    (this.focus = function (t) {
-        var s = new THREE.Box3().setFromObject(t);
-        e.lookAt(a.copy(s.getCenter())), i.dispatchEvent(p);
-    }),
-        (this.pan = function (t) {
-            var s = e.position.distanceTo(a);
-            t.multiplyScalar(s * i.panSpeed), t.applyMatrix3(o.getNormalMatrix(e.matrix)), e.position.add(t), a.add(t), i.dispatchEvent(p);
-        }),
-        (this.zoom = function (t) {
-            var s = e.position.distanceTo(a);
-            t.multiplyScalar(s * i.zoomSpeed), t.length() > s || (t.applyMatrix3(o.getNormalMatrix(e.matrix)), e.position.add(t), i.dispatchEvent(p));
-        }),
-        (this.rotate = function (t) {
-            s.copy(e.position).sub(a), c.setFromVector3(s), (c.theta += t.x), (c.phi += t.y), c.makeSafe(), s.setFromSpherical(c), e.position.copy(a).add(s), e.lookAt(a), i.dispatchEvent(p);
-        }),
-        (this.dispose = function () {
-            t.removeEventListener("contextmenu", y, !1),
-                t.removeEventListener("mousedown", d, !1),
-                t.removeEventListener("wheel", f, !1),
-                t.removeEventListener("mousemove", u, !1),
-                t.removeEventListener("mouseup", m, !1),
-                t.removeEventListener("mouseout", m, !1),
-                t.removeEventListener("dblclick", m, !1),
-                t.removeEventListener("touchstart", x, !1),
-                t.removeEventListener("touchmove", P, !1);
-        }),
-        t.addEventListener("contextmenu", y, !1),
-        t.addEventListener("mousedown", d, !1),
-        t.addEventListener("wheel", f, !1);
+
+    function onMouseRightClick(mouse) {
+        mouse.preventDefault();
+    }
+
+    this.focus = function(object) {
+        var boundingBox = new THREE.Box3().setFromObject(object);
+        e.lookAt( ECcenter.copy( boundingBox.getCenter() ) );
+        EC.dispatchEvent(changeEvent);
+    };
+
+    this.pan = function(t) {
+        var distance = e.position.distanceTo(ECcenter);
+        t.multiplyScalar(distance * EC.panSpeed);
+        t.applyMatrix3(o.getNormalMatrix(e.matrix));
+        e.position.add(t);
+        ECcenter.add(t);
+        EC.dispatchEvent(changeEvent);
+    };
+
+    this.zoom = function(t) {
+        var s = e.position.distanceTo(ECcenter);
+        // Scale movement vector by zoom speed
+        t.multiplyScalar(s * EC.zoomSpeed);
+
+        // Ensure movement isn't excessive
+        if (t.length() <= s) {
+            // Transform movement into local space
+            t.applyMatrix3(o.getNormalMatrix(e.matrix));
+
+            // Move the object (likely camera)
+            e.position.add(t);
+
+            // Notify listeners that a change occurred
+            EC.dispatchEvent(changeEvent);
+        }
+    };
+
+    this.rotate = function(t) {
+        vectorWhat.copy(e.position).sub(ECcenter);
+        sphericalWhat.setFromVector3(vectorWhat);
+        sphericalWhat.theta += t.x;
+        sphericalWhat.phi += t.y;
+        sphericalWhat.makeSafe();
+        vectorWhat.setFromSpherical(sphericalWhat);
+        e.position.copy(ECcenter).add(vectorWhat);
+        e.lookAt(ECcenter);
+        EC.dispatchEvent(changeEvent);
+    };
+
+    this.dispose = function () {
+        t.removeEventListener("contextmenu", onMouseRightClick, false),
+            t.removeEventListener("mousedown", onMouseDown, false),
+            t.removeEventListener("wheel", onMouseWheel, false),
+            t.removeEventListener("mousemove", onMouseMove, false),
+            t.removeEventListener("mouseup", onMouseUp, false),
+            t.removeEventListener("mouseout", onMouseUp, false),
+            t.removeEventListener("dblclick", onMouseUp, false),
+            t.removeEventListener("touchstart", x, false),
+            t.removeEventListener("touchmove", P, false);
+    };
+
+    t.addEventListener("contextmenu", onMouseRightClick, false);
+    t.addEventListener("mousedown", onMouseDown, false);
+    t.addEventListener("wheel", onMouseWheel, false);
+
     var g = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()],
         b = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()],
         v = null;
     function x(e) {
-        if (!1 !== i.enabled) {
+        if (false !== EC.enabled) {
             switch (e.touches.length) {
                 case 1:
                     g[0].set(e.touches[0].pageX, e.touches[0].pageY, 0), g[1].set(e.touches[0].pageX, e.touches[0].pageY, 0);
@@ -83,18 +165,18 @@ const PZUIVERSION = "1.0.72";
         }
     }
     function P(e) {
-        if (!1 !== i.enabled) {
+        if (false !== EC.enabled) {
             switch ((e.preventDefault(), e.stopPropagation(), e.touches.length)) {
                 case 1:
-                    g[0].set(e.touches[0].pageX, e.touches[0].pageY, 0), g[1].set(e.touches[0].pageX, e.touches[0].pageY, 0), i.rotate(g[0].sub(r(g[0], b)).multiplyScalar(-i.rotationSpeed));
+                    g[0].set(e.touches[0].pageX, e.touches[0].pageY, 0), g[1].set(e.touches[0].pageX, e.touches[0].pageY, 0), EC.rotate(g[0].sub(r(g[0], b)).multiplyScalar(-EC.rotationSpeed));
                     break;
                 case 2:
                     g[0].set(e.touches[0].pageX, e.touches[0].pageY, 0), g[1].set(e.touches[1].pageX, e.touches[1].pageY, 0);
                     var t = g[0].distanceTo(g[1]);
-                    i.zoom(new THREE.Vector3(0, 0, v - t)), (v = t);
+                    EC.zoom(new THREE.Vector3(0, 0, v - t)), (v = t);
                     var s = g[0].clone().sub(r(g[0], b)),
                         n = g[1].clone().sub(r(g[1], b));
-                    (s.x = -s.x), (n.x = -n.x), i.pan(s.add(n).multiplyScalar(0.5));
+                    (s.x = -s.x), (n.x = -n.x), EC.pan(s.add(n).multiplyScalar(0.5));
             }
             b[0].copy(g[0]), b[1].copy(g[1]);
         }
@@ -104,7 +186,7 @@ const PZUIVERSION = "1.0.72";
             return i;
         }
     }
-    t.addEventListener("touchstart", x, !1), t.addEventListener("touchmove", P, !1);
+    t.addEventListener("touchstart", x, false), t.addEventListener("touchmove", P, false);
 }),
     (THREE.EditorControls.prototype = Object.create(THREE.EventDispatcher.prototype)),
     (THREE.EditorControls.prototype.constructor = THREE.EditorControls),
@@ -112,10 +194,10 @@ const PZUIVERSION = "1.0.72";
         "use strict";
         var e = function (e) {
             THREE.MeshBasicMaterial.call(this),
-                (this.depthTest = !1),
-                (this.depthWrite = !1),
+                (this.depthTest = false),
+                (this.depthWrite = false),
                 (this.side = THREE.FrontSide),
-                (this.transparent = !0),
+                (this.transparent = true),
                 this.setValues(e),
                 (this.oldColor = this.color.clone()),
                 (this.oldOpacity = this.opacity),
@@ -126,9 +208,9 @@ const PZUIVERSION = "1.0.72";
         (e.prototype = Object.create(THREE.MeshBasicMaterial.prototype)).constructor = e;
         var t = function (e) {
             THREE.LineBasicMaterial.call(this),
-                (this.depthTest = !1),
-                (this.depthWrite = !1),
-                (this.transparent = !0),
+                (this.depthTest = false),
+                (this.depthWrite = false),
+                (this.transparent = true),
                 (this.linewidth = 1),
                 this.setValues(e),
                 (this.oldColor = this.color.clone()),
@@ -138,12 +220,12 @@ const PZUIVERSION = "1.0.72";
                 });
         };
         (t.prototype = Object.create(THREE.LineBasicMaterial.prototype)).constructor = t;
-        var i = new e({ visible: !1, transparent: !1 });
+        var i = new e({ visible: false, transparent: false });
         (THREE.TransformGizmo = function () {
             (this.init = function () {
                 THREE.Object3D.call(this), (this.handles = new THREE.Object3D()), (this.pickers = new THREE.Object3D()), (this.planes = new THREE.Object3D()), this.add(this.handles), this.add(this.pickers), this.add(this.planes);
                 var e = new THREE.PlaneBufferGeometry(50, 50, 2, 2),
-                    t = new THREE.MeshBasicMaterial({ visible: !1, side: THREE.DoubleSide }),
+                    t = new THREE.MeshBasicMaterial({ visible: false, side: THREE.DoubleSide }),
                     i = { XY: new THREE.Mesh(e, t), YZ: new THREE.Mesh(e, t), XZ: new THREE.Mesh(e, t), XYZE: new THREE.Mesh(e, t) };
                 for (var s in ((this.activePlane = i.XYZE), i.YZ.rotation.set(0, Math.PI / 2, 0), i.XZ.rotation.set(-Math.PI / 2, 0, 0), i)) (i[s].name = s), this.planes.add(i[s]), (this.planes[s] = i[s]);
                 var n = function (e, t) {
@@ -167,7 +249,7 @@ const PZUIVERSION = "1.0.72";
             }),
                 (this.highlight = function (e) {
                     this.traverse(function (t) {
-                        t.material && t.material.highlight && (t.name === e ? t.material.highlight(!0) : t.material.highlight(!1));
+                        t.material && t.material.highlight && (t.name === e ? t.material.highlight(true) : t.material.highlight(false));
                     });
                 });
         }),
@@ -184,7 +266,7 @@ const PZUIVERSION = "1.0.72";
             (THREE.TransformGizmoTranslate = function () {
                 THREE.TransformGizmo.call(this);
                 var s = new THREE.Geometry(),
-                    n = new THREE.Mesh(new THREE.CylinderGeometry(0, 0.05, 0.2, 12, 1, !1));
+                    n = new THREE.Mesh(new THREE.CylinderGeometry(0, 0.05, 0.2, 12, 1, false));
                 (n.position.y = 0.5), n.updateMatrix(), s.merge(n.geometry, n.matrix);
                 var r = new THREE.BufferGeometry();
                 r.addAttribute("position", new THREE.Float32BufferAttribute([0, 0, 0, 1, 0, 0], 3));
@@ -202,9 +284,9 @@ const PZUIVERSION = "1.0.72";
                         XZ: [[new THREE.Mesh(new THREE.PlaneBufferGeometry(0.29, 0.29), new e({ color: 16711935, opacity: 0.25 })), [0.15, 0, 0.15], [-Math.PI / 2, 0, 0]]],
                     }),
                     (this.pickerGizmos = {
-                        X: [[new THREE.Mesh(new THREE.CylinderBufferGeometry(0.2, 0, 1, 4, 1, !1), i), [0.6, 0, 0], [0, 0, -Math.PI / 2]]],
-                        Y: [[new THREE.Mesh(new THREE.CylinderBufferGeometry(0.2, 0, 1, 4, 1, !1), i), [0, 0.6, 0]]],
-                        Z: [[new THREE.Mesh(new THREE.CylinderBufferGeometry(0.2, 0, 1, 4, 1, !1), i), [0, 0, 0.6], [Math.PI / 2, 0, 0]]],
+                        X: [[new THREE.Mesh(new THREE.CylinderBufferGeometry(0.2, 0, 1, 4, 1, false), i), [0.6, 0, 0], [0, 0, -Math.PI / 2]]],
+                        Y: [[new THREE.Mesh(new THREE.CylinderBufferGeometry(0.2, 0, 1, 4, 1, false), i), [0, 0.6, 0]]],
+                        Z: [[new THREE.Mesh(new THREE.CylinderBufferGeometry(0.2, 0, 1, 4, 1, false), i), [0, 0, 0.6], [Math.PI / 2, 0, 0]]],
                         XYZ: [[new THREE.Mesh(new THREE.OctahedronGeometry(0.2, 0), i)]],
                         XY: [[new THREE.Mesh(new THREE.PlaneBufferGeometry(0.4, 0.4), i), [0.2, 0.2, 0]]],
                         YZ: [[new THREE.Mesh(new THREE.PlaneBufferGeometry(0.4, 0.4), i), [0, 0.2, 0.2], [0, Math.PI / 2, 0]]],
@@ -300,9 +382,9 @@ const PZUIVERSION = "1.0.72";
                         XYZ: [[new THREE.Mesh(new THREE.BoxBufferGeometry(0.125, 0.125, 0.125), new e({ color: 16777215, opacity: 0.25 }))]],
                     }),
                     (this.pickerGizmos = {
-                        X: [[new THREE.Mesh(new THREE.CylinderBufferGeometry(0.2, 0, 1, 4, 1, !1), i), [0.6, 0, 0], [0, 0, -Math.PI / 2]]],
-                        Y: [[new THREE.Mesh(new THREE.CylinderBufferGeometry(0.2, 0, 1, 4, 1, !1), i), [0, 0.6, 0]]],
-                        Z: [[new THREE.Mesh(new THREE.CylinderBufferGeometry(0.2, 0, 1, 4, 1, !1), i), [0, 0, 0.6], [Math.PI / 2, 0, 0]]],
+                        X: [[new THREE.Mesh(new THREE.CylinderBufferGeometry(0.2, 0, 1, 4, 1, false), i), [0.6, 0, 0], [0, 0, -Math.PI / 2]]],
+                        Y: [[new THREE.Mesh(new THREE.CylinderBufferGeometry(0.2, 0, 1, 4, 1, false), i), [0, 0.6, 0]]],
+                        Z: [[new THREE.Mesh(new THREE.CylinderBufferGeometry(0.2, 0, 1, 4, 1, false), i), [0, 0, 0.6], [Math.PI / 2, 0, 0]]],
                         XYZ: [[new THREE.Mesh(new THREE.BoxBufferGeometry(0.4, 0.4, 0.4), i)]],
                     }),
                     (this.setActivePlane = function (e, t) {
@@ -321,7 +403,7 @@ const PZUIVERSION = "1.0.72";
                 THREE.Object3D.call(this),
                     (t = void 0 !== t ? t : document),
                     (this.object = void 0),
-                    (this.visible = !1),
+                    (this.visible = false),
                     (this.translationSnap = null),
                     (this.rotationSnap = null),
                     (this.space = "world"),
@@ -329,7 +411,7 @@ const PZUIVERSION = "1.0.72";
                     (this.axis = null);
                 var i = this,
                     s = "translate",
-                    n = !1,
+                    n = false,
                     r = { translate: new THREE.TransformGizmoTranslate(), rotate: new THREE.TransformGizmoRotate(), scale: new THREE.TransformGizmoScale() };
                 for (var a in r) {
                     var o = r[a];
@@ -370,14 +452,14 @@ const PZUIVERSION = "1.0.72";
                     N = new THREE.Vector3(),
                     B = new THREE.Euler();
                 function H(e) {
-                    if (void 0 !== i.object && !0 !== n && (void 0 === e.button || 0 === e.button)) {
+                    if (void 0 !== i.object && true !== n && (void 0 === e.button || 0 === e.button)) {
                         var t = Y(e.changedTouches ? e.changedTouches[0] : e, r[s].pickers.children),
                             a = null;
                         t && ((a = t.object.name), e.preventDefault()), i.axis !== a && ((i.axis = a), i.update(), i.dispatchEvent(l));
                     }
                 }
                 function K(e) {
-                    if (void 0 !== i.object && !0 !== n && (void 0 === e.button || 0 === e.button)) {
+                    if (void 0 !== i.object && true !== n && (void 0 === e.button || 0 === e.button)) {
                         var t = e.changedTouches ? e.changedTouches[0] : e;
                         if (0 === t.button || void 0 === t.button) {
                             var a = Y(t, r[s].pickers.children);
@@ -394,13 +476,13 @@ const PZUIVERSION = "1.0.72";
                                     f.copy(o.point));
                             }
                         }
-                        n = !0;
+                        n = true;
                     }
                 }
                 function q(e) {
-                    if (void 0 !== i.object && null !== i.axis && !1 !== n && (void 0 === e.button || 0 === e.button)) {
+                    if (void 0 !== i.object && null !== i.axis && false !== n && (void 0 === e.button || 0 === e.button)) {
                         var t = Y(e.changedTouches ? e.changedTouches[0] : e, [r[s].activePlane]);
-                        !1 !== t &&
+                        false !== t &&
                             (e.preventDefault(),
                             e.stopPropagation(),
                             m.copy(t.point),
@@ -500,27 +582,27 @@ const PZUIVERSION = "1.0.72";
                 function V(e) {
                     e.preventDefault(),
                         (void 0 !== e.button && 0 !== e.button) ||
-                            (n && null !== i.axis && ((c.mode = s), i.dispatchEvent(c)), (n = !1), "TouchEvent" in window && e instanceof TouchEvent ? ((i.axis = null), i.update(), i.dispatchEvent(l)) : H(e));
+                            (n && null !== i.axis && ((c.mode = s), i.dispatchEvent(c)), (n = false), "TouchEvent" in window && e instanceof TouchEvent ? ((i.axis = null), i.update(), i.dispatchEvent(l)) : H(e));
                 }
                 function Y(i, s) {
                     var n = t.getBoundingClientRect(),
                         r = (i.clientX - n.left) / n.width,
                         a = (i.clientY - n.top) / n.height;
                     u.set(2 * r - 1, -2 * a + 1), d.setFromCamera(u, e);
-                    var o = d.intersectObjects(s, !0);
+                    var o = d.intersectObjects(s, true);
                     return !!o[0] && o[0];
                 }
-                t.addEventListener("mousedown", K, !1),
-                    t.addEventListener("touchstart", K, !1),
-                    t.addEventListener("mousemove", H, !1),
-                    t.addEventListener("touchmove", H, !1),
-                    t.addEventListener("mousemove", q, !1),
-                    t.addEventListener("touchmove", q, !1),
-                    t.addEventListener("mouseup", V, !1),
-                    t.addEventListener("mouseout", V, !1),
-                    t.addEventListener("touchend", V, !1),
-                    t.addEventListener("touchcancel", V, !1),
-                    t.addEventListener("touchleave", V, !1),
+                t.addEventListener("mousedown", K, false),
+                    t.addEventListener("touchstart", K, false),
+                    t.addEventListener("mousemove", H, false),
+                    t.addEventListener("touchmove", H, false),
+                    t.addEventListener("mousemove", q, false),
+                    t.addEventListener("touchmove", q, false),
+                    t.addEventListener("mouseup", V, false),
+                    t.addEventListener("mouseout", V, false),
+                    t.addEventListener("touchend", V, false),
+                    t.addEventListener("touchcancel", V, false),
+                    t.addEventListener("touchleave", V, false),
                     (this.dispose = function () {
                         t.removeEventListener("mousedown", K),
                             t.removeEventListener("touchstart", K),
@@ -535,10 +617,10 @@ const PZUIVERSION = "1.0.72";
                             t.removeEventListener("touchleave", V);
                     }),
                     (this.attach = function (e) {
-                        (this.object = e), (this.visible = !0), this.update();
+                        (this.object = e), (this.visible = true), this.update();
                     }),
                     (this.detach = function () {
-                        (this.object = void 0), (this.visible = !1), (this.axis = null);
+                        (this.object = void 0), (this.visible = false), (this.axis = null);
                     }),
                     (this.getMode = function () {
                         return s;
@@ -600,18 +682,18 @@ const PZ_ICONS = "pz.icons29.svg";
             (this.el.style.backgroundColor = "#242424"),
             (this.minWidth = 90),
             (this.minHeight = 90),
-            (this.initialized = !1);
+            (this.initialized = false);
     }),
     (PZ.ui.ad.prototype.resize = function () {
         if (!this.initialized) {
             let e = "Panzoid_tool_970x90_728x90_468x60_320x50_300x75";
-            (this.el.id = e), PZ.ui.ads.show(e), (this.initialized = !0);
+            (this.el.id = e), PZ.ui.ads.show(e), (this.initialized = true);
         }
     }),
     (PZ.ui.audioMeter = function (e) {
         PZ.ui.panel.call(this, e),
             (this.el.style = "background-color: #242424;"),
-            (this.canDuplicate = !0),
+            (this.canDuplicate = true),
             (this.minWidth = 45),
             (this.minHeight = 45),
             (this.peak = 0),
@@ -716,7 +798,7 @@ const PZ_ICONS = "pz.icons29.svg";
                             t = this.windows[i];
                             break;
                         }
-                    return !1 !== t.secondary && void 0;
+                    return false !== t.secondary && void 0;
                 }
             }.bind(this)),
             (t.window.onunload = function (e) {
@@ -726,7 +808,7 @@ const PZ_ICONS = "pz.icons29.svg";
                         t = this.windows[i];
                         break;
                     }
-                !1 === t.secondary ? ((this.project = null), this.closeAllWindows()) : this.windows.splice(i, 1);
+                false === t.secondary ? ((this.project = null), this.closeAllWindows()) : this.windows.splice(i, 1);
             }.bind(this)),
             (t.window.onkeydown = this.keydown.bind(this)),
             (window.enabled = this.enabled),
@@ -758,7 +840,7 @@ const PZ_ICONS = "pz.icons29.svg";
         try {
             if (!e) {
                 let t = this.recovery.load();
-                t && ((e = new PZ.project()).load(t), (e.ui.dirty = !0));
+                t && ((e = new PZ.project()).load(t), (e.ui.dirty = true));
             }
             if (e) return void (this.project = e);
         } catch (e) {}
@@ -792,7 +874,7 @@ const PZ_ICONS = "pz.icons29.svg";
         let t = new PZ.archive();
         await PZ.project.save(t, this.project), e || this.project.assets.saveAll(t), await PZ.file.getQuota();
         let i = await t.tar();
-        i && ((PZ.downloadBlob = i), (PZ.downloadFilename = "project.pz")), window.open("download.html"), (this.project.ui.dirty = !1);
+        i && ((PZ.downloadBlob = i), (PZ.downloadFilename = "project.pz")), window.open("download.html"), (this.project.ui.dirty = false);
     }),
     (PZ.ui.editor.prototype.getCreationFromUrl = async function () {
         let e = new PZ.ui.query(location.search),
@@ -806,7 +888,7 @@ const PZ_ICONS = "pz.icons29.svg";
         }
     }),
     (PZ.ui.window = function (e, t) {
-        if (((this.editor = e), t instanceof Node)) (this.window = window), (this.el = t), (this.secondary = !1);
+        if (((this.editor = e), t instanceof Node)) (this.window = window), (this.el = t), (this.secondary = false);
         else {
             if (((this.options = { title: "Panzoid", width: 600, height: 400 }), Object.assign(this.options, t), (this.window = window.open("", "", "width=" + this.options.width + ",height=" + this.options.height)), !this.window)) return;
             let e = this.window.document.head;
@@ -821,7 +903,7 @@ const PZ_ICONS = "pz.icons29.svg";
                 e.appendChild(a), a.setAttribute("rel", "stylesheet"), a.setAttribute("href", r);
             }
             let r = this.window.document.createElement("title");
-            e.appendChild(r), (r.innerText = this.options.title), (this.el = this.window.document.body), (this.secondary = !0);
+            e.appendChild(r), (r.innerText = this.options.title), (this.el = this.window.document.body), (this.secondary = true);
         }
         this.el.addEventListener(
             "keydown",
@@ -854,7 +936,7 @@ const PZ_ICONS = "pz.icons29.svg";
             this.window.addEventListener(
                 "unload",
                 function () {
-                    this.panel.enabled = !1;
+                    this.panel.enabled = false;
                 }.bind(this)
             ),
             (this.el.innerHTML = ""),
@@ -884,10 +966,10 @@ const PZ_ICONS = "pz.icons29.svg";
         (this.editor = e),
             (this.minHeight = 1),
             (this.minWidth = 1),
-            (this.canDuplicate = !1),
-            (this.canClose = !1),
+            (this.canDuplicate = false),
+            (this.canClose = false),
             PZ.observable.defineObservableProp(this, "enabled", "onEnabledChanged"),
-            (this.enabled = !1),
+            (this.enabled = false),
             (this.el = document.createElement("div")),
             this.el.setAttribute("tabindex", "0"),
             this.el.classList.add("editorpanel"),
@@ -1057,7 +1139,7 @@ const PZ_ICONS = "pz.icons29.svg";
                 this.changeTab(this.tabcontainer.children[0]);
         }
         resize() {
-            for (var e = 0; e < this.panels.length; e++) this.panels[e] === this.activePanel ? this.panels[e].resize() : (this.panels[e].needsResize = !0);
+            for (var e = 0; e < this.panels.length; e++) this.panels[e] === this.activePanel ? this.panels[e].resize() : (this.panels[e].needsResize = true);
         }
         buttonKeyDown(e) {
             let t = e.currentTarget;
@@ -1104,7 +1186,7 @@ const PZ_ICONS = "pz.icons29.svg";
                     (s.ondragleave = () => {
                         clearTimeout(s.pz_changeTimeout);
                     }),
-                    (this.panels[i].needsResize = !0);
+                    (this.panels[i].needsResize = true);
                 let n = PZ.ui.generateIcon(this.panels[i].icon);
                 s.appendChild(n);
                 let r = document.createElement("span");
@@ -1117,17 +1199,17 @@ const PZ_ICONS = "pz.icons29.svg";
         }
         buttonClick(e) {
             let t = e.currentTarget;
-            !0 !== t.disabled && (t.pz_tab ? (this.changeTab(t), this.toggle(!1)) : this.toggle());
+            true !== t.disabled && (t.pz_tab ? (this.changeTab(t), this.toggle(false)) : this.toggle());
         }
         changeTab(e) {
             var t = this.tabcontainer.getElementsByClassName("selected")[0];
-            t && (t.classList.remove("selected"), (t.pz_container.style.display = "none"), t.pz_tab.unfocus && t.pz_tab.unfocus(), (t.pz_tab.hasFocus = !1)), e.classList.add("selected"), (e.pz_container.style.display = "block");
+            t && (t.classList.remove("selected"), (t.pz_container.style.display = "none"), t.pz_tab.unfocus && t.pz_tab.unfocus(), (t.pz_tab.hasFocus = false)), e.classList.add("selected"), (e.pz_container.style.display = "block");
             let i = this.tabcontainer.querySelector('*[tabindex="0"]');
             i && i.removeAttribute("tabindex"),
                 e.setAttribute("tabindex", "0"),
-                e.pz_tab.needsCreate && (e.pz_tab.create(), (e.pz_tab.needsCreate = !1)),
-                e.pz_tab.needsResize && (e.pz_tab.resize(), (e.pz_tab.needsResize = !1)),
-                this.activePanel && (this.activePanel.enabled = !1),
+                e.pz_tab.needsCreate && (e.pz_tab.create(), (e.pz_tab.needsCreate = false)),
+                e.pz_tab.needsResize && (e.pz_tab.resize(), (e.pz_tab.needsResize = false)),
+                this.activePanel && (this.activePanel.enabled = false),
                 (this.activePanel = e.pz_tab),
                 (this.activePanel.enabled = this.enabled),
                 this.activePanel.el.focus();
@@ -1152,35 +1234,35 @@ const PZ_ICONS = "pz.icons29.svg";
             this.onEnabledChanged.watch(() => {
                 this.enabled ? (this.animFrameReq = requestAnimationFrame(this._updateFn)) : cancelAnimationFrame(this.animFrameReq),
                     this.options.keyframePanel && (this.options.keyframePanel.objects = this.enabled ? this.objects : null),
-                    this.enabled && this.objectsNeedUpdate && (this.objectsChanged(), (this.objectsNeedUpdate = !1));
+                    this.enabled && this.objectsNeedUpdate && (this.objectsChanged(), (this.objectsNeedUpdate = false));
             }),
             PZ.observable.defineObservableProp(this, "objects", "onObjectsChanged"),
             (this.objects = null),
-            (this.objectsNeedUpdate = !1),
+            (this.objectsNeedUpdate = false),
             (this.objectsChanged_bound = () => {
-                this.enabled ? this.objectsChanged() : (this.objectsNeedUpdate = !0);
+                this.enabled ? this.objectsChanged() : (this.objectsNeedUpdate = true);
             }),
             this.onObjectsChanged.watch((e) => {
                 e && e.onListChanged.unwatch(this.objectsChanged_bound), this.objects && this.objects.onListChanged.watch(this.objectsChanged_bound), this.objectsChanged_bound();
             }),
             (this.selection = new PZ.objectList()),
             (this.options = {
-                skipTopParent: !1,
-                childFilter: () => !0,
-                skipSingleChildren: !0,
-                collapseLists: !0,
-                showPropertyControls: !0,
-                showListItemButtons: !0,
-                alwaysShowListItemButtons: !0,
-                hideAllListItemButtons: !1,
+                skipTopParent: false,
+                childFilter: () => true,
+                skipSingleChildren: true,
+                collapseLists: true,
+                showPropertyControls: true,
+                showListItemButtons: true,
+                alwaysShowListItemButtons: true,
+                hideAllListItemButtons: false,
                 columnLayout: 0,
                 defaultColumnWidth: void 0,
                 emptyMessage: "select an object",
-                objectFilter: (e) => !0,
+                objectFilter: (e) => true,
                 objectMap: (e) => e,
                 objectLimit: 10,
-                hideAnimateToggle: !1,
-                selectionFilter: (e) => !0,
+                hideAnimateToggle: false,
+                selectionFilter: (e) => true,
             }),
             Object.assign(this.options, t),
             (this.el.style.overflow = "auto"),
@@ -1217,7 +1299,7 @@ const PZ_ICONS = "pz.icons29.svg";
             s.style = "height: 100%; display: grid; grid-template-rows: min-content min-content auto;";
             let n = PZ.ui.objectTypes.get(e.type),
                 r = {
-                    shouldSort: !0,
+                    shouldSort: true,
                     threshold: 0.45,
                     maxPatternLength: 32,
                     minMatchCharLength: 1,
@@ -1260,11 +1342,11 @@ const PZ_ICONS = "pz.icons29.svg";
                             i.classList.remove("active"),
                             "LI" !== (i = i.previousElementSibling || t.lastElementChild).tagName && (i = i.previousElementSibling || t.lastElementChild),
                             i.classList.add("active"),
-                            i.scrollIntoViewIfNeeded(!1);
+                            i.scrollIntoViewIfNeeded(false);
                     } else if ("ArrowDown" === e.key) {
                         e.preventDefault();
                         let i = t.querySelector(".active");
-                        i || (i = t.lastElementChild), i.classList.remove("active"), "LI" !== (i = i.nextElementSibling || t.firstElementChild).tagName && (i = i.nextElementSibling), i.classList.add("active"), i.scrollIntoViewIfNeeded(!1);
+                        i || (i = t.lastElementChild), i.classList.remove("active"), "LI" !== (i = i.nextElementSibling || t.firstElementChild).tagName && (i = i.nextElementSibling), i.classList.add("active"), i.scrollIntoViewIfNeeded(false);
                     } else if ("Escape" === e.key) h.click();
                     else {
                         if ("Enter" !== e.key) return;
@@ -1311,7 +1393,7 @@ const PZ_ICONS = "pz.icons29.svg";
                     for (var e = 0; e < n.length; e++) {
                         let t,
                             i = n[e];
-                        (t = !0 === i.category ? p.appendChild(u(i)) : p.appendChild(d(i))), o.set(i, t);
+                        (t = true === i.category ? p.appendChild(u(i)) : p.appendChild(d(i))), o.set(i, t);
                     }
                 };
             m(), this.el.appendChild(s), c.focus(), t.stopPropagation();
@@ -1353,10 +1435,10 @@ const PZ_ICONS = "pz.icons29.svg";
                 (i.pz_controls = s),
                 (i.pz_listChanged = () => {
                     for (; i.children.length; ) this.unloadListItem(i.children[0]);
-                    for (let e of t) !1 !== e.definition.visible && !1 !== e.visible && this.generateListItem(i, e);
+                    for (let e of t) false !== e.definition.visible && false !== e.visible && this.generateListItem(i, e);
                 }),
                 (i.pz_object = t),
-                t.onListChanged.watch(i.pz_listChanged, !0),
+                t.onListChanged.watch(i.pz_listChanged, true),
                 e.parentElement.insertBefore(i, e.nextElementSibling);
         },
         generateButton: function (e) {
@@ -1412,7 +1494,7 @@ const PZ_ICONS = "pz.icons29.svg";
                         }),
                         i.insertBefore(e, s);
                 } else if (t instanceof PZ.objectList) {
-                    if (PZ.ui.objectTypes.has(t.type) && t.parent instanceof PZ.property == !1) {
+                    if (PZ.ui.objectTypes.has(t.type) && t.parent instanceof PZ.property == false) {
                         let e = t instanceof PZ.objectSingleton ? "change" : "add",
                             n = this.generateButton(e);
                         (n.title = e), (n.onclick = this.generateAdd.bind(this, t)), i.insertBefore(n, s);
@@ -1445,7 +1527,7 @@ const PZ_ICONS = "pz.icons29.svg";
         generateListItem: function (e, t, i) {
             let s = document.createElement("li");
             s.style.gridTemplateColumns = this.columnTemplate;
-            let n = !0;
+            let n = true;
             s.pz_object = t;
             let r = document.createElement("div");
             r.style.paddingLeft = e.pz_paddingLevel + "px";
@@ -1462,7 +1544,7 @@ const PZ_ICONS = "pz.icons29.svg";
                     ((s.pz_renamed = () => {
                         (a.innerText = t.properties.name.get()), (a.title = a.innerText);
                     }),
-                    t.properties.name.onChanged.watch(s.pz_renamed, !0),
+                    t.properties.name.onChanged.watch(s.pz_renamed, true),
                     t.properties.name.definition.readOnly || (s.oncontextmenu = this.renameClick.bind(this))),
                 t instanceof PZ.property &&
                     (t.definition.name && ((a.innerText = t.definition.name), (a.title = a.innerText)),
@@ -1483,11 +1565,11 @@ const PZ_ICONS = "pz.icons29.svg";
             if (t instanceof PZ.propertyList) (a.innerText = "Properties"), (a.title = a.innerText), this.generatePropertyList(s, t);
             else if (t instanceof PZ.objectList) (a.innerText = t.name), (a.title = a.innerText), this.generateObjectList(s, t);
             else {
-                let e = (t.children || []).filter(this.options.childFilter).filter((e) => !1 !== e.visible);
+                let e = (t.children || []).filter(this.options.childFilter).filter((e) => false !== e.visible);
                 1 !== e.length || !this.options.skipSingleChildren || e[0] instanceof PZ.object
                     ? e.length > 0
                         ? this.generateChildrenList(s, e)
-                        : (n = !1)
+                        : (n = false)
                     : (e[0] instanceof PZ.objectList ? this.generateObjectList(s, e[0]) : this.generatePropertyList(s, e[0]), this.generateItemCommands(s, e[0]));
             }
             if (n) {
@@ -1616,7 +1698,7 @@ const PZ_ICONS = "pz.icons29.svg";
             for (let i = 0; i < e.children.length; i++) {
                 let s = e.children[i],
                     n = s.pz_object;
-                if (n instanceof PZ.property.dynamic == !1) continue;
+                if (n instanceof PZ.property.dynamic == false) continue;
                 let r = t - n.frameOffset;
                 (s.getElementsByClassName("editbox")[0].pz_update(r), n.animated) && s.children[1].children[0].pz_update(r);
             }
@@ -1648,18 +1730,18 @@ const PZ_ICONS = "pz.icons29.svg";
             this.ctx.setColumnTemplate(i);
         },
         itemDragStart: function (e) {
-            if (((this.item = e.currentTarget), e.currentTarget !== e.srcElement && e.currentTarget !== e.srcElement.parentElement)) return !1;
-            if ((this.ctx.el.focus(), this.item.classList.contains("toplevel"))) return !1;
-            if (this.item.classList.contains("selected")) this.originalState = !0;
+            if (((this.item = e.currentTarget), e.currentTarget !== e.srcElement && e.currentTarget !== e.srcElement.parentElement)) return false;
+            if ((this.ctx.el.focus(), this.item.classList.contains("toplevel"))) return false;
+            if (this.item.classList.contains("selected")) this.originalState = true;
             else {
-                this.originalState = !1;
+                this.originalState = false;
                 let t = this.ctx.el.getElementsByClassName("selected")[0];
                 (e.shiftKey && t && t.pz_object.baseTypeString !== this.item.pz_object.baseTypeString) ||
                     (this.ctx.options.selectionFilter(this.item.pz_object) && (e.shiftKey || this.ctx.deselectItems(), this.item.classList.add("selected")));
             }
             (this.startPt = e.pageY),
                 (this.origin = this.ctx.el.getBoundingClientRect().top),
-                (this.moved = !1),
+                (this.moved = false),
                 this.ctx.columnAdjust && (this.ctx.columnAdjust.style.pointerEvents = "none"),
                 (this.indicatorEl = document.createElement("div")),
                 (this.indicatorEl.style = "background-color:#ffffff;opacity:0.25;width:100%;position:relative;pointer-events:none;");
@@ -1669,18 +1751,18 @@ const PZ_ICONS = "pz.icons29.svg";
         },
         itemDragUpdate: function () {
             if (!this.moved && Math.abs(this.currentPt - this.startPt) < 5) return;
-            (this.moved = !0), this.indicatorEl.remove(), (this.operation = 0);
+            (this.moved = true), this.indicatorEl.remove(), (this.operation = 0);
             let e = 4;
             for (; this.target && "LI" !== this.target.tagName && e-- > 0; ) this.target = this.target.parentElement;
             if (!this.target || !this.target.pz_object || this.target === this.item) return;
-            let t = !1,
-                i = !1;
+            let t = false,
+                i = false;
             if (
                 (this.target.nextElementSibling &&
                     this.target.nextElementSibling.pz_object instanceof PZ.objectList &&
                     this.item.pz_object instanceof this.target.nextElementSibling.pz_object.type &&
-                    ((this.target.nextElementSibling.pz_object instanceof PZ.objectSingleton && 0 !== this.target.nextElementSibling.pz_object.length) || (t = !0)),
-                this.target.parentElement.pz_object instanceof PZ.objectList && this.item.pz_object instanceof this.target.parentElement.pz_object.type && (this.target.parentElement.pz_object instanceof PZ.objectSingleton || (i = !0)),
+                    ((this.target.nextElementSibling.pz_object instanceof PZ.objectSingleton && 0 !== this.target.nextElementSibling.pz_object.length) || (t = true)),
+                this.target.parentElement.pz_object instanceof PZ.objectList && this.item.pz_object instanceof this.target.parentElement.pz_object.type && (this.target.parentElement.pz_object instanceof PZ.objectSingleton || (i = true)),
                 !t && !i)
             )
                 return;
@@ -1715,7 +1797,7 @@ const PZ_ICONS = "pz.icons29.svg";
             if (
                 (this.ctx.columnAdjust && (this.ctx.columnAdjust.style.pointerEvents = ""),
                 this.indicatorEl.remove(),
-                e.shiftKey && !1 === this.moved && !0 === this.originalState && this.item.classList.remove("selected"),
+                e.shiftKey && false === this.moved && true === this.originalState && this.item.classList.remove("selected"),
                 this.ctx.selectItems(),
                 this.target && this.operation)
             ) {
@@ -1803,11 +1885,11 @@ const PZ_ICONS = "pz.icons29.svg";
     (PZ.ui.edit = PZ.ui.edit || {}),
     (PZ.ui.objectTypes = new Map()),
     PZ.ui.objectTypes.set(PZ.effect, [
-        { name: "LAYER", category: !0 },
+        { name: "LAYER", category: true },
         { name: "Color Overlay", desc: "Blends a solid color over opaque areas.", type: "coloroverlay" },
         { name: "Gradient Overlay", desc: "Blends a gradient over opaque areas.", type: "gradientoverlay" },
         { name: "Image Overlay", desc: "Blends an image over opaque areas.", type: "overlay" },
-        { name: "COLOR", category: !0 },
+        { name: "COLOR", category: true },
         { name: "Negative", desc: "Inverts colors.", type: "negative" },
         { name: "Saturation", desc: "Adjust color saturation and create grayscale effects.", type: "grayscale" },
         { name: "Brightness + Contrast", desc: "Adjust image brightness and contrast.", type: "brightnesscontrast" },
@@ -1821,12 +1903,12 @@ const PZ_ICONS = "pz.icons29.svg";
         { name: "Color Shift", desc: "Shift all of the hue values of the image.", type: "hueshift" },
         { name: "Exposure", desc: "Simulates adjusting image exposure.", type: "exposure" },
         { name: "Cube LUT", desc: "Applies a preset Cube LUT file to remap colors.", type: "cubelut" },
-        { name: "ENHANCE", category: !0 },
+        { name: "ENHANCE", category: true },
         { name: "Antialiasing", desc: "Softens jagged, sharp edges.", type: "fxaa" },
         { name: "Bloom", desc: "Adds a glowing effect to bright areas.", type: "bloom" },
         { name: "Anamorphic Lens Flare", desc: "Creates horizontal flares from bright areas.", type: "anamorphicflare" },
         { name: "Edge Detection", desc: "Applies a Sobel filter to emphasize edges.", type: "edgedetection" },
-        { name: "DISTORT", category: !0 },
+        { name: "DISTORT", category: true },
         { name: "RGB Shift", desc: "Shifts color channels apart.", type: "rgbshift" },
         { name: "Fisheye", desc: "Simulates a fisheye lens.", type: "fisheye" },
         { name: "Pulse", desc: "Distorts radially outward in a ripple pattern.", type: "pulse" },
@@ -1842,66 +1924,66 @@ const PZ_ICONS = "pz.icons29.svg";
             type: 0,
             data: {
                 type: 0,
-                properties: { name: "Twitch (beta v1)", enabled: { animated: !1, keyframes: [{ value: 1, frame: 0, tween: 1 }] } },
+                properties: { name: "Twitch (beta v1)", enabled: { animated: false, keyframes: [{ value: 1, frame: 0, tween: 1 }] } },
                 customProperties: [
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "Amount" }, animated: !1, keyframes: [{ value: 0.3, frame: 0, tween: 1 }] },
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "Speed" }, animated: !1, keyframes: [{ value: 2, frame: 0, tween: 1 }] },
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "RGB Shift amount" }, animated: !1, keyframes: [{ value: 24, frame: 0, tween: 1 }] },
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "RGB Shift tendency" }, animated: !1, keyframes: [{ value: 10, frame: 0, tween: 1 }] },
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "Slide amount" }, animated: !1, keyframes: [{ value: 0.5, frame: 0, tween: 1 }] },
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "Slide tendency" }, animated: !1, keyframes: [{ value: 10, frame: 0, tween: 1 }] },
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "Blur amount" }, animated: !1, keyframes: [{ value: 2, frame: 0, tween: 1 }] },
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "Blur tendency" }, animated: !1, keyframes: [{ value: 10, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "Amount" }, animated: false, keyframes: [{ value: 0.3, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "Speed" }, animated: false, keyframes: [{ value: 2, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "RGB Shift amount" }, animated: false, keyframes: [{ value: 24, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "RGB Shift tendency" }, animated: false, keyframes: [{ value: 10, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "Slide amount" }, animated: false, keyframes: [{ value: 0.5, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "Slide tendency" }, animated: false, keyframes: [{ value: 10, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "Blur amount" }, animated: false, keyframes: [{ value: 2, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "Blur tendency" }, animated: false, keyframes: [{ value: 10, frame: 0, tween: 1 }] },
                 ],
                 objects: [
                     {
                         type: "rgbshift",
                         properties: {
                             name: "RGB Shift",
-                            enabled: { animated: !1, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
+                            enabled: { animated: false, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
                             amount: {
-                                animated: !0,
+                                animated: true,
                                 expression: 'var amt = properties["Amount"];\namt *= properties["RGB Shift amount"];\nvar spd = properties["Speed"];\nspd *= properties["RGB Shift tendency"];\namt * shake(time, spd, 1, 0, 2)',
                             },
-                            angle: { animated: !1, keyframes: [{ value: 1.55, frame: 0, tween: 1 }] },
+                            angle: { animated: false, keyframes: [{ value: 1.55, frame: 0, tween: 1 }] },
                         },
                     },
                     {
                         type: "directionalblur",
                         properties: {
                             name: "Directional Blur",
-                            enabled: { animated: !1, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
+                            enabled: { animated: false, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
                             delta: {
-                                animated: !0,
+                                animated: true,
                                 expression: 'var amt = properties["Amount"];\namt *= properties["Blur amount"];\nvar spd = properties["Speed"];\nspd *= properties["Blur tendency"];\namt * shake(time, spd * 10, 1, 0, 2)',
                             },
-                            direction: { animated: !1, keyframes: [{ value: 1.55, frame: 0, tween: 1 }] },
+                            direction: { animated: false, keyframes: [{ value: 1.55, frame: 0, tween: 1 }] },
                         },
                     },
                     {
                         type: "brightnesscontrast",
                         properties: {
                             name: "Brightness + Contrast",
-                            enabled: { animated: !1, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
-                            brightness: { animated: !0, expression: 'var amt = properties["Amount"];\nvar spd = properties["Speed"];\namt * shake(time, spd * 5, 0.1, 1, 1)' },
-                            contrast: { animated: !1, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
+                            enabled: { animated: false, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
+                            brightness: { animated: true, expression: 'var amt = properties["Amount"];\nvar spd = properties["Speed"];\namt * shake(time, spd * 5, 0.1, 1, 1)' },
+                            contrast: { animated: false, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
                         },
                     },
                     {
                         type: "transform",
                         properties: {
                             name: "Transform",
-                            enabled: { animated: !1, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
+                            enabled: { animated: false, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
                             cameraType: 0,
                             cameraPosition: {
-                                animated: !0,
+                                animated: true,
                                 expression:
                                     'var amt = properties["Amount"];\namt *= properties["Slide amount"];\nvar spd = properties["Speed"];\nspd *= properties["Slide tendency"];\nvar slide = amt * shake(time, spd, 50, 0, 2);\n[0,slide,0]',
                             },
-                            cameraRotation: { animated: !1, keyframes: [{ value: [0, 0, 0], frame: 0, tween: 1 }] },
-                            imagePosition: { animated: !1, keyframes: [{ value: [0, 0, 0], frame: 0, tween: 1 }] },
-                            imageRotation: { animated: !1, keyframes: [{ value: [0, 0, 0], frame: 0, tween: 1 }] },
-                            imageScale: { animated: !1, keyframes: [{ value: [1, 1], frame: 0, tween: 1 }] },
+                            cameraRotation: { animated: false, keyframes: [{ value: [0, 0, 0], frame: 0, tween: 1 }] },
+                            imagePosition: { animated: false, keyframes: [{ value: [0, 0, 0], frame: 0, tween: 1 }] },
+                            imageRotation: { animated: false, keyframes: [{ value: [0, 0, 0], frame: 0, tween: 1 }] },
+                            imageScale: { animated: false, keyframes: [{ value: [1, 1], frame: 0, tween: 1 }] },
                         },
                     },
                 ],
@@ -1909,13 +1991,13 @@ const PZ_ICONS = "pz.icons29.svg";
         },
         { name: "Pixel Sort", desc: "Rearranges pixels based on relative brightness.", type: "pixelsort" },
         { name: "Scan Lines", desc: "Simulates scan lines.", type: "scanlines" },
-        { name: "BLUR + SHARPEN", category: !0 },
+        { name: "BLUR + SHARPEN", category: true },
         { name: "Box Blur", desc: "Blurs the image using a fast blur technique.", type: "boxblur" },
         { name: "Gaussian Blur", desc: "Blurs the image using a higher quality blur technique.", type: "gaussianblur" },
         { name: "Radial Blur", desc: "Blurs radially from a specified point.", type: "radialblur" },
         { name: "Directional Blur", desc: "Blurs the image in a single direction.", type: "directionalblur" },
         { name: "Sharpen", desc: "Sharpens the image.", type: "sharpen" },
-        { name: "FRAMING", category: !0 },
+        { name: "FRAMING", category: true },
         { name: "Crop", desc: "Trims the edges of the image.", type: "crop" },
         { name: "Transform", desc: "Applies 3d transformation to the image.", type: "transform" },
         { name: "Mask", desc: "Mask a part of the image to be transparent.", type: "mask" },
@@ -1924,12 +2006,12 @@ const PZ_ICONS = "pz.icons29.svg";
         { name: "Mirror", desc: "Uses reflection to create a symmetrical image.", type: "mirror" },
         { name: "Flip", desc: "Flips the image in the specified directions.", type: "flip" },
         { name: "Shake", desc: "Simulates a shaking camera by transforming the image.", type: "shake" },
-        { name: "MISC", category: !0 },
+        { name: "MISC", category: true },
         { name: "Group", desc: "Meta-effect for object management.", type: 0 },
         { name: "Shader", desc: "Custom shader effect.", type: 1 },
     ]),
     PZ.ui.objectTypes.set(PZ.object3d, [
-        { name: "OBJECTS", category: !0 },
+        { name: "OBJECTS", category: true },
         {
             name: "Shape",
             desc: "Primitive object such as a box or sphere.",
@@ -1949,7 +2031,7 @@ const PZ_ICONS = "pz.icons29.svg";
             name: "Light",
             desc: "Creates light and shadows in a scene.",
             type: 3,
-            hidelist: !0,
+            hidelist: true,
             list: [
                 { name: "Spot light", type: 3, data: { objectType: 1 } },
                 { name: "Point light", type: 3, data: { objectType: 2 } },
@@ -1971,16 +2053,16 @@ const PZ_ICONS = "pz.icons29.svg";
         { name: "Model", desc: "Import an OBJ object file.", type: 5, data: PZ.ui.edit.importOBJ },
     ]),
     PZ.ui.objectTypes.set(PZ.property.dynamic, [
-        { name: "Number", type: { custom: !0, dynamic: !0, type: PZ.property.type.NUMBER } },
+        { name: "Number", type: { custom: true, dynamic: true, type: PZ.property.type.NUMBER } },
         {
             name: "2D Vector",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "X", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "X", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
                 ],
                 type: PZ.property.type.VECTOR2,
             },
@@ -1988,13 +2070,13 @@ const PZ_ICONS = "pz.icons29.svg";
         {
             name: "3D Vector",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "X", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "X", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
                 ],
                 type: PZ.property.type.VECTOR3,
             },
@@ -2002,14 +2084,14 @@ const PZ_ICONS = "pz.icons29.svg";
         {
             name: "4D Vector",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "X", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "W", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "X", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "W", type: PZ.property.type.NUMBER, value: 0 },
                 ],
                 type: PZ.property.type.VECTOR4,
             },
@@ -2017,33 +2099,33 @@ const PZ_ICONS = "pz.icons29.svg";
         {
             name: "Color",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                    { dynamic: !0, name: "G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                    { dynamic: !0, name: "B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                    { dynamic: true, name: "R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                    { dynamic: true, name: "G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                    { dynamic: true, name: "B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
                 ],
                 type: PZ.property.type.COLOR,
             },
         },
     ]),
     PZ.ui.objectTypes.set(PZ.property, [
-        { name: "STATIC", category: !0 },
-        { name: "Number", type: { custom: !0, type: PZ.property.type.NUMBER, value: 0 } },
-        { name: "Image", type: { custom: !0, type: PZ.property.type.ASSET, assetType: PZ.asset.type.IMAGE, accept: "image/*", value: null } },
-        { name: "DYNAMIC", category: !0 },
-        { name: "Number", type: { custom: !0, dynamic: !0, type: PZ.property.type.NUMBER } },
+        { name: "STATIC", category: true },
+        { name: "Number", type: { custom: true, type: PZ.property.type.NUMBER, value: 0 } },
+        { name: "Image", type: { custom: true, type: PZ.property.type.ASSET, assetType: PZ.asset.type.IMAGE, accept: "image/*", value: null } },
+        { name: "DYNAMIC", category: true },
+        { name: "Number", type: { custom: true, dynamic: true, type: PZ.property.type.NUMBER } },
         {
             name: "2D Vector",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "X", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "X", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
                 ],
                 type: PZ.property.type.VECTOR2,
             },
@@ -2051,13 +2133,13 @@ const PZ_ICONS = "pz.icons29.svg";
         {
             name: "3D Vector",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "X", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "X", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
                 ],
                 type: PZ.property.type.VECTOR3,
             },
@@ -2065,14 +2147,14 @@ const PZ_ICONS = "pz.icons29.svg";
         {
             name: "4D Vector",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "X", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "W", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "X", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "W", type: PZ.property.type.NUMBER, value: 0 },
                 ],
                 type: PZ.property.type.VECTOR4,
             },
@@ -2080,13 +2162,13 @@ const PZ_ICONS = "pz.icons29.svg";
         {
             name: "Color",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                    { dynamic: !0, name: "G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                    { dynamic: !0, name: "B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                    { dynamic: true, name: "R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                    { dynamic: true, name: "G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                    { dynamic: true, name: "B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
                 ],
                 type: PZ.property.type.COLOR,
             },
@@ -2099,7 +2181,7 @@ const PZ_ICONS = "pz.icons29.svg";
         { name: "Custom Material", type: "custom" },
     ]),
     PZ.ui.objectTypes.set(PZ.layer, [
-        { name: "LAYERS", category: !0 },
+        { name: "LAYERS", category: true },
         { name: "Image", desc: "Import an image.", type: 3, data: PZ.ui.edit.importImage },
         { name: "Text", desc: "Custom text.", type: 7 },
         { name: "Preset Shape", desc: "Simple preset shapes.", type: 8 },
@@ -2297,7 +2379,7 @@ const PZ_ICONS = "pz.icons29.svg";
         (r.style = "width:35px;height:23px;pointer-events:none"),
             n.appendChild(r),
             (i.pz_set = function (e) {
-                this.pz_update(e << 8, !0);
+                this.pz_update(e << 8, true);
                 let t = this.parentElement.parentElement.parentElement,
                     s = t.pz_object,
                     r = t.parentElement.pz_controls,
@@ -2308,10 +2390,10 @@ const PZ_ICONS = "pz.icons29.svg";
                 r.editor.history.finishOperation();
             }),
             (i.pz_update = function (e, t) {
-                !1 === t ? (this.style.visibility = "hidden") : ((this.pz_value = e >> 8), (this.style.visibility = "visible"), PZ.ui.switchIcon(this.children[0], "interp_" + this.pz_value));
+                false === t ? (this.style.visibility = "hidden") : ((this.pz_value = e >> 8), (this.style.visibility = "visible"), PZ.ui.switchIcon(this.children[0], "interp_" + this.pz_value));
             }),
             (n.pz_set = function (e) {
-                this.pz_update(e, !0);
+                this.pz_update(e, true);
                 let t = this.parentElement.parentElement.parentElement,
                     s = t.pz_object,
                     r = t.parentElement.pz_controls,
@@ -2322,7 +2404,7 @@ const PZ_ICONS = "pz.icons29.svg";
                 r.editor.history.finishOperation();
             }),
             (n.pz_update = function (e, t) {
-                !1 === t ? (this.style.visibility = "hidden") : ((this.pz_value = 255 & e), (this.style.visibility = "visible"), PZ.ui.switchIcon(this.children[0], "ease_" + this.pz_value));
+                false === t ? (this.style.visibility = "hidden") : ((this.pz_value = 255 & e), (this.style.visibility = "visible"), PZ.ui.switchIcon(this.children[0], "ease_" + this.pz_value));
             }),
             e.interpolated || ((i.style.display = "none"), (n.style.display = "none"));
         let a = document.createElement("button");
@@ -2349,17 +2431,17 @@ const PZ_ICONS = "pz.icons29.svg";
                     s = "none",
                     r = "add keyframe",
                     a = -1,
-                    o = !1;
+                    o = false;
                 if (t instanceof PZ.property.dynamic.group)
                     for (let i = 0; i < t.objects.length; i++) {
                         let n = t.objects[i].getKeyframe(e);
                         if (n)
                             if (o) {
                                 if (n.tween !== a) {
-                                    (a = -1), (o = !1);
+                                    (a = -1), (o = false);
                                     break;
                                 }
-                            } else (s = "#ccc"), (r = "delete keyframe"), (a = n.tween), (o = !0);
+                            } else (s = "#ccc"), (r = "delete keyframe"), (a = n.tween), (o = true);
                     }
                 else {
                     let i = t.getKeyframe(e);
@@ -2403,11 +2485,11 @@ const PZ_ICONS = "pz.icons29.svg";
                 s.editor.history.startOperation(), s.propertyOps.setExpression({ property: e.getAddress(), expression: i.value }), s.editor.history.finishOperation();
             }),
             (i.onkeydown = function (e) {
-                return "Enter" != e.key || !e.ctrlKey || (this.blur(), !1);
+                return "Enter" != e.key || !e.ctrlKey || (this.blur(), false);
             }),
             e.onExpressionChanged.watch(() => {
                 e.expression && ((i.value = e.expression.source), e.expression.error ? (a.style.display = "") : (a.style.display = "none"));
-            }, !0),
+            }, true),
             t
         );
     }),
@@ -2659,7 +2741,7 @@ const PZ_ICONS = "pz.icons29.svg";
                 PZ.ui.controls.editStart.call(this, e), e.set(i.value, s), PZ.ui.controls.editFinish.call(this, e);
             }),
             (i.onkeydown = function (e) {
-                return "Enter" != e.key || (this.blur(), !1);
+                return "Enter" != e.key || (this.blur(), false);
             }),
             t.appendChild(i),
             (t.pz_update = function (t) {
@@ -2708,7 +2790,7 @@ const PZ_ICONS = "pz.icons29.svg";
                                 }
                                 s.preventDefault(), s.stopImmediatePropagation();
                             },
-                            { capture: !0, once: !0 }
+                            { capture: true, once: true }
                         );
                 });
             let s = PZ.ui.generateIcon("eyedropper");
@@ -3040,7 +3122,7 @@ const PZ_ICONS = "pz.icons29.svg";
                     e.set.call(t, n.value);
                 }),
                 (n.onkeydown = function (e) {
-                    return "Enter" !== e.key || (this.blur(), !1);
+                    return "Enter" !== e.key || (this.blur(), false);
                 }),
                 i.appendChild(n),
                 (i.pz_update = () => {
@@ -3090,7 +3172,7 @@ const PZ_ICONS = "pz.icons29.svg";
     }),
     (PZ.ui.viewport = function (e, t) {
         PZ.ui.panel.call(this, e),
-            (this.canDuplicate = !0),
+            (this.canDuplicate = true),
             (this.layer = null),
             (this.scene = null),
             (this.lastFrame = -1),
@@ -3102,7 +3184,7 @@ const PZ_ICONS = "pz.icons29.svg";
             (this.objects = null),
             (this.objectsChanged_bound = this.objectsChanged.bind(this)),
             this.onObjectsChanged.watch((e) => {
-                e && e.onListChanged.unwatch(this.objectsChanged_bound), this.objects ? this.objects.onListChanged.watch(this.objectsChanged_bound, !0) : this.objectsChanged();
+                e && e.onListChanged.unwatch(this.objectsChanged_bound), this.objects ? this.objects.onListChanged.watch(this.objectsChanged_bound, true) : this.objectsChanged();
             }),
             (this.options = Object.assign({}, t)),
             this.create(),
@@ -3110,17 +3192,17 @@ const PZ_ICONS = "pz.icons29.svg";
                 ((this.widget2d = new PZ.ui.widget2d(this)),
                 (this.widget3d = new PZ.ui.widget3d(this)),
                 (this.helper3d = new PZ.ui.helper3d(this)),
-                this.editor.onSequenceChanged.watch(this.sequenceChanged.bind(this), !0),
-                PZ.observable.defineObservableProp(this, "edit", "onEditChanged", !0),
-                this.onEditChanged.watch(this.editChanged.bind(this), !0));
+                this.editor.onSequenceChanged.watch(this.sequenceChanged.bind(this), true),
+                PZ.observable.defineObservableProp(this, "edit", "onEditChanged", true),
+                this.onEditChanged.watch(this.editChanged.bind(this), true));
     }),
     (PZ.ui.viewport.prototype.sequenceChanged = function () {
-        (this.sequence = this.editor.sequence), this.sequence && ((this.compositor.sequence = this.sequence), this.sequence.properties.resolution.onChanged.watch(this.resize.bind(this), !0));
+        (this.sequence = this.editor.sequence), this.sequence && ((this.compositor.sequence = this.sequence), this.sequence.properties.resolution.onChanged.watch(this.resize.bind(this), true));
     }),
     (PZ.ui.viewport.prototype.editChanged = function () {
         this.edit && this.scene
-            ? ((this.renderer.autoClear = !0), this.renderer.setClearColor(0, 1), (this.controls.enabled = !0), (this.renderMode = !0))
-            : ((this.renderer.autoClear = !1), (this.controls.enabled = !1), (this.renderMode = !1));
+            ? ((this.renderer.autoClear = true), this.renderer.setClearColor(0, 1), (this.controls.enabled = true), (this.renderMode = true))
+            : ((this.renderer.autoClear = false), (this.controls.enabled = false), (this.renderMode = false));
     }),
     (PZ.ui.viewport.prototype.objectsChanged = function () {
         let e = null,
@@ -3138,9 +3220,9 @@ const PZ_ICONS = "pz.icons29.svg";
     }),
     (PZ.ui.viewport.prototype.initRenderer = function () {
         try {
-            (this.renderer = new THREE.WebGLRenderer({ alpha: !1, canvas: this.canvas })),
+            (this.renderer = new THREE.WebGLRenderer({ alpha: false, canvas: this.canvas })),
                 this.renderer.setClearColor(0, 1),
-                (this.renderer.shadowMap.enabled = !0),
+                (this.renderer.shadowMap.enabled = true),
                 (this.renderer.shadowMap.type = THREE.PCFSoftShadowMap),
                 (this.compositor = new PZ.compositor(this.renderer, this.canvas.width, this.canvas.height));
         } catch (t) {
@@ -3152,7 +3234,7 @@ const PZ_ICONS = "pz.icons29.svg";
                 (e.style = "padding:2%;color:#ccc;background-color:#111;pointer-events: all;"),
                 this.el.appendChild(e),
                 this.canvas.remove(),
-                !1
+                false
             );
         }
         return (
@@ -3165,7 +3247,7 @@ const PZ_ICONS = "pz.icons29.svg";
             (this.grid = new THREE.GridHelper(200, 10, new THREE.Color(13421772), new THREE.Color(3355443))),
             this.grid.layers.set(1),
             this.threeObj.add(this.grid),
-            !0
+            true
         );
     }),
     (PZ.ui.viewport.prototype.keydown = function (e) {
@@ -3190,7 +3272,7 @@ const PZ_ICONS = "pz.icons29.svg";
             this.widget2d.resize();
     }),
     (PZ.ui.viewport.prototype.unload = function () {
-        (this.enabled = !1), this.compositor.unload(), this.renderer.dispose();
+        (this.enabled = false), this.compositor.unload(), this.renderer.dispose();
     }),
     (PZ.ui.viewport.prototype.render = function () {
         this.animFrameReq = requestAnimationFrame(this._renderFn);
@@ -3218,17 +3300,17 @@ const PZ_ICONS = "pz.icons29.svg";
             (this.update = s),
             (this.end = n),
             (this.globalCtx = r),
-            (this.dragging = !1),
-            (this.enableTouch = !0),
-            (this.enableMouse = !0),
-            (this.initialMove = !0),
-            (this.finalUpdate = !0),
+            (this.dragging = false),
+            (this.enableTouch = true),
+            (this.enableMouse = true),
+            (this.initialMove = true),
+            (this.finalUpdate = true),
             (this.startfn_bound = this.startfn.bind(this)),
             this.addElts(e);
     }),
     (PZ.ui.drag.prototype.addElts = function (e) {
         Array.isArray(e) || e instanceof NodeList || (e = [e]);
-        for (var t = 0; t < e.length; t++) this.enableMouse && e[t].addEventListener("mousedown", this.startfn_bound), this.enableTouch && e[t].addEventListener("touchstart", this.startfn_bound, { passive: !1 });
+        for (var t = 0; t < e.length; t++) this.enableMouse && e[t].addEventListener("mousedown", this.startfn_bound), this.enableTouch && e[t].addEventListener("touchstart", this.startfn_bound, { passive: false });
     }),
     (PZ.ui.drag.prototype.convertTouchEvent = function (e) {
         let t = { ctrlKey: e.ctrlKey, shiftKey: e.shiftKey, altKey: e.altKey, metaKey: e.metaKey, target: e.target, currentTarget: e.currentTarget, stopPropagation: () => e.stopPropagation(), preventDefault: () => e.preventDefault() },
@@ -3242,17 +3324,17 @@ const PZ_ICONS = "pz.icons29.svg";
         if (this.dragging) return;
         let t = this.createDragContext();
         if (this.start) {
-            if (!1 === this.start.call(t, e)) return;
+            if (false === this.start.call(t, e)) return;
         }
-        (this.dragging = !0), e.preventDefault(), this.startDragging(t, e);
+        (this.dragging = true), e.preventDefault(), this.startDragging(t, e);
     }),
     (PZ.ui.drag.prototype.startDragging = function (e, t) {
         var i = t.currentTarget.ownerDocument;
-        this.move && ((this.movefn_bound = this.movefn.bind(this, e)), i.addEventListener("mousemove", this.movefn_bound), i.addEventListener("touchmove", this.movefn_bound, { passive: !1 })),
+        this.move && ((this.movefn_bound = this.movefn.bind(this, e)), i.addEventListener("mousemove", this.movefn_bound), i.addEventListener("touchmove", this.movefn_bound, { passive: false })),
             (this.endfn_bound = this.endfn.bind(this, e)),
             i.addEventListener("mouseup", this.endfn_bound),
-            i.addEventListener("touchend", this.endfn_bound, { passive: !1 }),
-            i.addEventListener("touchcancel", this.endfn_bound, { passive: !1 }),
+            i.addEventListener("touchend", this.endfn_bound, { passive: false }),
+            i.addEventListener("touchcancel", this.endfn_bound, { passive: false }),
             i.addEventListener("keydown", this.endfn_bound),
             this.initialMove && this.move.call(e, t),
             this.update && ((this.updatefn_bound = this.updatefn.bind(this, e)), (this.reqId = requestAnimationFrame(this.updatefn_bound)));
@@ -3264,7 +3346,7 @@ const PZ_ICONS = "pz.icons29.svg";
         this.update.call(e), (this.reqId = requestAnimationFrame(this.updatefn_bound));
     }),
     (PZ.ui.drag.prototype.endfn = function (e, t) {
-        (t.type.startsWith("key") && "Escape" !== t.key) || (t.preventDefault(), (this.dragging = !1), this.stopDragging(e, t), this.end && this.end.call(e, t));
+        (t.type.startsWith("key") && "Escape" !== t.key) || (t.preventDefault(), (this.dragging = false), this.stopDragging(e, t), this.end && this.end.call(e, t));
     }),
     (PZ.ui.drag.prototype.stopDragging = function (e, t) {
         var i = t.currentTarget.ownerDocument || t.currentTarget;
@@ -3282,7 +3364,7 @@ const PZ_ICONS = "pz.icons29.svg";
             this.el.classList.add("pzinput"),
             this.el.classList.add("noselect"),
             e.readOnly ? this.el.classList.add("readOnly") : (this.el.setAttribute("tabindex", "0"), this.el.setAttribute("contenteditable", "true")),
-            (this.editing = !1),
+            (this.editing = false),
             (this.initialValue = null),
             (this.value = null),
             (this.editStart = null),
@@ -3300,16 +3382,16 @@ const PZ_ICONS = "pz.icons29.svg";
             this.el.addEventListener("keydown", this.keydown.bind(this));
     }),
     (PZ.ui.input.prototype.focus = function () {
-        (this.editing = !0),
+        (this.editing = true),
             (this.initialValue = parseFloat(this.el.innerText)),
             this.el.classList.add("edit"),
             this.el.classList.remove("noselect"),
-            document.execCommand("selectAll", !1, null),
+            document.execCommand("selectAll", false, null),
             this.editStart.call(this.el, this.noLink),
             delete this.noLink;
     }),
     (PZ.ui.input.prototype.blur = function () {
-        (this.editing = !1), this.el.classList.remove("edit"), this.el.classList.add("noselect"), window.getSelection().removeAllRanges();
+        (this.editing = false), this.el.classList.remove("edit"), this.el.classList.add("noselect"), window.getSelection().removeAllRanges();
         let e = parseFloat(this.el.innerText);
         this.setValue(Number.isNaN(e) ? this.initialValue : e), this.editFinish.call(this.el, this.value === this.initialValue);
     }),
@@ -3328,11 +3410,11 @@ const PZ_ICONS = "pz.icons29.svg";
         } else if ("PageDown" === e.key) {
             let e = parseFloat(this.el.innerText);
             this.setValue(e - 10 * this.step);
-        } else if ("ArrowLeft" !== e.key && "ArrowRight" !== e.key) return !0;
-        return !1;
+        } else if ("ArrowLeft" !== e.key && "ArrowRight" !== e.key) return true;
+        return false;
     }),
     (PZ.ui.input.prototype.dragStart = function (e) {
-        if (this.ctx.editing) return !1;
+        if (this.ctx.editing) return false;
         document.activeElement.blur(), this.ctx.editStart.call(this.ctx.el, e.altKey);
         let t = this.ctx.el.getBoundingClientRect();
         (this.origin = { x: t.left, y: t.top }),
@@ -3340,7 +3422,7 @@ const PZ_ICONS = "pz.icons29.svg";
             (this.startPt = { x: this.currentPt.x, y: this.currentPt.y }),
             (this.shiftKey = e.shiftKey),
             (this.ctrlKey = e.ctrlKey),
-            (this.moved = !1),
+            (this.moved = false),
             (this.initialValue = parseFloat(this.ctx.el.innerText)),
             (this.value = this.initialValue),
             (document.body.style.cursor = "move");
@@ -3352,11 +3434,11 @@ const PZ_ICONS = "pz.icons29.svg";
         let e = this.currentPt.x - this.startPt.x - (this.currentPt.y - this.startPt.y);
         (this.startPt.x = this.currentPt.x),
             (this.startPt.y = this.currentPt.y),
-            Math.abs(e) > 2 && (this.moved = !0),
+            Math.abs(e) > 2 && (this.moved = true),
             this.moved && ((this.value += e * this.ctx.step * 0.01 * (this.shiftKey ? 10 : 1) * (this.ctrlKey ? 0.1 : 1)), this.ctx.setValue(this.value));
     }),
     (PZ.ui.input.prototype.dragEnd = function (e) {
-        this.ctx.editFinish.call(this.ctx.el, !this.moved || this.value === this.initialValue), !1 === this.moved && ((this.ctx.noLink = e.altKey), this.ctx.el.focus()), (document.body.style.cursor = "");
+        this.ctx.editFinish.call(this.ctx.el, !this.moved || this.value === this.initialValue), false === this.moved && ((this.ctx.noLink = e.altKey), this.ctx.el.focus()), (document.body.style.cursor = "");
     }),
     (PZ.ui.input.prototype.update = function (e, t) {
         (this.editing && !t) || ((this.value = e), (this.el.innerText = e.toFixed(this.decimals)));
@@ -3366,7 +3448,7 @@ const PZ_ICONS = "pz.icons29.svg";
         return (e = Math.round(e * t) / t);
     }),
     (PZ.ui.input.prototype.set = function (e) {
-        (e = Math.min(this.max, Math.max(this.min, e))), (e = this.precisionRound(e)), this.update(e, !0);
+        (e = Math.min(this.max, Math.max(this.min, e))), (e = this.precisionRound(e)), this.update(e, true);
     }),
     (PZ.ui.input.prototype.setValue = function (e) {
         let t = this.value;
@@ -3378,8 +3460,8 @@ const PZ_ICONS = "pz.icons29.svg";
             (this.el.title = "color"),
             (this.el.style = "width: 30px; height: 20px; display: inline-block;"),
             e.readOnly && this.el.setAttribute("disabled", "true"),
-            (this.editing = !1),
-            (this.alpha = !1),
+            (this.editing = false),
+            (this.alpha = false),
             (this.initialValue = null),
             (this.value = null),
             (this.editStart = null),
@@ -3586,7 +3668,7 @@ const PZ_ICONS = "pz.icons29.svg";
             this.alpha ? ((this.value.length = 4), (this.value[3] = "number" == typeof this.value[3] ? this.value[3] : 1)) : (this.value.length = 3),
             this.picker.pz_update(this.value),
             (this.initialValue = this.value.slice()),
-            (this.editing = !0),
+            (this.editing = true),
             this.editStart.call(this.el),
             this.el.removeEventListener("click", this.el.pz_click),
             document.body.appendChild(this.picker),
@@ -3594,7 +3676,7 @@ const PZ_ICONS = "pz.icons29.svg";
             this.picker.focus();
     }),
     (PZ.ui.colorPicker.prototype.close = function (e) {
-        if (((this.editing = !1), this.picker.removeEventListener("focusout", this.picker.pz_focusout), this.picker.remove(), (this.picker = null), this.el.addEventListener("click", this.el.pz_click), this.el.focus(), e))
+        if (((this.editing = false), this.picker.removeEventListener("focusout", this.picker.pz_focusout), this.picker.remove(), (this.picker = null), this.el.addEventListener("click", this.el.pz_click), this.el.focus(), e))
             this.setValue(this.initialValue);
         else {
             PZ.ui.colorPicker.recentColors.stack.find((e) => e.every((e, t) => this.value[t] === e)) || PZ.ui.colorPicker.recentColors.push(this.value.slice());
@@ -3624,7 +3706,7 @@ const PZ_ICONS = "pz.icons29.svg";
     }),
     (PZ.ui.colorPicker.prototype.setValue = function (e) {
         let t = this.value;
-        this.update(e, !0), this.changed && this.changed(e, t);
+        this.update(e, true), this.changed && this.changed(e, t);
     }),
     (PZ.ui.colorPicker.recentColors = new PZ.fixedStack(36));
 for (let e = 0; e < 12; e++) {
@@ -3647,7 +3729,7 @@ for (let e = 17; e >= 0; e--) {
         let i = document.createElement("div");
         (i.style = "width: 100%; height: 15px; margin-top: 5px; position: relative;"),
             this.el.appendChild(i),
-            (this.editing = !1),
+            (this.editing = false),
             (this.initialValue = null),
             (this.editStart = null),
             (this.editFinish = null),
@@ -3674,16 +3756,16 @@ for (let e = 17; e >= 0; e--) {
                         0 !== s && r.setAttribute("tabindex", "-1");
                     let a = this.styleToColor(n.color);
                     r.addEventListener("click", (e) => {
-                        r.pz_ignoreClick && ((r.pz_ignoreClick = !1), e.stopImmediatePropagation());
+                        r.pz_ignoreClick && ((r.pz_ignoreClick = false), e.stopImmediatePropagation());
                     }),
                         new PZ.ui.colorPicker({
                             el: r,
-                            alpha: !0,
+                            alpha: true,
                             editStart: () => {
-                                (this.editing = !0), this.editStart.call(this.el);
+                                (this.editing = true), this.editStart.call(this.el);
                             },
                             editFinish: () => {
-                                this.editFinish.call(this.el), (this.editing = !1);
+                                this.editFinish.call(this.el), (this.editing = false);
                             },
                             changed: (e) => {
                                 (n.color = "rgba(" + 255 * e[0] + ", " + 255 * e[1] + ", " + 255 * e[2] + ", " + e[3] + ")"), this.changed && this.changed(this.value), t.pz_update(this.value);
@@ -3756,13 +3838,13 @@ for (let e = 17; e >= 0; e--) {
             (this.origin = this.control.getBoundingClientRect()),
             (this.startPt = e.pageX),
             (this.currentPt = 0),
-            (this.moved = !1),
+            (this.moved = false),
             (this.initialValue = this.pt.position),
             this.el.focus(),
             Array.from(this.control.children).forEach((e) => e.setAttribute("tabindex", "-1")),
             this.el.removeAttribute("tabindex"),
-            (this.el.pz_ignoreClick = !1),
-            (this.ctx.editing = !0),
+            (this.el.pz_ignoreClick = false),
+            (this.ctx.editing = true),
             this.ctx.editStart.call(this.ctx.el);
     }
     ptDrag(e) {
@@ -3771,7 +3853,7 @@ for (let e = 17; e >= 0; e--) {
     ptDragUpdate() {
         let e = this.initialValue + (this.currentPt - this.startPt) / this.origin.width;
         (e = Math.min(Math.max(e, 0), 1)),
-            Math.abs(this.currentPt - this.startPt) > 2 && (this.moved = !0),
+            Math.abs(this.currentPt - this.startPt) > 2 && (this.moved = true),
             this.moved &&
                 ((this.pt.position = e),
                 (this.el.style.left = 100 * e + "%"),
@@ -3780,7 +3862,7 @@ for (let e = 17; e >= 0; e--) {
                 this.ctx.el.firstElementChild.pz_update(this.ctx.value));
     }
     ptDragEnd(e) {
-        this.ctx.editFinish.call(this.ctx.el, !this.moved), (this.ctx.editing = !1), this.moved && ((this.el.pz_ignoreClick = !0), this.ctx.el.pz_update());
+        this.ctx.editFinish.call(this.ctx.el, !this.moved), (this.ctx.editing = false), this.moved && ((this.el.pz_ignoreClick = true), this.ctx.el.pz_update());
     }
     update(e, t) {
         (this.editing && !t) || ((this.value = e), this.el.pz_update());
@@ -3794,7 +3876,7 @@ for (let e = 17; e >= 0; e--) {
             let i = document.createElement("div");
             (i.style = "width: 100%; height: 15px; margin-top: 5px; position: relative;"),
                 this.el.appendChild(i),
-                (this.editing = !1),
+                (this.editing = false),
                 (this.initialValue = null),
                 (this.editStart = null),
                 (this.editFinish = null),
@@ -3821,16 +3903,16 @@ for (let e = 17; e >= 0; e--) {
                             0 !== s && r.setAttribute("tabindex", "-1");
                         let a = this.styleToColor(n.color);
                         r.addEventListener("click", (e) => {
-                            r.pz_ignoreClick && ((r.pz_ignoreClick = !1), e.stopImmediatePropagation());
+                            r.pz_ignoreClick && ((r.pz_ignoreClick = false), e.stopImmediatePropagation());
                         }),
                             new PZ.ui.colorPicker({
                                 el: r,
-                                alpha: !0,
+                                alpha: true,
                                 editStart: () => {
-                                    (this.editing = !0), this.editStart.call(this.el);
+                                    (this.editing = true), this.editStart.call(this.el);
                                 },
                                 editFinish: () => {
-                                    this.editFinish.call(this.el), (this.editing = !1);
+                                    this.editFinish.call(this.el), (this.editing = false);
                                 },
                                 changed: (e) => {
                                     (n.color = "rgba(" + 255 * e[0] + ", " + 255 * e[1] + ", " + 255 * e[2] + ", " + e[3] + ")"), this.changed && this.changed(this.value), t.pz_update(this.value);
@@ -3903,13 +3985,13 @@ for (let e = 17; e >= 0; e--) {
                 (this.origin = this.control.getBoundingClientRect()),
                 (this.startPt = e.pageX),
                 (this.currentPt = 0),
-                (this.moved = !1),
+                (this.moved = false),
                 (this.initialValue = this.pt.position),
                 this.el.focus(),
                 Array.from(this.control.children).forEach((e) => e.setAttribute("tabindex", "-1")),
                 this.el.removeAttribute("tabindex"),
-                (this.el.pz_ignoreClick = !1),
-                (this.ctx.editing = !0),
+                (this.el.pz_ignoreClick = false),
+                (this.ctx.editing = true),
                 this.ctx.editStart.call(this.ctx.el);
         }
         ptDrag(e) {
@@ -3918,7 +4000,7 @@ for (let e = 17; e >= 0; e--) {
         ptDragUpdate() {
             let e = this.initialValue + (this.currentPt - this.startPt) / this.origin.width;
             (e = Math.min(Math.max(e, 0), 1)),
-                Math.abs(this.currentPt - this.startPt) > 2 && (this.moved = !0),
+                Math.abs(this.currentPt - this.startPt) > 2 && (this.moved = true),
                 this.moved &&
                     ((this.pt.position = e),
                     (this.el.style.left = 100 * e + "%"),
@@ -3927,7 +4009,7 @@ for (let e = 17; e >= 0; e--) {
                     this.ctx.el.firstElementChild.pz_update(this.ctx.value));
         }
         ptDragEnd(e) {
-            this.ctx.editFinish.call(this.ctx.el, !this.moved), (this.ctx.editing = !1), this.moved && ((this.el.pz_ignoreClick = !0), this.ctx.el.pz_update());
+            this.ctx.editFinish.call(this.ctx.el, !this.moved), (this.ctx.editing = false), this.moved && ((this.el.pz_ignoreClick = true), this.ctx.el.pz_update());
         }
         update(e, t) {
             (this.editing && !t) || ((this.value = e), this.el.pz_update());
@@ -3943,7 +4025,7 @@ for (let e = 17; e >= 0; e--) {
         this.fn(this.params);
     }),
     (PZ.ui.history.prototype.projectChanged = function () {
-        (this.project = this.editor.project), (this.undoStack = new PZ.fixedStack(100)), (this.redoStack = new PZ.fixedStack(100)), (this.operation = null), (this.isUndoOperation = !1);
+        (this.project = this.editor.project), (this.undoStack = new PZ.fixedStack(100)), (this.redoStack = new PZ.fixedStack(100)), (this.operation = null), (this.isUndoOperation = false);
     }),
     (PZ.ui.history.prototype.startOperation = function () {
         this.operation = [];
@@ -3960,7 +4042,7 @@ for (let e = 17; e >= 0; e--) {
     }),
     (PZ.ui.history.prototype.finishOperation = function (e) {
         this.operation.length
-            ? (!0 === e ? this.redoStack.push(this.operation) : (this.undoStack.push(this.operation), this.redoStack.length && !1 !== e && this.redoStack.clear()), (this.operation = null), this.project.ui.onChanged.update())
+            ? (true === e ? this.redoStack.push(this.operation) : (this.undoStack.push(this.operation), this.redoStack.length && false !== e && this.redoStack.clear()), (this.operation = null), this.project.ui.onChanged.update())
             : (this.operation = null);
     }),
     (PZ.ui.history.prototype.undo = function () {
@@ -3968,7 +4050,7 @@ for (let e = 17; e >= 0; e--) {
             var e = this.undoStack.pop();
             this.startOperation();
             for (var t = e.length - 1; t >= 0; t--) e[t].execute();
-            this.finishOperation(!0);
+            this.finishOperation(true);
         }
     }),
     (PZ.ui.history.prototype.redo = function () {
@@ -3976,7 +4058,7 @@ for (let e = 17; e >= 0; e--) {
             var e = this.redoStack.pop();
             this.startOperation();
             for (var t = e.length - 1; t >= 0; t--) e[t].execute();
-            this.finishOperation(!1);
+            this.finishOperation(false);
         }
     }),
     (PZ.ui.recovery = function (e) {
@@ -3987,7 +4069,7 @@ for (let e = 17; e >= 0; e--) {
         if (e) return JSON.parse(e);
     }),
     (PZ.ui.recovery.prototype.projectChanged = function () {
-        this.cleanUp(), (this.project = this.editor.project), this.project && this.project.ui.onChanged.watch(this.projectModified.bind(this), !0);
+        this.cleanUp(), (this.project = this.editor.project), this.project && this.project.ui.onChanged.watch(this.projectModified.bind(this), true);
     }),
     (PZ.ui.recovery.prototype.projectModified = function () {
         this.backUp();
@@ -4045,18 +4127,18 @@ for (let e = 17; e >= 0; e--) {
                 },
             }),
             (this._updateFn = this.update.bind(this)),
-            (this._enabled = !1),
+            (this._enabled = false),
             PZ.observable.defineObservableProp(this, "speed", "onSpeedChanged"),
             (this.speed = 0),
             PZ.observable.defineObservableProp(this, "loop", "onLoopChanged"),
-            (this.loop = !1),
+            (this.loop = false),
             (this._sequence = null),
             (this._currentFrame = 0),
             (this._exactFrame = 0),
             (this._speed = 0),
             (this.lastFrame = 0),
             (this.syncSchedule = null),
-            this.editor.onSequenceChanged.watch(this.sequenceChanged.bind(this), !0);
+            this.editor.onSequenceChanged.watch(this.sequenceChanged.bind(this), true);
     }),
     (PZ.ui.playback.prototype.sequenceChanged = function () {
         if (((this._sequence = this.editor.sequence), (this.speed = 0), (this.currentFrame = 0), this._sequence)) {
@@ -4082,12 +4164,12 @@ for (let e = 17; e >= 0; e--) {
     (PZ.ui.playback.prototype.updateSchedule = function (e, t) {
         let i = this.frameRate;
         if (e.currentItem) {
-            if ((e.texture && e.el.readyState === e.el.HAVE_ENOUGH_DATA && (e.texture.needsUpdate = !0), e.el)) {
+            if ((e.texture && e.el.readyState === e.el.HAVE_ENOUGH_DATA && (e.texture.needsUpdate = true), e.el)) {
                 var s = this._exactFrame - e.currentItem.start,
                     n = e.currentItem.clip.properties.time.get(s);
                 if (s < 0)
                     return (
-                        e.playing && (e.el.pause(), (e.playing = !1), this.syncSchedule === e && (this.syncSchedule = null)), void (e.el.readyState === e.el.HAVE_ENOUGH_DATA && (e.el.currentTime = e.currentItem.clip.properties.time.get(0)))
+                        e.playing && (e.el.pause(), (e.playing = false), this.syncSchedule === e && (this.syncSchedule = null)), void (e.el.readyState === e.el.HAVE_ENOUGH_DATA && (e.el.currentTime = e.currentItem.clip.properties.time.get(0)))
                     );
                 if (t > 0) {
                     if (e.sourceNode) {
@@ -4105,10 +4187,10 @@ for (let e = 17; e >= 0; e--) {
                             Math.abs(e.el.playbackRate - l) > 0.01 && (e.el.playbackRate = l), (e.el.muted = !(e.el instanceof Audio));
                         } else (e.el.currentTime = a), (e.el.muted = e.el instanceof Audio);
                         e.oldTimeDiff = r;
-                    } else e.el.play(), (e.playing = !0), (e.oldTimeDiff = 0), null === this.syncSchedule && (this.syncSchedule = e);
-                } else e.playing ? (e.el.pause(), (e.playing = !1), this.syncSchedule === e && (this.syncSchedule = null)) : e.el.readyState === e.el.HAVE_ENOUGH_DATA && (e.el.currentTime = n);
+                    } else e.el.play(), (e.playing = true), (e.oldTimeDiff = 0), null === this.syncSchedule && (this.syncSchedule = e);
+                } else e.playing ? (e.el.pause(), (e.playing = false), this.syncSchedule === e && (this.syncSchedule = null)) : e.el.readyState === e.el.HAVE_ENOUGH_DATA && (e.el.currentTime = n);
             }
-        } else e.el && e.playing && (e.el.pause(), (e.playing = !1)), this.syncSchedule === e && (this.syncSchedule = null);
+        } else e.el && e.playing && (e.el.pause(), (e.playing = false)), this.syncSchedule === e && (this.syncSchedule = null);
     }),
     (PZ.ui.playback.prototype.update = function (e) {
         this.animFrameReq = requestAnimationFrame(this._updateFn);
@@ -4146,7 +4228,7 @@ for (let e = 17; e >= 0; e--) {
                     let s = { property: t, frame: e.keyframes[i].frame };
                     this.deleteKeyframe(s);
                 }
-                let i = { property: t, animated: !1 };
+                let i = { property: t, animated: false };
                 this.setAnimated(i);
             }
             let i = { property: t, oldFrame: e.keyframes[0].frame, newFrame: 0 };
@@ -4340,7 +4422,7 @@ for (let e = 17; e >= 0; e--) {
                 (this.id = 0),
                 (this.lists = []),
                 (this.onResized = new PZ.observable()),
-                (this.options = { showProjectMedia: !0 }),
+                (this.options = { showProjectMedia: true }),
                 Object.assign(this.options, t),
                 (this.el.style.overflowY = "auto"),
                 this.create();
@@ -4502,7 +4584,7 @@ for (let e = 17; e >= 0; e--) {
             e.el.appendChild(this.el);
     }),
     (PZ.ui.media.list.prototype.mouseWheel = function (e) {
-        !0 === e.ctrlKey && (e.deltaY < 0 ? (this.pz_zoom += 5) : e.deltaY > 0 && (this.pz_zoom -= 5), (this.style.gridTemplateColumns = "repeat(auto-fill, " + this.pz_zoom + "px)"), e.preventDefault());
+        true === e.ctrlKey && (e.deltaY < 0 ? (this.pz_zoom += 5) : e.deltaY > 0 && (this.pz_zoom -= 5), (this.style.gridTemplateColumns = "repeat(auto-fill, " + this.pz_zoom + "px)"), e.preventDefault());
     }),
     (PZ.ui.media.list.prototype.createItem = function (e) {
         e || (e = "div");
@@ -4517,7 +4599,7 @@ for (let e = 17; e >= 0; e--) {
         (this.title = new PZ.ui.media.title(e)), (this.title.nameEl.innerText = "Missing assets"), e.el.appendChild(this.title.el);
         let t = PZ.ui.media.list.missing.prototype.locateFiles.bind(this);
         this.title.createButton("Locate", "project", () => {
-            this.editor.showFilePicker(t, "", !0);
+            this.editor.showFilePicker(t, "", true);
         }),
             PZ.ui.media.list.call(this, e),
             (this.el.style.gridTemplateColumns = "repeat(auto-fill, 100%)"),
@@ -4525,7 +4607,7 @@ for (let e = 17; e >= 0; e--) {
             (this.assets = null),
             (this.searchQuery = ""),
             (this.searchTimeout = null),
-            this.editor.onProjectChanged.watch(this.projectChanged.bind(this), !0);
+            this.editor.onProjectChanged.watch(this.projectChanged.bind(this), true);
     }),
     (PZ.ui.media.list.missing.prototype.locateFiles = async function (e) {
         let t = e.currentTarget.files;
@@ -4568,7 +4650,7 @@ for (let e = 17; e >= 0; e--) {
             s = t.children[1];
         var n = document.createElement("img");
         return (
-            n.setAttribute("draggable", !1),
+            n.setAttribute("draggable", false),
             (n.src = PZ.blobOrigin + "/creation-thumbnails/" + e.creationId + ".jpg"),
             (n.title = e.title),
             (n.style.width = "100%"),
@@ -4609,10 +4691,10 @@ for (let e = 17; e >= 0; e--) {
         (this.title = new PZ.ui.media.title(e)), (this.title.nameEl.innerText = "Project media"), e.el.appendChild(this.title.el);
         let t = PZ.ui.media.list.project.prototype.importFiles.bind(this);
         this.title.createButton("Import", "add", () => {
-            this.editor.showFilePicker(t, "video/*,audio/*,image/*,.pz", !0);
+            this.editor.showFilePicker(t, "video/*,audio/*,image/*,.pz", true);
         }),
             PZ.ui.media.list.call(this, e),
-            this.editor.onProjectChanged.watch(this.projectChanged.bind(this), !0),
+            this.editor.onProjectChanged.watch(this.projectChanged.bind(this), true),
             (this.searchTimeout = null),
             this.el.setAttribute("tabindex", "-1"),
             (this.el.ondragover = this.dragOver.bind(this)),
@@ -4621,7 +4703,7 @@ for (let e = 17; e >= 0; e--) {
             (this.el.onclick = this.click.bind(this)),
             (this.drag = {}),
             (this.touchDrag = new PZ.ui.drag([], this.touchDragStart, this.touchDrag, this.touchDragUpdate, this.touchDragEnd, this)),
-            (this.touchDrag.enableMouse = !1);
+            (this.touchDrag.enableMouse = false);
     }),
     (PZ.ui.media.list.project.prototype.projectChanged = function () {
         let e = this.editor.project;
@@ -4668,7 +4750,7 @@ for (let e = 17; e >= 0; e--) {
                     s.appendChild(PZ.ui.generateIcon(t));
                 }
                 t.list.push({ title: e.properties.name.get(), el: i }), (i.pz_object = e), i.setAttribute("draggable", "true");
-            }, !0),
+            }, true),
             i
         );
     }),
@@ -4735,11 +4817,11 @@ for (let e = 17; e >= 0; e--) {
     }),
     (PZ.ui.media.list.project.prototype.mouseDown = function (e) {
         var t = e.currentTarget;
-        this.el.focus(), t.classList.contains("selected") ? (this.drag.originalState = !0) : ((this.drag.originalState = !1), e.shiftKey || this.deselectAll(), t.classList.add("selected"));
+        this.el.focus(), t.classList.contains("selected") ? (this.drag.originalState = true) : ((this.drag.originalState = false), e.shiftKey || this.deselectAll(), t.classList.add("selected"));
     }),
     (PZ.ui.media.list.project.prototype.mouseUp = function (e) {
         var t = e.currentTarget;
-        e.shiftKey && !0 === this.drag.originalState && t.classList.remove("selected");
+        e.shiftKey && true === this.drag.originalState && t.classList.remove("selected");
     }),
     (PZ.ui.media.list.project.prototype.dragStart = function (e) {
         this.editor.draggingData = [];
@@ -4761,7 +4843,7 @@ for (let e = 17; e >= 0; e--) {
     (PZ.ui.media.list.project.prototype.deleteMedia = function (e) {
         for (var t = 0; t < e.length; t++) {
             var i = e[t];
-            if (!0 === i.pz_object.preset) continue;
+            if (true === i.pz_object.preset) continue;
             var s = { address: [1, Array.prototype.indexOf.call(i.parentElement.children, i)] };
             this.media.deleteMedia(s);
         }
@@ -4819,7 +4901,7 @@ for (let e = 17; e >= 0; e--) {
     }),
     (PZ.ui.timeline = function (e) {
         PZ.ui.panel.call(this, e),
-            (this.canDuplicate = !0),
+            (this.canDuplicate = true),
             (this.el.style = "background-color: #2a2a2a;"),
             (this.zoom = 1),
             (this.scroll = 0),
@@ -4833,13 +4915,13 @@ for (let e = 17; e >= 0; e--) {
             this.create(),
             (this.keyframes = new PZ.ui.timeline.keyframes(this)),
             (this.tracks = new PZ.ui.timeline.tracks(this)),
-            this.editor.onSequenceChanged.watch(this.sequenceChanged.bind(this), !0),
-            this.tracks.selection.onListChanged.watch(this.selectionChanged.bind(this), !0);
+            this.editor.onSequenceChanged.watch(this.sequenceChanged.bind(this), true),
+            this.tracks.selection.onListChanged.watch(this.selectionChanged.bind(this), true);
     }),
     (PZ.ui.timeline.prototype.sequenceChanged = function () {
         if (((this.sequence = this.editor.sequence), this.sequence)) {
             let e = this.sequence.properties;
-            e.rate.onChanged.watch(this.updateZoom.bind(this, null, null), !0), e.markers.onKeyframeCreated.watch(this.redrawMarkers.bind(this), !0), e.markers.onKeyframeDeleted.watch(this.redrawMarkers.bind(this));
+            e.rate.onChanged.watch(this.updateZoom.bind(this, null, null), true), e.markers.onKeyframeCreated.watch(this.redrawMarkers.bind(this), true), e.markers.onKeyframeDeleted.watch(this.redrawMarkers.bind(this));
         }
     }),
     (PZ.ui.timeline.prototype.redrawMarkers = function () {
@@ -4874,7 +4956,7 @@ for (let e = 17; e >= 0; e--) {
             (this.timestamp = document.createElement("span")),
             (this.timestamp.style = "color:#ccc;display:block;line-height:30px;width:100%;padding-left:10px;box-sizing:border-box"),
             (i.oncontextmenu = function () {
-                return (e.timeFormat = (e.timeFormat + 1) % 3), !1;
+                return (e.timeFormat = (e.timeFormat + 1) % 3), false;
             }),
             i.appendChild(this.timestamp),
             t.appendChild(i),
@@ -4892,8 +4974,8 @@ for (let e = 17; e >= 0; e--) {
                     e.setFrame(t);
                 }
             )),
-            (this.timerule_drag.initialMove = !0),
-            (this.timerule_drag.finalUpdate = !0),
+            (this.timerule_drag.initialMove = true),
+            (this.timerule_drag.finalUpdate = true),
             (this.timerule.style = "position: absolute;left: 200px;top: 0;height: 35px;overflow: hidden;background-color: rgb(36, 36, 36);"),
             t.appendChild(this.timerule),
             (this.timelabels = []),
@@ -5033,7 +5115,7 @@ for (let e = 17; e >= 0; e--) {
         } else e.ctrlKey && "v" === e.key && (this.keyframes.keydown(e), this.tracks.keydown(e));
     }),
     (PZ.ui.timeline.prototype.mouseWheel = function (e) {
-        if (!0 === e.ctrlKey) {
+        if (true === e.ctrlKey) {
             var t = e.pageX - this.scrollBar.getBoundingClientRect().left;
             e.deltaY < 0 ? this.updateZoom(1.03125 * this.zoom, t) : e.deltaY > 0 && this.updateZoom(this.zoom / 1.03125, t), e.preventDefault();
         } else {
@@ -5048,12 +5130,12 @@ for (let e = 17; e >= 0; e--) {
             (this.objects = null),
             (this.objectsChanged_bound = this.objectsChanged.bind(this)),
             this.onObjectsChanged.watch((e) => {
-                e && e.onListChanged.unwatch(this.objectsChanged_bound), this.objects ? this.objects.onListChanged.watch(this.objectsChanged_bound, !0) : this.objectsChanged();
+                e && e.onListChanged.unwatch(this.objectsChanged_bound), this.objects ? this.objects.onListChanged.watch(this.objectsChanged_bound, true) : this.objectsChanged();
             }),
             (this.propertyOps = new PZ.ui.properties(this.timeline.editor)),
-            (this.options = { objectFilter: (e) => !0, objectMap: (e) => e }),
+            (this.options = { objectFilter: (e) => true, objectMap: (e) => e }),
             Object.assign(this.options, t),
-            (this.selectNewKeyframes = !1),
+            (this.selectNewKeyframes = false),
             this.create();
     }),
     (PZ.ui.timeline.keyframes.prototype.create = function () {
@@ -5090,8 +5172,8 @@ for (let e = 17; e >= 0; e--) {
             }),
             (this.container_drag = new PZ.ui.drag(this.container, this.containerDragStart, this.containerDrag, this.containerDragUpdate, this.containerDragEnd, this)),
             (this.keyframe_drag = new PZ.ui.drag([], this.keyframeDragStart, this.keyframeDrag, this.keyframeDragUpdate, this.keyframeDragEnd, this)),
-            (this.keyframe_drag.initialMove = !0),
-            (this.keyframe_drag.finalUpdate = !0),
+            (this.keyframe_drag.initialMove = true),
+            (this.keyframe_drag.finalUpdate = true),
             this.el.appendChild(this.container);
     }),
     (PZ.ui.timeline.keyframes.prototype.objectsChanged = function () {
@@ -5119,7 +5201,7 @@ for (let e = 17; e >= 0; e--) {
             let n = (40 * PZ.stringHash(i.innerText || "")) % 360;
             (s.pz_color = `hsl(${n}, 40%, 45%)`), (s.pz_borderColor = `hsl(${n}, 40%, 60%)`), this.updateKeyframeColors(s);
         };
-        t.properties && t.properties.name ? ((i.pz_nameChanged = r), t.properties.name.onChanged.watch(i.pz_nameChanged, !0)) : r(t.definition ? t.definition.name : "Object"),
+        t.properties && t.properties.name ? ((i.pz_nameChanged = r), t.properties.name.onChanged.watch(i.pz_nameChanged, true)) : r(t.definition ? t.definition.name : "Object"),
             t instanceof PZ.property.dynamic.keyframes &&
                 ((s.pz_keyframeCreated = this.trackKeyframeCreated.bind(this, s)),
                 (s.pz_keyframeDeleted = this.trackKeyframeDeleted.bind(this, s)),
@@ -5128,7 +5210,7 @@ for (let e = 17; e >= 0; e--) {
                 t.onKeyframeCreated.watch(s.pz_keyframeCreated),
                 t.onKeyframeDeleted.watch(s.pz_keyframeDeleted),
                 t.onKeyframeMoved.watch(s.pz_keyframeMoved),
-                t.onAnimatedChanged.watch(s.pz_animatedChanged, !0));
+                t.onAnimatedChanged.watch(s.pz_animatedChanged, true));
         let a = t.children || [];
         (a = a.filter((e) => e instanceof PZ.propertyList || (e instanceof PZ.objectList && (e.type === PZ.property.dynamic || e.type === PZ.property)) || e instanceof PZ.objectSingleton || e instanceof PZ.object)).reverse();
         for (let e = 0; e < a.length; e++) this.createTrackList(s, a[e]);
@@ -5359,7 +5441,7 @@ for (let e = 17; e >= 0; e--) {
         if (((this.origin = { x: i.left, y: i.top }), (this.containerSize = { x: t.scrollWidth, y: t.scrollHeight }), (this.currentPt = { x: e.pageX - this.origin.x, y: e.pageY - this.origin.y }), 2 === e.button)) {
             let t = this.ctx.timeline,
                 i = this.currentPt.x + t.scroll;
-            return t.setFrame(i), e.preventDefault(), !1;
+            return t.setFrame(i), e.preventDefault(), false;
         }
         (this.startPt = { x: (this.currentPt.x + t.scrollLeft) / this.ctx.timeline.zoom, y: this.currentPt.y + t.scrollTop }), (this.trackTops = new Map()), (this.kftracks = []);
         let s = (e, t) => {
@@ -5373,7 +5455,7 @@ for (let e = 17; e >= 0; e--) {
             (this.selectEl = document.createElement("div")),
             (this.selectEl.style = "border: 1px dashed rgb(151, 151, 151);position:absolute;display:none;"),
             this.ctx.container.appendChild(this.selectEl),
-            (this.moved = !1),
+            (this.moved = false),
             (this.addOnly = e.shiftKey);
     }),
     (PZ.ui.timeline.keyframes.prototype.containerDrag = function (e) {
@@ -5388,13 +5470,13 @@ for (let e = 17; e >= 0; e--) {
             r = Math.abs(t - this.startPt.x) * this.ctx.timeline.zoom,
             a = Math.abs(i - this.startPt.y);
         if (
-            (r + a > 2 && !1 === this.moved && ((this.moved = !0), (this.selectEl.style.display = "")),
+            (r + a > 2 && false === this.moved && ((this.moved = true), (this.selectEl.style.display = "")),
             (this.selectEl.style.left = s + "px"),
             (this.selectEl.style.top = n + "px"),
             (this.selectEl.style.width = r + "px"),
             (this.selectEl.style.height = a + "px"),
             this.addOnly || this.ctx.deselectAll(),
-            !1 !== this.moved)
+            false !== this.moved)
         ) {
             var o = this.kftracks;
             for (let e = 0; e < o.length; e++) {
@@ -5424,9 +5506,9 @@ for (let e = 17; e >= 0; e--) {
             (this.startFrame = this.kf.pz_frame),
             (this.lastFrame = this.startFrame),
             (this.deltaFrames = 0),
-            this.kf.classList.contains("selected") ? (this.originalState = !0) : ((this.originalState = !1), e.shiftKey || this.ctx.deselectAll(), this.ctx.selectKeyframe(this.kf)),
+            this.kf.classList.contains("selected") ? (this.originalState = true) : ((this.originalState = false), e.shiftKey || this.ctx.deselectAll(), this.ctx.selectKeyframe(this.kf)),
             (this.offset = (parseFloat(this.kf.style.left) - t.scrollLeft) / this.ctx.timeline.zoom - this.currentPt.x),
-            (this.moved = !1),
+            (this.moved = false),
             (this.kftracks = Array.from(this.ctx.container.getElementsByClassName("kftrack"))),
             (this.kfproxies = []),
             (this.kfobjects = []),
@@ -5444,7 +5526,7 @@ for (let e = 17; e >= 0; e--) {
         (this.guideEl.style.left = this.ctx.timeline.frameToPx(i) - e.scrollLeft + "px"),
             (this.deltaFrames = i - this.lastFrame),
             (this.lastFrame = i),
-            0 !== this.deltaFrames && !1 === this.moved && ((this.moved = !0), (this.clone = this.altKey), this.ctx.initProxies.call(this, this.clone), this.clone || this.ctx.startMoving(this.kftracks));
+            0 !== this.deltaFrames && false === this.moved && ((this.moved = true), (this.clone = this.altKey), this.ctx.initProxies.call(this, this.clone), this.clone || this.ctx.startMoving(this.kftracks));
         for (let e = 0; e < this.kfobjects.length; e++) {
             let t = this.kfobjects[e];
             t.pz_object.frame = Math.round(t.pz_object.frame + this.deltaFrames);
@@ -5456,9 +5538,9 @@ for (let e = 17; e >= 0; e--) {
         }
     }),
     (PZ.ui.timeline.keyframes.prototype.keyframeDragEnd = function (e, t) {
-        if ((this.guideEl.parentElement.removeChild(this.guideEl), e.shiftKey && !1 === this.moved && !0 === this.originalState && this.ctx.deselectKeyframe(this.kf), !0 === this.moved)) {
+        if ((this.guideEl.parentElement.removeChild(this.guideEl), e.shiftKey && false === this.moved && true === this.originalState && this.ctx.deselectKeyframe(this.kf), true === this.moved)) {
             let e = this.lastFrame - this.startFrame > 0;
-            (this.ctx.selectNewKeyframes = !0), this.clone ? this.ctx.cloneKeyframes(this.kfobjects) : this.ctx.finishMoving(this.kftracks, e), (this.ctx.selectNewKeyframes = !1), this.ctx.unloadProxies.call(this);
+            (this.ctx.selectNewKeyframes = true), this.clone ? this.ctx.cloneKeyframes(this.kfobjects) : this.ctx.finishMoving(this.kftracks, e), (this.ctx.selectNewKeyframes = false), this.ctx.unloadProxies.call(this);
         }
         this.ctx.timeline.editor.history.finishOperation();
     }),
@@ -5476,7 +5558,7 @@ for (let e = 17; e >= 0; e--) {
                 n.classList.add("keyframe", "selected", "kfproxy"),
                     (n.pz_object = i),
                     s || (n.classList.add("kfobject"), (n.pz_oldFrame = i.frame), this.kfobjects.push(n)),
-                    e.parentElement.pz_parent && t(e.parentElement.pz_parent, i, !0),
+                    e.parentElement.pz_parent && t(e.parentElement.pz_parent, i, true),
                     this.kfproxies.push(n),
                     e.appendChild(n),
                     this.ctx.updateKeyframeColor(n);
@@ -5525,9 +5607,9 @@ for (let e = 17; e >= 0; e--) {
             (this.audioTrackSize = 40),
             this.create(),
             (this.sequence = null),
-            this.timeline.editor.onSequenceChanged.watch(this.sequenceChanged.bind(this), !0),
+            this.timeline.editor.onSequenceChanged.watch(this.sequenceChanged.bind(this), true),
             (this.mediaDragCtx = null),
-            (this.initialResize = !1),
+            (this.initialResize = false),
             (this.zoomUpdateRef = null);
     }),
     (PZ.ui.timeline.tracks.prototype.sequenceChanged = function () {
@@ -5588,11 +5670,11 @@ for (let e = 17; e >= 0; e--) {
             (this.waveform = new PZ.ui.waveform(this.timeline, this.waveformContainer)),
             (this.container_drag = new PZ.ui.drag(this.container, this.containerDragStart, this.containerDrag, this.containerDragUpdate, this.containerDragEnd, this)),
             (this.clip_drag = new PZ.ui.drag([], this.clipDragStart, this.clipDrag, this.clipDragUpdate, this.clipDragEnd, this)),
-            (this.clip_drag.initialMove = !0),
-            (this.clip_drag.finalUpdate = !0),
+            (this.clip_drag.initialMove = true),
+            (this.clip_drag.finalUpdate = true),
             (this.handle_drag = new PZ.ui.drag([], this.handleDragStart, this.handleDrag, this.handleDragUpdate, this.handleDragEnd, this)),
-            (this.handle_drag.initialMove = !0),
-            (this.handle_drag.finalUpdate = !0),
+            (this.handle_drag.initialMove = true),
+            (this.handle_drag.finalUpdate = true),
             this.el.appendChild(this.container),
             (this.resize = document.createElement("div")),
             (this.resize.style = "width:100%;height:4px;position:absolute;cursor:ns-resize; box-sizing:border-box; border-bottom: 1px solid rgb(33, 33, 33); border-top: 1px solid rgb(33, 33, 33);"),
@@ -5610,8 +5692,8 @@ for (let e = 17; e >= 0; e--) {
                 },
                 function () {}
             )),
-            (this.resize_drag.initialMove = !0),
-            (this.resize_drag.finalUpdate = !0),
+            (this.resize_drag.initialMove = true),
+            (this.resize_drag.finalUpdate = true),
             this.el.appendChild(this.resize);
     }),
     (PZ.ui.timeline.tracks.prototype.mouseWheel = function (e) {
@@ -5673,7 +5755,7 @@ for (let e = 17; e >= 0; e--) {
             (t.pz_renamed = () => {
                 (i.innerText = e.properties.name.get()), (t.title = i.innerText);
             }),
-            e.properties.name.onChanged.watch(t.pz_renamed, !0),
+            e.properties.name.onChanged.watch(t.pz_renamed, true),
             t.appendChild(i);
         var s = document.createElement("div");
         s.classList.add("handle"), (s.style = "left:0;border-left-width:3px"), t.appendChild(s);
@@ -5778,7 +5860,7 @@ for (let e = 17; e >= 0; e--) {
                     let s = this.timeline.frameToPx(e.pz_length);
                     e.style.width = s + "px";
                 }
-                this.timeline.editor.history.startOperation(), this.insertTrackProxies(r), this.moveClipProxies(a, !0, !1), this.timeline.editor.history.finishOperation();
+                this.timeline.editor.history.startOperation(), this.insertTrackProxies(r), this.moveClipProxies(a, true, false), this.timeline.editor.history.finishOperation();
                 for (i = 0; i < a.length; i++) a[i].remove();
                 this.verticalZoom(), this.timeline.updateZoom();
             } else if ("c" === e.key) {
@@ -5829,7 +5911,7 @@ for (let e = 17; e >= 0; e--) {
         if (!this.initialResize && this.el.clientHeight > 0) {
             let e = this.el.getBoundingClientRect(),
                 t = this.videoTrackSize / (this.videoTrackSize + this.audioTrackSize);
-            this.setContainerSplit(e.height * t - 2), (this.initialResize = !0);
+            this.setContainerSplit(e.height * t - 2), (this.initialResize = true);
         }
         var e = this.videoContainer,
             t = this.videoLabels;
@@ -6058,7 +6140,7 @@ for (let e = 17; e >= 0; e--) {
         if (((this.origin = { x: i.left, y: i.top }), (this.containerSize = { x: t.scrollWidth, y: t.scrollHeight }), (this.currentPt = { x: e.pageX - this.origin.x, y: e.pageY - this.origin.y }), 2 === e.button)) {
             let t = this.ctx.timeline,
                 i = this.currentPt.x + t.scroll;
-            return t.setFrame(i), e.preventDefault(), !1;
+            return t.setFrame(i), e.preventDefault(), false;
         }
         var s = this.ctx.timeline.scrollBar.scrollLeft;
         (this.startPt = { x: (this.currentPt.x + s) / this.ctx.timeline.zoom, y: this.currentPt.y }),
@@ -6066,7 +6148,7 @@ for (let e = 17; e >= 0; e--) {
             (this.selectEl.style = "border: 1px dashed rgb(151, 151, 151);position:absolute; display:none;"),
             t.appendChild(this.selectEl),
             this.ctx.deselectHandles(),
-            (this.moved = !1),
+            (this.moved = false),
             (this.addOnly = e.shiftKey),
             (this.altHeld = e.altKey);
     }),
@@ -6098,13 +6180,13 @@ for (let e = 17; e >= 0; e--) {
                     }
             }
         }
-        r + a > 2 && !1 === this.moved && ((this.moved = !0), (this.selectEl.style.display = "")),
+        r + a > 2 && false === this.moved && ((this.moved = true), (this.selectEl.style.display = "")),
             (this.selectEl.style.left = s - e + "px"),
             (this.selectEl.style.top = n + "px"),
             (this.selectEl.style.width = r + "px"),
             (this.selectEl.style.height = a + "px"),
             this.addOnly || this.ctx.deselectClips(),
-            !1 !== this.moved && (o.call(this, this.ctx.videoContainer), o.call(this, this.ctx.audioContainer));
+            false !== this.moved && (o.call(this, this.ctx.videoContainer), o.call(this, this.ctx.audioContainer));
     }),
     (PZ.ui.timeline.tracks.prototype.containerDragEnd = function (e) {
         this.selectEl.remove(), this.ctx.selectClips(), this.ctx.zoom();
@@ -6142,12 +6224,12 @@ for (let e = 17; e >= 0; e--) {
         s.remove(), n.remove(), this.verticalZoom(), this.zoom();
     }),
     (PZ.ui.timeline.tracks.prototype.clipDragStart = function (e) {
-        if (e.ctrlKey) return !1;
+        if (e.ctrlKey) return false;
         this.ctx.el.focus();
         var t = this.ctx.container.getBoundingClientRect();
-        if (((this.origin = { x: t.left, y: t.top }), (this.currentPt = { x: (e.pageX - this.origin.x) / this.ctx.timeline.zoom }), (this.clip = e.currentTarget), this.clip.classList.contains("selected"))) this.originalState = !0;
+        if (((this.origin = { x: t.left, y: t.top }), (this.currentPt = { x: (e.pageX - this.origin.x) / this.ctx.timeline.zoom }), (this.clip = e.currentTarget), this.clip.classList.contains("selected"))) this.originalState = true;
         else {
-            (this.originalState = !1), e.shiftKey || this.ctx.deselectHandles();
+            (this.originalState = false), e.shiftKey || this.ctx.deselectHandles();
             let t = new Map(),
                 n = this.ctx.container.getElementsByClassName("clip selected");
             for (let i = 0; i < n.length; i++) t.set(n[i], { newState: e.shiftKey ? 1 : 0, idx: i });
@@ -6195,11 +6277,11 @@ for (let e = 17; e >= 0; e--) {
             }
         }
         n.parentElement === this.ctx.videoContainer ? ((this.videoTrackIndex = r), (this.audioTrackIndex = 0)) : ((this.videoTrackIndex = 0), (this.audioTrackIndex = r)),
-            (this.createOnly = !1),
+            (this.createOnly = false),
             (this.minFrame = Number.MAX_SAFE_INTEGER),
             (this.minTrackOffset = 0),
             (this.maxTrackOffset = 0),
-            (this.matchTrackIndices = !1),
+            (this.matchTrackIndices = false),
             (this.track_proxies = []),
             (this.clip_proxies = []),
             o.call(this, this.ctx.videoContainer, this.videoTrackIndex),
@@ -6208,7 +6290,7 @@ for (let e = 17; e >= 0; e--) {
             this.ctx.verticalZoom(),
             (this.offset = (parseFloat(this.clip.style.left) - this.ctx.timeline.scrollBar.scrollLeft) / this.ctx.timeline.zoom - this.currentPt.x),
             (this.start = this.clip.pz_object.start),
-            (this.moved = !1),
+            (this.moved = false),
             e.stopPropagation();
     }),
     (PZ.ui.timeline.tracks.prototype.clipDrag = function (e) {
@@ -6220,7 +6302,7 @@ for (let e = 17; e >= 0; e--) {
         this.ctx.timeline.keepInView(t * this.ctx.timeline.zoom), (t += this.offset);
         var i = this.ctx.snap(t * this.ctx.timeline.zoom, this.snap);
         (this.deltaFrames = i - this.start), (this.deltaFrames = Math.max(this.deltaFrames, -this.minFrame));
-        var s = !1,
+        var s = false,
             n = function (e, t) {
                 var i;
                 for (e += (t = this.ctx.videoContainer).scrollTop, i = 1; i < t.children.length; i++) {
@@ -6238,7 +6320,7 @@ for (let e = 17; e >= 0; e--) {
                 return i - 1;
             }.call(this, this.currentPt.y);
         if (this.videoTrackIndex !== n || this.audioTrackIndex !== r) {
-            if (((s = !0), this.matchTrackIndices)) {
+            if (((s = true), this.matchTrackIndices)) {
                 var a = Math.max(n, r);
                 (this.videoTrackIndex = a), (this.audioTrackIndex = a);
             } else (this.videoTrackIndex = n), (this.audioTrackIndex = r);
@@ -6247,11 +6329,11 @@ for (let e = 17; e >= 0; e--) {
             (this.videoTrackIndex = Math.max(-this.minTrackOffset, Math.min(this.videoTrackIndex, o.children.length - this.maxTrackOffset - 1))),
                 (this.audioTrackIndex = Math.max(-this.minTrackOffset, Math.min(this.audioTrackIndex, l.children.length - this.maxTrackOffset - 1)));
         }
-        if ((0 !== this.deltaFrames || !1 !== s) && !1 === this.moved) {
-            this.moved = !0;
+        if ((0 !== this.deltaFrames || false !== s) && false === this.moved) {
+            this.moved = true;
             for (var h = 0; h < this.clip_proxies.length; h++) this.clip_proxies[h].style.display = "";
         }
-        if (!1 !== this.moved) {
+        if (false !== this.moved) {
             for (h = 0; h < this.clip_proxies.length; h++) {
                 var c;
                 0 === (d = this.clip_proxies[h]).pz_type ? ((e = this.ctx.videoContainer), (c = this.videoTrackIndex)) : ((e = this.ctx.audioContainer), (c = this.audioTrackIndex));
@@ -6270,7 +6352,7 @@ for (let e = 17; e >= 0; e--) {
         }
     }),
     (PZ.ui.timeline.tracks.prototype.clipDragEnd = function (e) {
-        if (e.shiftKey && !1 === this.moved && !0 === this.originalState) {
+        if (e.shiftKey && false === this.moved && true === this.originalState) {
             let s = new Map(),
                 n = this.ctx.container.getElementsByClassName("clip selected");
             for (let t = 0; t < n.length; t++) s.set(n[t], { newState: e.shiftKey ? 1 : 0, idx: t });
@@ -6455,8 +6537,8 @@ for (let e = 17; e >= 0; e--) {
             (this.isRightHandle = 0 === parseFloat(this.handle.style.right)),
             this.handle.classList.contains("selected"))
         )
-            this.originalState = !0;
-        else if (((this.originalState = !1), e.shiftKey || (this.ctx.deselectClips(), this.ctx.deselectHandles()), !e.altKey && this.clip.pz_object.link))
+            this.originalState = true;
+        else if (((this.originalState = false), e.shiftKey || (this.ctx.deselectClips(), this.ctx.deselectHandles()), !e.altKey && this.clip.pz_object.link))
             for (var i = this.clip.pz_object.link, s = this.isRightHandle ? 2 : 1, n = 0; n < i.clips.length; n++) {
                 (o = this.ctx.addressToEl(i.clips[n].getAddress())).children[s].classList.add("selected");
             }
@@ -6493,7 +6575,7 @@ for (let e = 17; e >= 0; e--) {
                 var d = {};
                 if (((d.proxy = p), (d.handle = a), (d.isRightHandle = l), this.selected_handles.push(d), c)) {
                     var u = {};
-                    (u.proxy = p), (u.handle = c), (u.isRightHandle = !1), this.selected_handles.push(u);
+                    (u.proxy = p), (u.handle = c), (u.isRightHandle = false), this.selected_handles.push(u);
                 }
                 (p.leftHandle = !l || !!c), (p.rightHandle = l);
             }
@@ -6501,7 +6583,7 @@ for (let e = 17; e >= 0; e--) {
         var m = parseFloat(this.clip.style.left);
         this.isRightHandle && (m += parseFloat(this.clip.style.width)),
             (this.offset = (m - this.ctx.timeline.scrollBar.scrollLeft) / this.ctx.timeline.zoom - this.currentPt.x),
-            (this.moved = !1),
+            (this.moved = false),
             (this.lastFrame = null),
             e.stopPropagation();
     }),
@@ -6513,11 +6595,11 @@ for (let e = 17; e >= 0; e--) {
         (e += this.offset), this.ctx.timeline.keepInView(e * this.ctx.timeline.zoom);
         var t,
             i = this.ctx.snap(e * this.ctx.timeline.zoom, this.snap);
-        if (0 !== (t = this.isRightHandle ? i - this.clip.pz_object.start - this.clip.pz_object.length : i - this.clip.pz_object.start) && !1 === this.moved) {
-            this.moved = !0;
+        if (0 !== (t = this.isRightHandle ? i - this.clip.pz_object.start - this.clip.pz_object.length : i - this.clip.pz_object.start) && false === this.moved) {
+            this.moved = true;
             for (var s = 0; s < this.clip_proxies.length; s++) this.clip_proxies[s].style.display = "";
         }
-        if (!1 !== this.moved) {
+        if (false !== this.moved) {
             var n = t;
             for (s = 0; s < this.clip_proxies.length; s++) {
                 var r = this.clip_proxies[s],
@@ -6548,7 +6630,7 @@ for (let e = 17; e >= 0; e--) {
         }
     }),
     (PZ.ui.timeline.tracks.prototype.handleDragEnd = function (e) {
-        if (e.shiftKey && !1 === this.moved && !0 === this.originalState)
+        if (e.shiftKey && false === this.moved && true === this.originalState)
             if (!e.altKey && this.clip.pz_object.link)
                 for (var t = this.clip.pz_object.link, i = this.isRightHandle ? 2 : 1, s = 0; s < t.clips.length; s++) {
                     this.ctx.addressToEl(t.clips[s].getAddress()).children[i].classList.remove("selected");
@@ -6633,7 +6715,7 @@ for (let e = 17; e >= 0; e--) {
         const i = this.clip_drag.createDragContext();
         let { track_proxies: s, clip_proxies: n, maxTrackOffset: r } = this.createProxiesFromFragments(t, 0);
         if (s.length) {
-            (i.refCount = 1), (i.track_proxies = s), (i.clip_proxies = n), (i.minFrame = 0), (i.minTrackOffset = 0), (i.maxTrackOffset = r), (i.createOnly = !0), (i.matchTrackIndices = !0);
+            (i.refCount = 1), (i.track_proxies = s), (i.clip_proxies = n), (i.minFrame = 0), (i.minTrackOffset = 0), (i.maxTrackOffset = r), (i.createOnly = true), (i.matchTrackIndices = true);
             var a = this.container.getBoundingClientRect();
             (i.origin = { x: a.left, y: a.top }),
                 (i.currentPt = { x: (e.pageX - i.origin.x) / this.timeline.zoom }),
@@ -6641,7 +6723,7 @@ for (let e = 17; e >= 0; e--) {
                 this.timeline.tracks.zoom(),
                 (i.offset = 0),
                 (i.start = 0),
-                (i.moved = !1),
+                (i.moved = false),
                 (i.videoTrackIndex = -1),
                 (i.audioTrackIndex = -1),
                 e.stopPropagation(),
@@ -6669,7 +6751,7 @@ for (let e = 17; e >= 0; e--) {
             this.el.classList.add("toolbarpanel"),
             (this.minWidth = 40),
             (this.minHeight = 40),
-            (this.enabled = !0),
+            (this.enabled = true),
             (this.buttons = t),
             this.create();
     }),
@@ -6688,7 +6770,7 @@ for (let e = 17; e >= 0; e--) {
                 var s = PZ.ui.generateIcon(this.buttons[e].icon);
                 (s.style = "fill:rgb(172, 172, 172);width:25px;height:25px;pointer-events:none"),
                     i.appendChild(s),
-                    this.buttons[e].observable && this.buttons[e].observable.watch(this.buttons[e].update.bind(this, i), !0),
+                    this.buttons[e].observable && this.buttons[e].observable.watch(this.buttons[e].update.bind(this, i), true),
                     this.el.appendChild(i);
             }
         document.addEventListener("keydown", this.keydown.bind(this));
@@ -6710,7 +6792,7 @@ for (let e = 17; e >= 0; e--) {
             }
     }),
     (PZ.ui.waveform = function (e, t) {
-        (this.timeline = e), (this.canvas = t), (this.needsUpdate = !0), (this.prevScrollLeft = -1), (this.prevScrollTop = -1), (this.bufferCache = new WeakMap());
+        (this.timeline = e), (this.canvas = t), (this.needsUpdate = true), (this.prevScrollLeft = -1), (this.prevScrollTop = -1), (this.bufferCache = new WeakMap());
     }),
     (PZ.ui.waveform.prototype.analyzeBuffer = function (e, t, i) {
         if (!e) return;
@@ -6926,7 +7008,7 @@ for (let e = 17; e >= 0; e--) {
             (this.objects = null),
             (this.objectsChanged_bound = this.objectsChanged.bind(this)),
             this.onObjectsChanged.watch((e) => {
-                e && e.onListChanged.unwatch(this.objectsChanged_bound), this.objects ? this.objects.onListChanged.watch(this.objectsChanged_bound, !0) : this.objectsChanged();
+                e && e.onListChanged.unwatch(this.objectsChanged_bound), this.objects ? this.objects.onListChanged.watch(this.objectsChanged_bound, true) : this.objectsChanged();
             }),
             this.create(),
             this.viewport.options.widget3dObjects && (this.objects = this.viewport.options.widget3dObjects);
@@ -6934,7 +7016,7 @@ for (let e = 17; e >= 0; e--) {
     (PZ.ui.widget3d.mode = { POSITION: 0, ROTATION: 1, SCALE: 2, NONE: 3 }),
     (PZ.ui.widget3d.prototype.objectsChanged = function () {
         let e,
-            t = !1;
+            t = false;
         if (((this.threeObj = null), (this.position = null), (this.rotation = null), (this.scale = null), this.objects && 1 === this.objects.length && this.objects[0] instanceof PZ.object3d && (e = this.objects[0]), e && e.threeObj)) {
             let i = e.properties;
             for (let e of i) {
@@ -6945,7 +7027,7 @@ for (let e = 17; e >= 0; e--) {
                     if ("Scale" !== i) continue;
                     this.scale = e;
                 }
-                t = !0;
+                t = true;
             }
             t && (this.threeObj = e.threeObj);
         }
@@ -6954,7 +7036,7 @@ for (let e = 17; e >= 0; e--) {
     (PZ.ui.widget3d.prototype.create = function () {
         (this.controls = new THREE.TransformControls(this.viewport.camera, this.viewport.canvas)),
             this.controls.traverse(function (e) {
-                e.layers.set(1), e.material && (e.material.fog = !1);
+                e.layers.set(1), e.material && (e.material.fog = false);
             }),
             this.controls.setSpace("world"),
             this.viewport.threeObj.add(this.controls),
@@ -6992,17 +7074,17 @@ for (let e = 17; e >= 0; e--) {
             this.editor.history.startOperation(),
             this.propertyOps.startEdit(this.property, this.frame),
             (this.initialValue = this.property.get(this.frame)),
-            (this.dragging = !0);
+            (this.dragging = true);
     }),
     (PZ.ui.widget3d.prototype.drag = function () {
         let e = [this.objectProperty.x, this.objectProperty.y, this.objectProperty.z];
         this.property.set(e, this.frame);
     }),
     (PZ.ui.widget3d.prototype.dragEnd = function () {
-        (this.dragging = !1), this.propertyOps.setValue({ property: this.property.getAddress(), frame: this.frame, oldValue: this.initialValue }), this.editor.history.finishOperation();
+        (this.dragging = false), this.propertyOps.setValue({ property: this.property.getAddress(), frame: this.frame, oldValue: this.initialValue }), this.editor.history.finishOperation();
     }),
     (PZ.ui.widget3d.prototype.update = function () {
-        this.threeObj && !0 == !this.dragging && this.controls.update();
+        this.threeObj && true == !this.dragging && this.controls.update();
     }),
     (PZ.ui.widget2d = function (e) {
         (this.viewport = e),
@@ -7014,7 +7096,7 @@ for (let e = 17; e >= 0; e--) {
             (this.resolution = null),
             (this.size = null),
             (this.ratio = 1),
-            PZ.observable.defineObservableProp(this, "edit", "onEditChanged", !0),
+            PZ.observable.defineObservableProp(this, "edit", "onEditChanged", true),
             this.onEditChanged.watch(() => {
                 this.el.style.display = this.position && this.edit ? "" : "none";
             }),
@@ -7022,7 +7104,7 @@ for (let e = 17; e >= 0; e--) {
             (this.objects = null),
             (this.objectsChanged_bound = this.objectsChanged.bind(this)),
             this.onObjectsChanged.watch((e) => {
-                e && e.onListChanged.unwatch(this.objectsChanged_bound), this.objects ? this.objects.onListChanged.watch(this.objectsChanged_bound, !0) : this.objectsChanged();
+                e && e.onListChanged.unwatch(this.objectsChanged_bound), this.objects ? this.objects.onListChanged.watch(this.objectsChanged_bound, true) : this.objectsChanged();
             }),
             this.create(),
             this.viewport.options.widget2dObjects && (this.objects = this.viewport.options.widget2dObjects);
@@ -7063,7 +7145,7 @@ for (let e = 17; e >= 0; e--) {
             (this.handleDrag = new PZ.ui.drag(t, this.resizeDragStart, this.resizeDrag, this.resizeDragUpdate, this.resizeDragEnd, this)),
             t.forEach((e) => this.el.appendChild(e));
         let i = document.createElement("div");
-        (i.style = e + "left:50%;margin-left:-7px;top:-25px;border-radius:7px;"), (i.pz_theta = 90), (i.pz_rotate = !0), this.handleDrag.addElts(i), this.el.appendChild(i), this.viewport.el.appendChild(this.el);
+        (i.style = e + "left:50%;margin-left:-7px;top:-25px;border-radius:7px;"), (i.pz_theta = 90), (i.pz_rotate = true), this.handleDrag.addElts(i), this.el.appendChild(i), this.viewport.el.appendChild(this.el);
     }),
     (PZ.ui.widget2d.prototype.update = function (e) {
         if (!this.resolution) return;
@@ -7122,8 +7204,8 @@ for (let e = 17; e >= 0; e--) {
             l = r[1] * a[1];
         (this.direction = new THREE.Vector2(Math.abs(Math.round(Math.cos(t))), Math.abs(Math.round(Math.sin(t))))),
             (this.guide = new THREE.Vector2(o * Math.cos(t + n), -l * Math.sin(t + n)).normalize()),
-            (this.center = new THREE.Vector2(i.left + 0.5 * i.width + s[0] * this.ctx.ratio, i.top + 0.5 * i.height - s[1] * this.ctx.ratio)),
-            (this.currentPt = new THREE.Vector2(e.pageX, e.pageY).sub(this.center)),
+            (ECcenter = new THREE.Vector2(i.left + 0.5 * i.width + s[0] * this.ctx.ratio, i.top + 0.5 * i.height - s[1] * this.ctx.ratio)),
+            (this.currentPt = new THREE.Vector2(e.pageX, e.pageY).sub(ECcenter)),
             (this.initialPos = this.currentPt.dot(this.guide)),
             (this.initialRot = -Math.atan2(this.currentPt.y, this.currentPt.x)),
             this.direction.multiply(new THREE.Vector2(a[0], a[1])),
@@ -7133,7 +7215,7 @@ for (let e = 17; e >= 0; e--) {
             e.stopPropagation();
     }),
     (PZ.ui.widget2d.prototype.resizeDrag = function (e) {
-        (this.currentPt.x = e.pageX - this.center.x), (this.currentPt.y = e.pageY - this.center.y), (this.shiftKey = e.shiftKey), (this.ctrlKey = e.ctrlKey);
+        (this.currentPt.x = e.pageX - ECcenter.x), (this.currentPt.y = e.pageY - ECcenter.y), (this.shiftKey = e.shiftKey), (this.ctrlKey = e.ctrlKey);
     }),
     (PZ.ui.widget2d.prototype.resizeDragUpdate = function () {
         let e;
@@ -7162,7 +7244,7 @@ for (let e = 17; e >= 0; e--) {
             (this.objects = null),
             (this.objectsChanged_bound = this.objectsChanged.bind(this)),
             this.onObjectsChanged.watch((e) => {
-                e && e.onListChanged.unwatch(this.objectsChanged_bound), this.objects ? this.objects.onListChanged.watch(this.objectsChanged_bound, !0) : this.objectsChanged();
+                e && e.onListChanged.unwatch(this.objectsChanged_bound), this.objects ? this.objects.onListChanged.watch(this.objectsChanged_bound, true) : this.objectsChanged();
             }),
             this.viewport.options.helper3dObjects && (this.objects = this.viewport.options.helper3dObjects);
     }),
@@ -7222,7 +7304,7 @@ for (let e = 17; e >= 0; e--) {
                 this.create();
         }
         create() {
-            this.imageExportOnly ? this.navigate(this.frameExport.createOptionsPage(!0)) : this.navigate(this.createMainPage());
+            this.imageExportOnly ? this.navigate(this.frameExport.createOptionsPage(true)) : this.navigate(this.createMainPage());
         }
         createMainPage() {
             let e = this.createPage("Export project");
@@ -7237,7 +7319,7 @@ for (let e = 17; e >= 0; e--) {
                 s.appendChild(n),
                 t.appendChild(s),
                 (t.onclick = function () {
-                    this.navigate(this.deviceExport.createOptionsPage(), !0);
+                    this.navigate(this.deviceExport.createOptionsPage(), true);
                 }.bind(this)),
                 e.appendChild(t);
             var r = document.createElement("button");
@@ -7252,7 +7334,7 @@ for (let e = 17; e >= 0; e--) {
                 o.appendChild(l),
                 r.appendChild(o),
                 (r.onclick = function () {
-                    this.navigate(this.frameExport.createOptionsPage(), !0);
+                    this.navigate(this.frameExport.createOptionsPage(), true);
                 }.bind(this)),
                 e.appendChild(r),
                 e
@@ -7289,7 +7371,7 @@ for (let e = 17; e >= 0; e--) {
                 }));
         }
         createOptionsPage() {
-            let e = this.export.createPage("Cloud render", !0, () => (this.editor.project.ui.onChanged.unwatch(this.updateProject_bound), this.export.onEnabledChanged.unwatch(this.updateEnabled_bound), (this.cloudPaymentPage = null), !0));
+            let e = this.export.createPage("Cloud render", true, () => (this.editor.project.ui.onChanged.unwatch(this.updateProject_bound), this.export.onEnabledChanged.unwatch(this.updateEnabled_bound), (this.cloudPaymentPage = null), true));
             (this.params = { version: PZVERSION, width: 1920, height: 1080, rate: 30, quality: 2, format: "mp4_h264_aac", start: 0, length: 0, frames: 0 }),
                 e.appendChild(
                     PZ.ui.controls.legacy.generateDropdown(
@@ -7382,15 +7464,15 @@ for (let e = 17; e >= 0; e--) {
                         title: "Next",
                         clickfn: async function () {
                             return (
-                                (t.disabled = !0),
+                                (t.disabled = true),
                                 this.editor.project.ui.onChanged.unwatch(this.updateProject_bound),
                                 this.export.onEnabledChanged.unwatch(this.updateEnabled_bound),
                                 (await PZ.account.getCurrent())
                                     ? (await this.quoteLoading,
                                       0 === this.cloudPrice
-                                          ? ((t.disabled = !1), (this.pageCache.services = this.pageCache.services || this.createServicesPage()), void this.export.navigate(this.pageCache.services, !0))
-                                          : ((t.disabled = !1), (this.pageCache.payment = this.pageCache.payment || this.createPaymentPage()), void this.export.navigate(this.pageCache.payment, !0)))
-                                    : ((t.disabled = !1), void this.export.navigate(this.createLoginPage(), !0))
+                                          ? ((t.disabled = false), (this.pageCache.services = this.pageCache.services || this.createServicesPage()), void this.export.navigate(this.pageCache.services, true))
+                                          : ((t.disabled = false), (this.pageCache.payment = this.pageCache.payment || this.createPaymentPage()), void this.export.navigate(this.pageCache.payment, true)))
+                                    : ((t.disabled = false), void this.export.navigate(this.createLoginPage(), true))
                             );
                         },
                     },
@@ -7406,19 +7488,19 @@ for (let e = 17; e >= 0; e--) {
                         (this.params.frames = t ? Math.ceil(this.editor.sequence.properties.motionBlurSamples.integrate(this.editor.sequence.length)) : this.params.length), this.updateQuote();
                     }),
                         (this.updateEnabled_bound = () => {
-                            this.export.enabled ? this.editor.project.ui.onChanged.watch(this.updateProject_bound, !0) : this.editor.project.ui.onChanged.unwatch(this.updateProject_bound);
+                            this.export.enabled ? this.editor.project.ui.onChanged.watch(this.updateProject_bound, true) : this.editor.project.ui.onChanged.unwatch(this.updateProject_bound);
                         }),
-                        this.export.onEnabledChanged.watch(this.updateEnabled_bound, !0);
+                        this.export.onEnabledChanged.watch(this.updateEnabled_bound, true);
                 }),
                 e
             );
         }
         createLoginPage() {
-            let e = this.export.createPage("Cloud render", !0);
+            let e = this.export.createPage("Cloud render", true);
             return e.appendChild(PZ.ui.controls.legacy.generateDescription({ content: "Please log in to use this feature!" })), e;
         }
         createPaymentPage() {
-            let e = this.export.createPage("Payment", !0, null, !0);
+            let e = this.export.createPage("Payment", true, null, true);
             var t = this;
             let i = document.createElement("div");
             i.appendChild(PZ.ui.generateIcon("loading")), i.classList.add("loading"), e.appendChild(i);
@@ -7436,14 +7518,14 @@ for (let e = 17; e >= 0; e--) {
                     PZ.ui.controls.legacy.generateButton({
                         title: "Next",
                         clickfn: async function () {
-                            (h.disabled = !0),
+                            (h.disabled = true),
                                 l
                                     .requestPaymentMethod()
                                     .then(function (e) {
-                                        (h.disabled = !1), (t.cloudPaymentNonce = e.nonce), (t.pageCache.services = t.pageCache.services || t.createServicesPage()), t.export.navigate(t.pageCache.services, !0);
+                                        (h.disabled = false), (t.cloudPaymentNonce = e.nonce), (t.pageCache.services = t.pageCache.services || t.createServicesPage()), t.export.navigate(t.pageCache.services, true);
                                     })
                                     .catch(function (e) {
-                                        t.export.navigate(t.createErrorPage(), !0);
+                                        t.export.navigate(t.createErrorPage(), true);
                                     });
                         },
                     })
@@ -7453,7 +7535,7 @@ for (let e = 17; e >= 0; e--) {
         }
         createServicesPage() {
             let e = this,
-                t = this.export.createPage("Destinations", !0, null, !0),
+                t = this.export.createPage("Destinations", true, null, true),
                 i = document.createElement("div");
             i.appendChild(PZ.ui.generateIcon("loading")), i.classList.add("loading"), t.appendChild(i);
             let s = (e) => {
@@ -7481,9 +7563,9 @@ for (let e = 17; e >= 0; e--) {
                         if (e)
                             if (e.params.validate()) (e.enabled = !e.enabled), r();
                             else {
-                                e.enabled = !0;
+                                e.enabled = true;
                                 let t = PZ.ui.export[e.connectionType];
-                                this.export.navigate(t.createOptionsPage(this.export, e, r), !0);
+                                this.export.navigate(t.createOptionsPage(this.export, e, r), true);
                             }
                     }),
                     n.appendChild(t),
@@ -7500,7 +7582,7 @@ for (let e = 17; e >= 0; e--) {
                         s.appendChild(t),
                         (s.onclick = () => {
                             let t = PZ.ui.export[e.connectionType];
-                            this.export.navigate(t.createOptionsPage(this.export, e, r), !0);
+                            this.export.navigate(t.createOptionsPage(this.export, e, r), true);
                         }),
                         n.appendChild(s);
                 }
@@ -7515,7 +7597,7 @@ for (let e = 17; e >= 0; e--) {
                 if ((i.remove(), t.appendChild(s()), this.connections && this.connections.length > 0))
                     for (let e = 0; e < this.connections.length; e++) {
                         let i = PZ.ui.export[this.connections[e].connectionType];
-                        (this.connections[e].enabled = !1), (this.connections[e].params = i.createParams());
+                        (this.connections[e].enabled = false), (this.connections[e].params = i.createParams());
                         let n = s(this.connections[e]);
                         t.appendChild(n);
                     }
@@ -7532,7 +7614,7 @@ for (let e = 17; e >= 0; e--) {
                     PZ.ui.controls.legacy.generateButton({
                         title: "Next",
                         clickfn: function () {
-                            e.export.navigate(e.createConfirmationPage(), !0);
+                            e.export.navigate(e.createConfirmationPage(), true);
                         },
                     })
                 );
@@ -7540,7 +7622,7 @@ for (let e = 17; e >= 0; e--) {
             return t;
         }
         createConfirmationPage() {
-            let e = this.export.createPage("Confirmation", !0);
+            let e = this.export.createPage("Confirmation", true);
             e.appendChild(
                 PZ.ui.controls.legacy.generateValue(
                     {
@@ -7596,7 +7678,7 @@ for (let e = 17; e >= 0; e--) {
                         this
                     )
                 );
-            const t = this.connections.filter((e) => !0 === e.enabled && !0 === e.params.validate()).length;
+            const t = this.connections.filter((e) => true === e.enabled && true === e.params.validate()).length;
             return (
                 t > 0 &&
                     (e.appendChild(PZ.ui.controls.legacy.generateSpacer()),
@@ -7645,7 +7727,7 @@ for (let e = 17; e >= 0; e--) {
                         {
                             title: "Start",
                             clickfn: async function () {
-                                0 === this.params.length ? this.export.navigate(this.createErrorPage("Your project is empty.")) : this.export.navigate(this.createProgressPage(), !0);
+                                0 === this.params.length ? this.export.navigate(this.createErrorPage("Your project is empty.")) : this.export.navigate(this.createProgressPage(), true);
                             },
                         },
                         this
@@ -7656,7 +7738,7 @@ for (let e = 17; e >= 0; e--) {
         }
         createProgressPage(e) {
             let t,
-                i = this.export.createPage("Uploading...", !0, () => (clearInterval(t), this.uploadCleanUp(), !0)),
+                i = this.export.createPage("Uploading...", true, () => (clearInterval(t), this.uploadCleanUp(), true)),
                 s = new PZ.upload();
             i.appendChild(PZ.ui.controls.legacy.generateDescription({ content: "Your project assets are being uploaded. Please stay on this page to ensure your browser continues to process your project." }));
             var n = performance.now();
@@ -7702,7 +7784,7 @@ for (let e = 17; e >= 0; e--) {
             );
         }
         createFinishedPage(e) {
-            let t = this.export.createPage("Upload complete", !0, () => (this.export.pageBackStack.splice(2), this.uploadCleanUp(), !0));
+            let t = this.export.createPage("Upload complete", true, () => (this.export.pageBackStack.splice(2), this.uploadCleanUp(), true));
             return (
                 t.appendChild(PZ.ui.controls.legacy.generateDescription({ content: "Your render has started! Track its progress with the link below." })),
                 t.appendChild(PZ.ui.controls.legacy.generateSpacer()),
@@ -7722,7 +7804,7 @@ for (let e = 17; e >= 0; e--) {
             );
         }
         createErrorPage(e) {
-            let t = this.export.createPage("Upload error", !0, () => (this.export.pageBackStack.splice(2), this.uploadCleanUp(), !0));
+            let t = this.export.createPage("Upload error", true, () => (this.export.pageBackStack.splice(2), this.uploadCleanUp(), true));
             return t.appendChild(PZ.ui.controls.legacy.generateDescription({ content: e || "Unfortunately, your upload could not be completed. Please try again later. Sorry about that." })), t;
         }
         async upload(e) {
@@ -7732,7 +7814,7 @@ for (let e = 17; e >= 0; e--) {
                 (t = await PZ.api("/renders", "post", {
                     token: this.cloudToken,
                     nonce: this.cloudPaymentNonce,
-                    uploads: this.connections.filter((e) => !0 === e.enabled && !0 === e.params.validate()).map((e) => ({ serviceConnectionId: e.connectionId, uploadParams: e.params })),
+                    uploads: this.connections.filter((e) => true === e.enabled && true === e.params.validate()).map((e) => ({ serviceConnectionId: e.connectionId, uploadParams: e.params })),
                 })).status
             )
                 return null;
@@ -7743,7 +7825,7 @@ for (let e = 17; e >= 0; e--) {
             return s.append("x-csrf-token", PZ.account.csrf), 200 !== (t = await e.fetchWithRetry(PZ.apiOrigin + "/renders/" + i, { method: "put", headers: s, credentials: "include" })).status ? null : i;
         }
         uploadCleanUp() {
-            (this.editor.enabled = !0), (this.editor.playback.enabled = !0);
+            (this.editor.enabled = true), (this.editor.playback.enabled = true);
         }
     }),
     (PZ.ui.export.device = class {
@@ -7751,14 +7833,14 @@ for (let e = 17; e >= 0; e--) {
             (this.export = e), (this.editor = this.export.editor), (this.DEVICE_FORMATS = ["mkv_vp8_opus", "webm_vp8_opus"]), (this.params = null);
         }
         createOptionsPage() {
-            let e = this.export.createPage("Device render", !0, () => (this.editor.sequence.onLengthChanged.unwatch(this.updateLength_bound), !0));
+            let e = this.export.createPage("Device render", true, () => (this.editor.sequence.onLengthChanged.unwatch(this.updateLength_bound), true));
             return (
                 (this.params = { width: 1920, height: 1080, rate: 30, quality: 2, format: "mkv_vp8_opus", start: 0, length: 0 }),
                 (this.updateLength_bound = function () {
                     let e = this.params.rate / this.editor.sequence.properties.rate.get();
                     this.params.length = this.editor.sequence.length * e;
                 }.bind(this)),
-                this.editor.sequence.onLengthChanged.watch(this.updateLength_bound, !0),
+                this.editor.sequence.onLengthChanged.watch(this.updateLength_bound, true),
                 e.appendChild(
                     PZ.ui.controls.legacy.generateDropdown(
                         {
@@ -7827,7 +7909,7 @@ for (let e = 17; e >= 0; e--) {
                         {
                             title: "Start",
                             clickfn: async function () {
-                                this.editor.sequence.onLengthChanged.unwatch(this.updateLength_bound), this.export.navigate(this.createProgressPage(), !0);
+                                this.editor.sequence.onLengthChanged.unwatch(this.updateLength_bound), this.export.navigate(this.createProgressPage(), true);
                             },
                         },
                         this
@@ -7837,10 +7919,10 @@ for (let e = 17; e >= 0; e--) {
             );
         }
         createProgressPage() {
-            (this.editor.enabled = !1), (this.editor.playback.enabled = !1);
+            (this.editor.enabled = false), (this.editor.playback.enabled = false);
             let e,
                 t = new PZ.export(this.editor.sequence, this.params),
-                i = this.export.createPage("Rendering...", !0, () => (clearInterval(e), PZ.av.stop(), t.unload(), this.renderCleanUp(), !0));
+                i = this.export.createPage("Rendering...", true, () => (clearInterval(e), PZ.av.stop(), t.unload(), this.renderCleanUp(), true));
             i.appendChild(PZ.ui.controls.legacy.generateDescription({ content: "Your video is being rendered. Please stay on this page to ensure your browser continues to process the video." }));
             var s = performance.now();
             let n;
@@ -7888,7 +7970,7 @@ for (let e = 17; e >= 0; e--) {
             );
         }
         createFinishedPage() {
-            let e = this.export.createPage("Render complete", !0, () => (this.renderCleanUp(), !0));
+            let e = this.export.createPage("Render complete", true, () => (this.renderCleanUp(), true));
             return (
                 e.appendChild(PZ.ui.controls.legacy.generateDescription({ content: "Your render is finished! Click below to download." })),
                 e.appendChild(PZ.ui.controls.legacy.generateSpacer()),
@@ -7908,7 +7990,7 @@ for (let e = 17; e >= 0; e--) {
             );
         }
         createErrorPage(e) {
-            let t = this.export.createPage("Render error", !0, () => (this.renderCleanUp(), !0));
+            let t = this.export.createPage("Render error", true, () => (this.renderCleanUp(), true));
             return (
                 t.appendChild(PZ.ui.controls.legacy.generateDescription({ content: 'Unfortunately, your render could not be completed. Sorry about that.<span style="display:block;margin-top:20px;color:#666">Error: ' + e + "</span>" })), t
             );
@@ -7917,7 +7999,7 @@ for (let e = 17; e >= 0; e--) {
             return await PZ.file.getQuota(), await PZ.av.encode(e, this.params);
         }
         renderCleanUp() {
-            (PZ.downloadBlob = null), PZ.file.cleanUp(), (this.editor.enabled = !0), (this.editor.playback.enabled = !0);
+            (PZ.downloadBlob = null), PZ.file.cleanUp(), (this.editor.enabled = true), (this.editor.playback.enabled = true);
         }
     }),
     (PZ.ui.export.frame = class {
@@ -7925,7 +8007,7 @@ for (let e = 17; e >= 0; e--) {
             (this.export = e), (this.editor = this.export.editor), (this.FRAME_FORMATS = ["png", "jpg", "webp"]), (this.params = null);
         }
         createOptionsPage(e) {
-            let t = this.export.createPage("Image render", !e, () => !0);
+            let t = this.export.createPage("Image render", !e, () => true);
             return (
                 (this.params = { width: 1920, height: 1080, rate: 0, quality: 1, format: "png", start: 0, length: 1 }),
                 t.appendChild(
@@ -7965,7 +8047,7 @@ for (let e = 17; e >= 0; e--) {
                             title: "Start",
                             clickfn: async function () {
                                 let e = this.editor.sequence.properties.resolution.get();
-                                (this.params.start = this.editor.playback.currentFrame), (this.params.width = e[0]), (this.params.height = e[1]), this.export.navigate(this.createProgressPage(), !0);
+                                (this.params.start = this.editor.playback.currentFrame), (this.params.width = e[0]), (this.params.height = e[1]), this.export.navigate(this.createProgressPage(), true);
                             },
                         },
                         this
@@ -7975,10 +8057,10 @@ for (let e = 17; e >= 0; e--) {
             );
         }
         createProgressPage() {
-            (this.editor.enabled = !1), (this.editor.playback.enabled = !1);
+            (this.editor.enabled = false), (this.editor.playback.enabled = false);
             let e,
                 t = new PZ.export(this.editor.sequence, this.params),
-                i = this.export.createPage("Rendering...", !0, () => (clearInterval(e), t.unload(), this.renderCleanUp(), !0));
+                i = this.export.createPage("Rendering...", true, () => (clearInterval(e), t.unload(), this.renderCleanUp(), true));
             i.appendChild(PZ.ui.controls.legacy.generateDescription({ content: "Your image is being rendered. Please stay on this page to ensure your browser continues to process the image." }));
             var s = performance.now();
             this.render(t).then(
@@ -8017,7 +8099,7 @@ for (let e = 17; e >= 0; e--) {
             );
         }
         createFinishedPage() {
-            let e = this.export.createPage("Render complete", !0, () => (this.renderCleanUp(), !0));
+            let e = this.export.createPage("Render complete", true, () => (this.renderCleanUp(), true));
             return (
                 e.appendChild(PZ.ui.controls.legacy.generateDescription({ content: "Your render is finished! Click below to download." })),
                 e.appendChild(PZ.ui.controls.legacy.generateSpacer()),
@@ -8037,14 +8119,14 @@ for (let e = 17; e >= 0; e--) {
             );
         }
         createErrorPage() {
-            let e = this.export.createPage("Render error", !0, () => (this.renderCleanUp(), !0));
+            let e = this.export.createPage("Render error", true, () => (this.renderCleanUp(), true));
             return e.appendChild(PZ.ui.controls.legacy.generateDescription({ content: "Unfortunately, your render could not be completed. Sorry about that." })), e;
         }
         async render(e) {
             return await PZ.imageEncoder.encode(e, this.params);
         }
         renderCleanUp() {
-            (PZ.downloadBlob = null), (this.editor.enabled = !0), (this.editor.playback.enabled = !0);
+            (PZ.downloadBlob = null), (this.editor.enabled = true), (this.editor.playback.enabled = true);
         }
     }),
     (PZ.ui.export.YouTube = class {
@@ -8052,7 +8134,7 @@ for (let e = 17; e >= 0; e--) {
             return new PZ.ui.export.YouTube.params();
         }
         static createOptionsPage(e, t, i) {
-            let s = e.createPage(`YouTube Options: ${t.accountName}`, !0);
+            let s = e.createPage(`YouTube Options: ${t.accountName}`, true);
             const n = t.params;
             return (
                 s.appendChild(
@@ -8208,8 +8290,8 @@ for (let e = 17; e >= 0; e--) {
                 (this.privacyStatus = "public"),
                 (this.publishAt = void 0),
                 (this.license = "youtube"),
-                (this.embeddable = !0),
-                (this.publicStatsViewable = !0);
+                (this.embeddable = true),
+                (this.publicStatsViewable = true);
         }
         validate() {
             return (
@@ -8266,10 +8348,10 @@ for (let e = 17; e >= 0; e--) {
         function r(e, t, i) {
             const s = t || "codeflask-style",
                 n = i || document.head;
-            if (!e) return !1;
-            if (document.getElementById(s)) return !0;
+            if (!e) return false;
+            if (document.getElementById(s)) return true;
             const r = document.createElement("style");
-            return (r.innerHTML = e), (r.id = s), n.appendChild(r), !0;
+            return (r.innerHTML = e), (r.id = s), n.appendChild(r), true;
         }
         const a = { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;", "/": "&#x2F;", "`": "&#x60;", "=": "&#x3D;" };
         function o(e) {
@@ -8357,8 +8439,8 @@ for (let e = 17; e >= 0; e--) {
                                                 e.hasOwnProperty(r) &&
                                                     (t.call(e, r, e[r], i || r),
                                                     "Object" !== s.util.type(e[r]) || n[s.util.objId(e[r])]
-                                                        ? "Array" !== s.util.type(e[r]) || n[s.util.objId(e[r])] || ((n[s.util.objId(e[r])] = !0), s.languages.DFS(e[r], t, r, n))
-                                                        : ((n[s.util.objId(e[r])] = !0), s.languages.DFS(e[r], t, null, n)));
+                                                        ? "Array" !== s.util.type(e[r]) || n[s.util.objId(e[r])] || ((n[s.util.objId(e[r])] = true), s.languages.DFS(e[r], t, r, n))
+                                                        : ((n[s.util.objId(e[r])] = true), s.languages.DFS(e[r], t, null, n)));
                                         },
                                     },
                                     plugins: {},
@@ -8368,7 +8450,7 @@ for (let e = 17; e >= 0; e--) {
                                     highlightAllUnder: function (e, t, i) {
                                         var n = { callback: i, selector: 'code[class*="language-"], [class*="language-"] code, code[class*="lang-"], [class*="lang-"] code' };
                                         s.hooks.run("before-highlightall", n);
-                                        for (var r, a = n.elements || e.querySelectorAll(n.selector), o = 0; (r = a[o++]); ) s.highlightElement(r, !0 === t, n.callback);
+                                        for (var r, a = n.elements || e.querySelectorAll(n.selector), o = 0; (r = a[o++]); ) s.highlightElement(r, true === t, n.callback);
                                     },
                                     highlightElement: function (i, n, r) {
                                         for (var a, o, l = i; l && !e.test(l.className); ) l = l.parentNode;
@@ -8383,7 +8465,7 @@ for (let e = 17; e >= 0; e--) {
                                             (c.onmessage = function (e) {
                                                 (h.highlightedCode = e.data), s.hooks.run("before-insert", h), (h.element.innerHTML = h.highlightedCode), r && r.call(h.element), s.hooks.run("after-highlight", h), s.hooks.run("complete", h);
                                             }),
-                                                c.postMessage(JSON.stringify({ language: h.language, code: h.code, immediateClose: !0 }));
+                                                c.postMessage(JSON.stringify({ language: h.language, code: h.code, immediateClose: true }));
                                         } else
                                             (h.highlightedCode = s.highlight(h.code, h.grammar, h.language)),
                                                 s.hooks.run("before-insert", h),
@@ -8438,7 +8520,7 @@ for (let e = 17; e >= 0; e--) {
                                                                     S = [v, Z];
                                                                 _ && (++v, (x += _.length), S.push(_));
                                                                 var L = new l(h, u ? s.tokenize(T, u) : T, g, T, f);
-                                                                if ((S.push(L), j && S.push(j), Array.prototype.splice.apply(t, S), 1 != Z && s.matchGrammar(e, t, i, v, x, !0, h), a)) break;
+                                                                if ((S.push(L), j && S.push(j), Array.prototype.splice.apply(t, S), 1 != Z && s.matchGrammar(e, t, i, v, x, true, h), a)) break;
                                                             } else if (a) break;
                                                         }
                                                     }
@@ -8452,7 +8534,7 @@ for (let e = 17; e >= 0; e--) {
                                             for (var a in r) t[a] = r[a];
                                             delete t.rest;
                                         }
-                                        return s.matchGrammar(e, n, t, 0, 0, !1), n;
+                                        return s.matchGrammar(e, n, t, 0, 0, false), n;
                                     },
                                     hooks: {
                                         all: {},
@@ -8504,7 +8586,7 @@ for (let e = 17; e >= 0; e--) {
                                                       a = i.immediateClose;
                                                   t.postMessage(s.highlight(r, s.languages[n], n)), a && t.close();
                                               },
-                                              !1
+                                              false
                                           ),
                                       t.Prism)
                                     : t.Prism;
@@ -8531,10 +8613,10 @@ for (let e = 17; e >= 0; e--) {
                             cdata: /<!\[CDATA\[[\s\S]*?]]>/i,
                             tag: {
                                 pattern: /<\/?(?!\d)[^\s>\/=$<%]+(?:\s+[^\s>\/=]+(?:=(?:("|')(?:\\[\s\S]|(?!\1)[^\\])*\1|[^\s'">=]+))?)*\s*\/?>/i,
-                                greedy: !0,
+                                greedy: true,
                                 inside: {
                                     tag: { pattern: /^<\/?[^\s>\/]+/i, inside: { punctuation: /^<\/?/, namespace: /^[^\s>\/:]+:/ } },
-                                    "attr-value": { pattern: /=(?:("|')(?:\\[\s\S]|(?!\1)[^\\])*\1|[^\s'">=]+)/i, inside: { punctuation: [/^=/, { pattern: /(^|[^\\])["']/, lookbehind: !0 }] } },
+                                    "attr-value": { pattern: /=(?:("|')(?:\\[\s\S]|(?!\1)[^\\])*\1|[^\s'">=]+)/i, inside: { punctuation: [/^=/, { pattern: /(^|[^\\])["']/, lookbehind: true }] } },
                                     punctuation: /\/?>/,
                                     "attr-name": { pattern: /[^\s>\/]+/, inside: { namespace: /^[^\s>\/:]+:/ } },
                                 },
@@ -8554,7 +8636,7 @@ for (let e = 17; e >= 0; e--) {
                             atrule: { pattern: /@[\w-]+?.*?(?:;|(?=\s*\{))/i, inside: { rule: /@[\w-]+/ } },
                             url: /url\((?:(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1|.*?)\)/i,
                             selector: /[^{}\s][^{};]*?(?=\s*\{)/,
-                            string: { pattern: /("|')(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/, greedy: !0 },
+                            string: { pattern: /("|')(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/, greedy: true },
                             property: /[-_a-z\xA0-\uFFFF][-\w\xA0-\uFFFF]*(?=\s*:)/i,
                             important: /\B!important\b/i,
                             function: /[-a-z0-9]+(?=\()/i,
@@ -8562,7 +8644,7 @@ for (let e = 17; e >= 0; e--) {
                         }),
                         (i.languages.css.atrule.inside.rest = i.languages.css),
                         i.languages.markup &&
-                            (i.languages.insertBefore("markup", "tag", { style: { pattern: /(<style[\s\S]*?>)[\s\S]*?(?=<\/style>)/i, lookbehind: !0, inside: i.languages.css, alias: "language-css", greedy: !0 } }),
+                            (i.languages.insertBefore("markup", "tag", { style: { pattern: /(<style[\s\S]*?>)[\s\S]*?(?=<\/style>)/i, lookbehind: true, inside: i.languages.css, alias: "language-css", greedy: true } }),
                             i.languages.insertBefore(
                                 "inside",
                                 "attr-value",
@@ -8577,11 +8659,11 @@ for (let e = 17; e >= 0; e--) {
                             )),
                         (i.languages.clike = {
                             comment: [
-                                { pattern: /(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/, lookbehind: !0 },
-                                { pattern: /(^|[^\\:])\/\/.*/, lookbehind: !0, greedy: !0 },
+                                { pattern: /(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/, lookbehind: true },
+                                { pattern: /(^|[^\\:])\/\/.*/, lookbehind: true, greedy: true },
                             ],
-                            string: { pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/, greedy: !0 },
-                            "class-name": { pattern: /((?:\b(?:class|interface|extends|implements|trait|instanceof|new)\s+)|(?:catch\s+\())[\w.\\]+/i, lookbehind: !0, inside: { punctuation: /[.\\]/ } },
+                            string: { pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/, greedy: true },
+                            "class-name": { pattern: /((?:\b(?:class|interface|extends|implements|trait|instanceof|new)\s+)|(?:catch\s+\())[\w.\\]+/i, lookbehind: true, inside: { punctuation: /[.\\]/ } },
                             keyword: /\b(?:if|else|while|do|for|return|in|instanceof|function|new|try|throw|catch|finally|null|break|continue)\b/,
                             boolean: /\b(?:true|false)\b/,
                             function: /[a-z0-9_]+(?=\()/i,
@@ -8596,27 +8678,27 @@ for (let e = 17; e >= 0; e--) {
                             operator: /-[-=]?|\+[+=]?|!=?=?|<<?=?|>>?>?=?|=(?:==?|>)?|&[&=]?|\|[|=]?|\*\*?=?|\/=?|~|\^=?|%=?|\?|\.{3}/,
                         })),
                         i.languages.insertBefore("javascript", "keyword", {
-                            regex: { pattern: /((?:^|[^$\w\xA0-\uFFFF."'\])\s])\s*)\/(\[[^\]\r\n]+]|\\.|[^/\\\[\r\n])+\/[gimyu]{0,5}(?=\s*($|[\r\n,.;})\]]))/, lookbehind: !0, greedy: !0 },
+                            regex: { pattern: /((?:^|[^$\w\xA0-\uFFFF."'\])\s])\s*)\/(\[[^\]\r\n]+]|\\.|[^/\\\[\r\n])+\/[gimyu]{0,5}(?=\s*($|[\r\n,.;})\]]))/, lookbehind: true, greedy: true },
                             "function-variable": { pattern: /[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*(?=\s*=\s*(?:function\b|(?:\([^()]*\)|[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*)\s*=>))/i, alias: "function" },
                             constant: /\b[A-Z][A-Z\d_]*\b/,
                         }),
                         i.languages.insertBefore("javascript", "string", {
                             "template-string": {
                                 pattern: /`(?:\\[\s\S]|\${[^}]+}|[^\\`])*`/,
-                                greedy: !0,
+                                greedy: true,
                                 inside: { interpolation: { pattern: /\${[^}]+}/, inside: { "interpolation-punctuation": { pattern: /^\${|}$/, alias: "punctuation" }, rest: null } }, string: /[\s\S]+/ },
                             },
                         }),
                         (i.languages.javascript["template-string"].inside.interpolation.inside.rest = i.languages.javascript),
                         i.languages.markup &&
-                            i.languages.insertBefore("markup", "tag", { script: { pattern: /(<script[\s\S]*?>)[\s\S]*?(?=<\/script>)/i, lookbehind: !0, inside: i.languages.javascript, alias: "language-javascript", greedy: !0 } }),
+                            i.languages.insertBefore("markup", "tag", { script: { pattern: /(<script[\s\S]*?>)[\s\S]*?(?=<\/script>)/i, lookbehind: true, inside: i.languages.javascript, alias: "language-javascript", greedy: true } }),
                         (i.languages.js = i.languages.javascript),
                         (i.languages.glsl = i.languages.extend("clike", {
                             comment: [/\/\*[\s\S]*?\*\//, /\/\/(?:\\(?:\r\n|[\s\S])|[^\\\r\n])*/],
                             number: /(?:\b0x[\da-f]+|(?:\b\d+\.?\d*|\B\.\d+)(?:e[+-]?\d+)?)[ulf]*/i,
                             keyword: /\b(?:attribute|const|uniform|varying|buffer|shared|coherent|volatile|restrict|readonly|writeonly|atomic_uint|layout|centroid|flat|smooth|noperspective|patch|sample|break|continue|do|for|while|switch|case|default|if|else|subroutine|in|out|inout|float|double|int|void|bool|true|false|invariant|precise|discard|return|d?mat[234](?:x[234])?|[ibdu]?vec[234]|uint|lowp|mediump|highp|precision|[iu]?sampler[123]D|[iu]?samplerCube|sampler[12]DShadow|samplerCubeShadow|[iu]?sampler[12]DArray|sampler[12]DArrayShadow|[iu]?sampler2DRect|sampler2DRectShadow|[iu]?samplerBuffer|[iu]?sampler2DMS(?:Array)?|[iu]?samplerCubeArray|samplerCubeArrayShadow|[iu]?image[123]D|[iu]?image2DRect|[iu]?imageCube|[iu]?imageBuffer|[iu]?image[12]DArray|[iu]?imageCubeArray|[iu]?image2DMS(?:Array)?|struct|common|partition|active|asm|class|union|enum|typedef|template|this|resource|goto|inline|noinline|public|static|extern|external|interface|long|short|half|fixed|unsigned|superp|input|output|hvec[234]|fvec[234]|sampler3DRect|filter|sizeof|cast|namespace|using)\b/,
                         })),
-                        i.languages.insertBefore("glsl", "comment", { preprocessor: { pattern: /(^[ \t]*)#(?:(?:define|undef|if|ifdef|ifndef|else|elif|endif|error|pragma|extension|version|line)\b)?/m, lookbehind: !0, alias: "builtin" } }),
+                        i.languages.insertBefore("glsl", "comment", { preprocessor: { pattern: /(^[ \t]*)#(?:(?:define|undef|if|ifdef|ifndef|else|elif|endif|error|pragma|extension|version|line)\b)?/m, lookbehind: true, alias: "builtin" } }),
                         "undefined" != typeof self &&
                             self.Prism &&
                             self.document &&
@@ -8632,7 +8714,7 @@ for (let e = 17; e >= 0; e--) {
                                     var l = document.createElement("code");
                                     (l.className = "language-" + s), (t.textContent = ""), (l.textContent = "Loading…"), t.appendChild(l);
                                     var h = new XMLHttpRequest();
-                                    h.open("GET", n, !0),
+                                    h.open("GET", n, true),
                                         (h.onreadystatechange = function () {
                                             4 == h.readyState &&
                                                 (h.status < 400 && h.responseText
@@ -8691,17 +8773,17 @@ for (let e = 17; e >= 0; e--) {
                 return t.appendChild(i), i;
             }
             runOptions() {
-                (this.opts.rtl = this.opts.rtl || !1),
+                (this.opts.rtl = this.opts.rtl || false),
                     (this.opts.tabSize = this.opts.tabSize || 2),
-                    (this.opts.enableAutocorrect = this.opts.enableAutocorrect || !1),
-                    (this.opts.lineNumbers = this.opts.lineNumbers || !1),
-                    (this.opts.defaultTheme = !1 !== this.opts.defaultTheme),
+                    (this.opts.enableAutocorrect = this.opts.enableAutocorrect || false),
+                    (this.opts.lineNumbers = this.opts.lineNumbers || false),
+                    (this.opts.defaultTheme = false !== this.opts.defaultTheme),
                     (this.opts.areaId = this.opts.areaId || null),
                     (this.opts.ariaLabelledby = this.opts.ariaLabelledby || null),
                     (this.opts.readonly = this.opts.readonly || null),
-                    "boolean" != typeof this.opts.handleTabs && (this.opts.handleTabs = !0),
-                    !0 === this.opts.rtl && (this.elTextarea.setAttribute("dir", "rtl"), this.elPre.setAttribute("dir", "rtl")),
-                    !1 === this.opts.enableAutocorrect &&
+                    "boolean" != typeof this.opts.handleTabs && (this.opts.handleTabs = true),
+                    true === this.opts.rtl && (this.elTextarea.setAttribute("dir", "rtl"), this.elPre.setAttribute("dir", "rtl")),
+                    false === this.opts.enableAutocorrect &&
                         (this.elTextarea.setAttribute("spellcheck", "false"), this.elTextarea.setAttribute("autocapitalize", "off"), this.elTextarea.setAttribute("autocomplete", "off"), this.elTextarea.setAttribute("autocorrect", "off")),
                     this.opts.lineNumbers && (this.elWrapper.classList.add("codeflask--has-line-numbers"), this.createLineNumbers()),
                     this.opts.defaultTheme && r(e, "theme-default", this.opts.styleParent),
@@ -8783,7 +8865,7 @@ for (let e = 17; e >= 0; e--) {
                 this.updateCode(this.code);
             }
             highlight() {
-                c.highlightElement(this.elCode, !1);
+                c.highlightElement(this.elCode, false);
             }
             onUpdate(e) {
                 if (e && "[object Function]" !== {}.toString.call(e)) throw Error("CodeFlask expects callback of type Function");
@@ -8796,7 +8878,7 @@ for (let e = 17; e >= 0; e--) {
                 this.updateCallBack && this.updateCallBack(this.code);
             }
             enableReadonlyMode() {
-                this.elTextarea.setAttribute("readonly", !0);
+                this.elTextarea.setAttribute("readonly", true);
             }
             disableReadonlyMode() {
                 this.elTextarea.removeAttribute("readonly");
@@ -8806,7 +8888,7 @@ for (let e = 17; e >= 0; e--) {
     (PZ.ui.expression = function (e, t) {
         PZ.ui.panel.call(this, e),
             (this.el.style = "background-color: #242424;"),
-            (this.canDuplicate = !0),
+            (this.canDuplicate = true),
             (this.minWidth = 45),
             (this.minHeight = 45),
             (this.property = t.property),
@@ -8824,18 +8906,18 @@ for (let e = 17; e >= 0; e--) {
             (this.statusEl = document.createElement("div")),
             (this.statusEl.style = "font-family: 'Source Code Pro', monospace; position: absolute; bottom: 0; left:0; right: 0; height: 20px; color: #aaa; background: #111; font-size: 14px; padding: 2px; box-sizing: border-box;"),
             this.el.appendChild(this.statusEl),
-            (this.codeFlask = new CodeFlask(this.editEl, { styleParent: this.el.ownerDocument.head, language: "js", lineNumbers: !0 })),
+            (this.codeFlask = new CodeFlask(this.editEl, { styleParent: this.el.ownerDocument.head, language: "js", lineNumbers: true })),
             (this.expressionChangedHandler = () => {
                 let e = "",
                     t = "";
                 this.property.expression && ((e = this.property.expression.source), this.property.expression.error && (t = this.property.expression.error)),
-                    this.selfTriggered ? ((this.selfTriggered = !1), (this.statusEl.innerText = t)) : (this.codeFlask.updateCode(e), (this.statusEl.innerText = t));
+                    this.selfTriggered ? ((this.selfTriggered = false), (this.statusEl.innerText = t)) : (this.codeFlask.updateCode(e), (this.statusEl.innerText = t));
             }),
-            this.property.onExpressionChanged.watch(this.expressionChangedHandler, !0),
+            this.property.onExpressionChanged.watch(this.expressionChangedHandler, true),
             this.codeFlask.elTextarea.addEventListener("keydown", (e) => {
                 e.ctrlKey &&
                     "Enter" === e.key &&
-                    (this.editor.history.startOperation(), this.propertyOps.setExpression({ property: this.property.getAddress(), expression: this.codeFlask.getCode() }), this.editor.history.finishOperation(), (this.selfTriggered = !0));
+                    (this.editor.history.startOperation(), this.propertyOps.setExpression({ property: this.property.getAddress(), expression: this.codeFlask.getCode() }), this.editor.history.finishOperation(), (this.selfTriggered = true));
             });
     }),
     (PZ.ui.expression.prototype.resize = function () {}),
@@ -8843,7 +8925,7 @@ for (let e = 17; e >= 0; e--) {
     (PZ.ui.shader = function (e, t) {
         PZ.ui.panel.call(this, e),
             (this.el.style = "background-color: #242424;"),
-            (this.canDuplicate = !0),
+            (this.canDuplicate = true),
             (this.minWidth = 45),
             (this.minHeight = 45),
             (this.property = t.property),
@@ -8865,17 +8947,17 @@ for (let e = 17; e >= 0; e--) {
             (this.statusEl = document.createElement("div")),
             (this.statusEl.style = "font-family: 'Source Code Pro', monospace; position: absolute; bottom: 0; left:0; right: 0; height: 20px; color: #aaa; background: #111; font-size: 14px; padding: 2px; box-sizing: border-box;"),
             this.el.appendChild(this.statusEl),
-            (this.codeFlask = new CodeFlask(this.editEl, { styleParent: this.el.ownerDocument.head, language: "glsl", lineNumbers: !0 })),
+            (this.codeFlask = new CodeFlask(this.editEl, { styleParent: this.el.ownerDocument.head, language: "glsl", lineNumbers: true })),
             (this.shaderChangedHandler = () => {
                 let e = "";
                 (e = this.property.get()),
-                    this.selfTriggered ? ((this.selfTriggered = !1), (this.statusEl.innerText = ""), (this.statusEl.title = "")) : (this.codeFlask.updateCode(e), (this.statusEl.innerText = ""), (this.statusEl.title = ""));
+                    this.selfTriggered ? ((this.selfTriggered = false), (this.statusEl.innerText = ""), (this.statusEl.title = "")) : (this.codeFlask.updateCode(e), (this.statusEl.innerText = ""), (this.statusEl.title = ""));
             }),
-            this.property.onChanged.watch(this.shaderChangedHandler, !0),
+            this.property.onChanged.watch(this.shaderChangedHandler, true),
             this.codeFlask.elTextarea.addEventListener("keydown", (e) => {
                 e.ctrlKey &&
                     "Enter" === e.key &&
-                    (this.editor.history.startOperation(), this.propertyOps.setValue({ property: this.property.getAddress(), value: this.codeFlask.getCode() }), this.editor.history.finishOperation(), (this.selfTriggered = !0));
+                    (this.editor.history.startOperation(), this.propertyOps.setValue({ property: this.property.getAddress(), value: this.codeFlask.getCode() }), this.editor.history.finishOperation(), (this.selfTriggered = true));
             });
     }),
     (PZ.ui.shader.prototype.resize = function () {}),
@@ -8909,7 +8991,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
             this.onEnabledChanged.watch(() => {
                 this.enabled ? (this.animFrameReq = requestAnimationFrame(this._updateFn)) : cancelAnimationFrame(this.animFrameReq);
             }),
-            (this.selectNewKeyframes = !1),
+            (this.selectNewKeyframes = false),
             this.create();
     }
     updateViewBox() {
@@ -8969,11 +9051,11 @@ const SVGNS = "http://www.w3.org/2000/svg";
             (this.startValue = this.kf.pz_object.value),
             (this.lastValue = this.startValue),
             (this.deltaUnits = 0),
-            this.kf.classList.contains("selected") ? (this.originalState = !0) : ((this.originalState = !1), e.shiftKey || this.ctx.deselectAllKeyframes(), this.ctx.selectKeyframe(this.kf));
+            this.kf.classList.contains("selected") ? (this.originalState = true) : ((this.originalState = false), e.shiftKey || this.ctx.deselectAllKeyframes(), this.ctx.selectKeyframe(this.kf));
         let s = this.ctx.centerX - 0.5 * this.ctx.width * this.ctx.zoomX,
             n = this.ctx.centerY - 0.5 * this.ctx.height * this.ctx.zoomY;
         (this.offset = { x: this.currentPt.x - (this.startFrame - s) / this.ctx.zoomX, y: this.currentPt.y - (-this.startValue - n) / this.ctx.zoomY }),
-            (this.moved = !1),
+            (this.moved = false),
             (this.keyframeEls = Array.from(t.getElementsByClassName("selected"))),
             this.keyframeEls.forEach((e) => (e.pz_oldFrame = e.pz_object.frame)),
             this.keyframeEls.forEach((e) => (e.pz_oldValue = e.pz_object.value)),
@@ -8985,7 +9067,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
     }
     keyframeDragUpdate() {
         if (!this.moved && Math.abs(this.currentPt.x - this.startPt.x) + Math.abs(this.currentPt.y - this.startPt.y) < 4) return;
-        this.moved = !0;
+        this.moved = true;
         this.ctx.svg;
         let e = this.ctx.centerX - 0.5 * this.ctx.width * this.ctx.zoomX,
             t = this.ctx.centerY - 0.5 * this.ctx.height * this.ctx.zoomY,
@@ -9003,9 +9085,9 @@ const SVGNS = "http://www.w3.org/2000/svg";
         }
     }
     keyframeDragEnd(e) {
-        if ((e.shiftKey && !1 === this.moved && !0 === this.originalState && this.ctx.deselectKeyframe(this.kf), !0 === this.moved)) {
+        if ((e.shiftKey && false === this.moved && true === this.originalState && this.ctx.deselectKeyframe(this.kf), true === this.moved)) {
             let e = this.lastFrame - this.startFrame > 0;
-            (this.ctx.selectNewKeyframes = !0), this.ctx.finishMovingKeyframes(e), (this.ctx.selectNewKeyframes = !1);
+            (this.ctx.selectNewKeyframes = true), this.ctx.finishMovingKeyframes(e), (this.ctx.selectNewKeyframes = false);
         }
         this.ctx.editor.history.finishOperation();
     }
@@ -9051,7 +9133,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
         let n = this.ctx.centerX - 0.5 * this.ctx.width * this.ctx.zoomX,
             r = this.ctx.centerY - 0.5 * this.ctx.height * this.ctx.zoomY;
         (this.offset = { x: this.currentPt.x - (this.startFrame - n) / this.ctx.zoomX, y: this.currentPt.y - (-this.startValue - r) / this.ctx.zoomY }),
-            (this.moved = !1),
+            (this.moved = false),
             (this.keyframeEls = Array.from(t.getElementsByClassName("selected"))),
             this.keyframeEls.forEach((e) => (e.pz_oldControlPoints = JSON.parse(JSON.stringify(e.pz_object.controlPoints)))),
             e.stopPropagation(),
@@ -9062,7 +9144,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
     }
     handleDragUpdate() {
         if (!this.moved && Math.abs(this.currentPt.x - this.startPt.x) + Math.abs(this.currentPt.y - this.startPt.y) < 4) return;
-        this.moved = !0;
+        this.moved = true;
         this.ctx.svg;
         let e = this.ctx.centerX - 0.5 * this.ctx.width * this.ctx.zoomX,
             t = this.ctx.centerY - 0.5 * this.ctx.height * this.ctx.zoomY,
@@ -9087,7 +9169,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
         }
     }
     handleDragEnd(e) {
-        !0 === this.moved && this.ctx.finishMovingHandles(this.breakTangent), this.ctx.editor.history.finishOperation();
+        true === this.moved && this.ctx.finishMovingHandles(this.breakTangent), this.ctx.editor.history.finishOperation();
     }
     finishMovingHandles(e) {
         let t = this.svg.children;
@@ -9099,7 +9181,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
                 let i = s[t],
                     r = i.pz_object;
                 if (e && r.continuousTangent) {
-                    let e = { property: n, frame: r.frame, continuous: !1 };
+                    let e = { property: n, frame: r.frame, continuous: false };
                     this.propertyOps.setContinuousTangent(e);
                 }
                 this.editor.history.pushCommand(PZ.ui.properties.prototype.setControlPoints.bind(this), { property: n, frame: r.frame, controlPoints: i.pz_oldControlPoints });
@@ -9291,7 +9373,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
             let s = `hsl(${(40 * PZ.stringHash(t || "")) % 360}, 40%, 45%)`;
             i.setAttributeNS(null, "stroke", s);
         };
-        e.properties && e.properties.name ? ((t.pz_nameChanged = s), e.properties.name.onChanged.watch(t.pz_nameChanged, !0)) : s(e.definition ? e.definition.name : "Object");
+        e.properties && e.properties.name ? ((t.pz_nameChanged = s), e.properties.name.onChanged.watch(t.pz_nameChanged, true)) : s(e.definition ? e.definition.name : "Object");
         let n = document.createElementNS(SVGNS, "g");
         t.appendChild(n);
         let r = document.createElementNS(SVGNS, "g");
@@ -9312,7 +9394,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
                     let e = a.start;
                     (t.pz_frameOffset = e), t.setAttributeNS(null, "transform", `translate(${e} 0)`), this.updateViewBox();
                 }),
-                t.pz_sequence.ui.onClipMoved.watch(t.pz_clipMoved, !0)),
+                t.pz_sequence.ui.onClipMoved.watch(t.pz_clipMoved, true)),
             this.redrawAllKeyframes(t),
             t
         );
@@ -9628,11 +9710,11 @@ const SVGNS = "http://www.w3.org/2000/svg";
     }),
     (PZ.ui.graphEditor = class extends PZ.ui.splitPanel {
         constructor(e, t) {
-            let i = new PZ.ui.edit(e, { columnLayout: 2, showPropertyControls: !1, hideAllListItemButtons: !0, selectionFilter: (e) => e instanceof PZ.property.dynamic.keyframes }),
+            let i = new PZ.ui.edit(e, { columnLayout: 2, showPropertyControls: false, hideAllListItemButtons: true, selectionFilter: (e) => e instanceof PZ.property.dynamic.keyframes }),
                 s = new PZ.ui.graph(e);
             if (e.sequence) {
                 let t = new PZ.objectList();
-                t.push(e.sequence), (i.enabled = !0), (i.objects = t);
+                t.push(e.sequence), (i.enabled = true), (i.objects = t);
             }
             (s.objects = i.selection),
                 super(e, i, s, 0.33, 1),
@@ -9651,7 +9733,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
         }
         static check(e) {
             let t = PZ.compatibility.getBuildNumber(e);
-            if (t < PZ.compatibility.getBuildNumber() || 0 === t) return !0;
+            if (t < PZ.compatibility.getBuildNumber() || 0 === t) return true;
         }
         static getCurrentVersion() {
             return "dev" === PZVERSION ? "1.0.101" : PZVERSION;
@@ -9686,7 +9768,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
                         "gradientoverlay" === i.type
                             ? ((i.properties.gradientType = i.properties.type), delete i.properties.type)
                             : "radialblur" === i.type
-                            ? (i.properties.overbright = !0)
+                            ? (i.properties.overbright = true)
                             : "radialblur2" === i.type && (i.type = "radialblur");
                     }
                 }
@@ -9700,7 +9782,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
                               properties: { position: r[e].object.properties.position, rotation: r[e].object.properties.rotation, scale: r[e].object.properties.scale },
                               operations: [
                                   { type: 0, properties: { color: r[e].object.properties.childProperties.color } },
-                                  { type: 1, properties: { opacity: { animated: !1, keyframes: [{ value: 0, frame: 0, tween: 1 }] } } },
+                                  { type: 1, properties: { opacity: { animated: false, keyframes: [{ value: 0, frame: 0, tween: 1 }] } } },
                               ],
                           },
                       ]),
@@ -9759,15 +9841,15 @@ const SVGNS = "http://www.w3.org/2000/svg";
             for (let e = 0; e < n.length; e++) {
                 a(n[e], -n[e].offset);
                 let t = [];
-                (t[0] = { frame: 0, value: n[e].offset / i, tween: 1 }), (t[1] = { frame: n[e].length, value: (n[e].offset + n[e].length) / i, tween: 1 }), (n[e].properties.time = { animated: !1, keyframes: t });
+                (t[0] = { frame: 0, value: n[e].offset / i, tween: 1 }), (t[1] = { frame: n[e].length, value: (n[e].offset + n[e].length) / i, tween: 1 }), (n[e].properties.time = { animated: false, keyframes: t });
             }
         }
         core84(e) {
             let t = e.sequence;
             const i = void 0 !== t.properties.motionBlurSamples ? t.properties.motionBlurSamples : 16;
-            t.properties.motionBlurSamples = { animated: !1, keyframes: [{ value: i, frame: 0, tween: 1 }] };
+            t.properties.motionBlurSamples = { animated: false, keyframes: [{ value: i, frame: 0, tween: 1 }] };
             const s = void 0 !== t.properties.motionBlurShutter ? t.properties.motionBlurShutter : 0.5;
-            t.properties.motionBlurShutter = { animated: !1, keyframes: [{ value: s, frame: 0, tween: 1 }] };
+            t.properties.motionBlurShutter = { animated: false, keyframes: [{ value: s, frame: 0, tween: 1 }] };
         }
         core96(e) {
             let t = e.sequence.videoTracks.map((e) => e.clips).reduce((e, t) => e.concat(t), []),
@@ -9865,7 +9947,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
     }),
     (PZ.compatibility.CM2.prototype.createAssetFromPreset = function (e, t) {
         let i = JSON.parse(JSON.stringify(new PZ.asset().toJSON()));
-        return (i.type = e), (i.url = t), (i.source = PZ.asset.source.PRESET), (i.external = !0), (this.project.assets[i.url] = i), i;
+        return (i.type = e), (i.url = t), (i.source = PZ.asset.source.PRESET), (i.external = true), (this.project.assets[i.url] = i), i;
     }),
     (PZ.compatibility.CM2.prototype.loadBasics = function () {
         var e = this.archive.getFileString("basics");
@@ -9876,7 +9958,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
     }),
     (PZ.compatibility.CM2.prototype.migrateProperties = function (e, t) {
         e.properties = {};
-        let i = { emissive: !0, color: !0, groundColor: !0, inner: !0, outer: !0 };
+        let i = { emissive: true, color: true, groundColor: true, inner: true, outer: true };
         function s(e) {
             if ("object" != typeof e || null === e) return e;
             let t = [],
@@ -9900,7 +9982,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
                     (n.frame = n.frame - 1),
                         (n.tween = n.tweenfn),
                         delete n.tweenfn,
-                        !0 === i[r] && "number" == typeof n.value ? (n.value = [(n.value >> 16) / 255, ((n.value >> 8) & 255) / 255, (255 & n.value) / 255]) : (n.value = s(n.value)),
+                        true === i[r] && "number" == typeof n.value ? (n.value = [(n.value >> 16) / 255, ((n.value >> 8) & 255) / 255, (255 & n.value) / 255]) : (n.value = s(n.value)),
                         e[r].keyframes.push(n);
                 }
             } else void 0 !== a && (e[r] = s(a));
@@ -10148,7 +10230,7 @@ const SVGNS = "http://www.w3.org/2000/svg";
         if (
             ((a[0] = { frame: 0, value: s.startOffset / r, tween: 1 }),
             (a[1] = { frame: n.length, value: (s.startOffset + n.length) / r, tween: 1 }),
-            (n.properties.time = { animated: !1, keyframes: a }),
+            (n.properties.time = { animated: false, keyframes: a }),
             (n.object = {}),
             (n.object.keyframeProps = s.keyframeProps || {}),
             0 === s.volumeMode || void 0 === s.volumeMode)
