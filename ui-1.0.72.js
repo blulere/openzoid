@@ -1,8 +1,8 @@
 const PZUIVERSION = "1.0.72";
 
-(THREE.EditorControls = function (e, t) {
-    if (t === undefined) {
-        t = document;
+THREE.EditorControls = function (camera, canvas) {
+    if (canvas === undefined) {
+        canvas = document;
     }
 
     this.enabled = true;
@@ -90,31 +90,31 @@ const PZUIVERSION = "1.0.72";
 
     this.focus = function(object) {
         var boundingBox = new THREE.Box3().setFromObject(object);
-        e.lookAt( ECcenter.copy( boundingBox.getCenter() ) );
+        camera.lookAt( ECcenter.copy( boundingBox.getCenter() ) );
         EC.dispatchEvent(changeEvent);
     };
 
     this.pan = function(t) {
-        var distance = e.position.distanceTo(ECcenter);
+        var distance = camera.position.distanceTo(ECcenter);
         t.multiplyScalar(distance * EC.panSpeed);
-        t.applyMatrix3(matrix.getNormalMatrix(e.matrix));
-        e.position.add(t);
+        t.applyMatrix3(matrix.getNormalMatrix(camera.matrix));
+        camera.position.add(t);
         ECcenter.add(t);
         EC.dispatchEvent(changeEvent);
     };
 
     this.zoom = function(t) {
-        var s = e.position.distanceTo(ECcenter);
+        var s = camera.position.distanceTo(ECcenter);
         // Scale movement vector by zoom speed
         t.multiplyScalar(s * EC.zoomSpeed);
 
         // Ensure movement isn't excessive
         if (t.length() <= s) {
             // Transform movement into local space
-            t.applyMatrix3(matrix.getNormalMatrix(e.matrix));
+            t.applyMatrix3(matrix.getNormalMatrix(camera.matrix));
 
             // Move the object (likely camera)
-            e.position.add(t);
+            camera.position.add(t);
 
             // Notify listeners that a change occurred
             EC.dispatchEvent(changeEvent);
@@ -122,32 +122,32 @@ const PZUIVERSION = "1.0.72";
     };
 
     this.rotate = function(t) {
-        vector.copy(e.position).sub(ECcenter);
+        vector.copy(camera.position).sub(ECcenter);
         spherical.setFromVector3(vector);
         spherical.theta += t.x;
         spherical.phi += t.y;
         spherical.makeSafe();
         vector.setFromSpherical(spherical);
-        e.position.copy(ECcenter).add(vector);
-        e.lookAt(ECcenter);
+        camera.position.copy(ECcenter).add(vector);
+        camera.lookAt(ECcenter);
         EC.dispatchEvent(changeEvent);
     };
 
     this.dispose = function () {
-        t.removeEventListener("contextmenu", onMouseRightClick, false),
-            t.removeEventListener("mousedown", onMouseDown, false),
-            t.removeEventListener("wheel", onMouseWheel, false),
-            t.removeEventListener("mousemove", onMouseMove, false),
-            t.removeEventListener("mouseup", onMouseUp, false),
-            t.removeEventListener("mouseout", onMouseUp, false),
-            t.removeEventListener("dblclick", onMouseUp, false),
-            t.removeEventListener("touchstart", x, false),
-            t.removeEventListener("touchmove", P, false);
+        canvas.removeEventListener("contextmenu", onMouseRightClick, false),
+            canvas.removeEventListener("mousedown", onMouseDown, false),
+            canvas.removeEventListener("wheel", onMouseWheel, false),
+            canvas.removeEventListener("mousemove", onMouseMove, false),
+            canvas.removeEventListener("mouseup", onMouseUp, false),
+            canvas.removeEventListener("mouseout", onMouseUp, false),
+            canvas.removeEventListener("dblclick", onMouseUp, false),
+            canvas.removeEventListener("touchstart", x, false),
+            canvas.removeEventListener("touchmove", P, false);
     };
 
-    t.addEventListener("contextmenu", onMouseRightClick, false);
-    t.addEventListener("mousedown", onMouseDown, false);
-    t.addEventListener("wheel", onMouseWheel, false);
+    canvas.addEventListener("contextmenu", onMouseRightClick, false);
+    canvas.addEventListener("mousedown", onMouseDown, false);
+    canvas.addEventListener("wheel", onMouseWheel, false);
 
     var g = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
     var b = [new THREE.Vector3(), new THREE.Vector3(), new THREE.Vector3()];
@@ -187,66 +187,107 @@ const PZUIVERSION = "1.0.72";
             return i;
         }
     }
-    t.addEventListener("touchstart", x, false), t.addEventListener("touchmove", P, false);
-});
-(THREE.EditorControls.prototype = Object.create(THREE.EventDispatcher.prototype)),
-(THREE.EditorControls.prototype.constructor = THREE.EditorControls),
+    canvas.addEventListener("touchstart", x, false), canvas.addEventListener("touchmove", P, false);
+}
+
+THREE.EditorControls.prototype = Object.create(THREE.EventDispatcher.prototype);
+THREE.EditorControls.prototype.constructor = THREE.EditorControls;
+
 (function () {
     "use strict";
-    var e = function (e) {
-        THREE.MeshBasicMaterial.call(this),
-            (this.depthTest = false),
-            (this.depthWrite = false),
-            (this.side = THREE.FrontSide),
-            (this.transparent = true),
-            this.setValues(e),
-            (this.oldColor = this.color.clone()),
-            (this.oldOpacity = this.opacity),
-            (this.highlight = function (e) {
-                e ? (this.color.setRGB(1, 1, 0), (this.opacity = 1)) : (this.color.copy(this.oldColor), (this.opacity = this.oldOpacity));
-            });
+    var floorGrid = function(values) {
+        THREE.MeshBasicMaterial.call(this);
+        this.depthTest = false;
+        this.depthWrite = false;
+        this.side = THREE.FrontSide;
+        this.transparent = true;
+        this.setValues(values);
+        this.oldColor = this.color.clone();
+        this.oldOpacity = this.opacity;
+
+        this.highlight = function(e) {
+            if(e) {
+                this.color.setRGB(1, 1, 0);
+                this.opacity = 1;
+            } else {
+                this.color.copy(this.oldColor);
+                this.opacity = this.oldOpacity;
+            }
+        };
     };
-    (e.prototype = Object.create(THREE.MeshBasicMaterial.prototype)).constructor = e;
+
+    floorGrid.prototype = Object.create(THREE.MeshBasicMaterial.prototype);
+    floorGrid.prototype.constructor = floorGrid;
+
     var t = function (e) {
-        THREE.LineBasicMaterial.call(this),
-            (this.depthTest = false),
-            (this.depthWrite = false),
-            (this.transparent = true),
-            (this.linewidth = 1),
-            this.setValues(e),
-            (this.oldColor = this.color.clone()),
-            (this.oldOpacity = this.opacity),
-            (this.highlight = function (e) {
-                e ? (this.color.setRGB(1, 1, 0), (this.opacity = 1)) : (this.color.copy(this.oldColor), (this.opacity = this.oldOpacity));
-            });
+        THREE.LineBasicMaterial.call(this);
+        this.depthTest = false;
+        this.depthWrite = false;
+        this.transparent = true;
+        this.linewidth = 1;
+        this.setValues(e);
+        this.oldColor = this.color.clone();
+        this.oldOpacity = this.opacity;
+        this.highlight = function(e) {
+            if(e) {
+                this.color.setRGB(1, 1, 0);
+                this.opacity = 1;
+            } else {
+                this.color.copy(this.oldColor);
+                this.opacity = this.oldOpacity;
+            }
+        };
     };
-    (t.prototype = Object.create(THREE.LineBasicMaterial.prototype)).constructor = t;
-    var i = new e({ visible: false, transparent: false });
+
+    t.prototype = Object.create(THREE.LineBasicMaterial.prototype)
+    t.prototype.constructor = t;
+    var i = new floorGrid({ visible: false, transparent: false });
     (THREE.TransformGizmo = function () {
-        (this.init = function () {
-            THREE.Object3D.call(this), (this.handles = new THREE.Object3D()), (this.pickers = new THREE.Object3D()), (this.planes = new THREE.Object3D()), this.add(this.handles), this.add(this.pickers), this.add(this.planes);
-            var e = new THREE.PlaneBufferGeometry(50, 50, 2, 2),
-                t = new THREE.MeshBasicMaterial({ visible: false, side: THREE.DoubleSide }),
-                i = { XY: new THREE.Mesh(e, t), YZ: new THREE.Mesh(e, t), XZ: new THREE.Mesh(e, t), XYZE: new THREE.Mesh(e, t) };
-            for (var s in ((this.activePlane = i.XYZE), i.YZ.rotation.set(0, Math.PI / 2, 0), i.XZ.rotation.set(-Math.PI / 2, 0, 0), i)) (i[s].name = s), this.planes.add(i[s]), (this.planes[s] = i[s]);
+        (this.init = function() {
+            THREE.Object3D.call(this),
+            this.handles = new THREE.Object3D();
+            this.pickers = new THREE.Object3D();
+            this.planes = new THREE.Object3D();
+            this.add(this.handles);
+            this.add(this.pickers);
+            this.add(this.planes);
+            var planeBufferGeometry = new THREE.PlaneBufferGeometry(50, 50, 2, 2);
+            var meshMaterial = new THREE.MeshBasicMaterial({ visible: false, side: THREE.DoubleSide });
+            var i = {
+                XY: new THREE.Mesh(planeBufferGeometry, meshMaterial),
+                YZ: new THREE.Mesh(planeBufferGeometry, meshMaterial),
+                XZ: new THREE.Mesh(planeBufferGeometry, meshMaterial),
+                XYZE: new THREE.Mesh(planeBufferGeometry, meshMaterial)
+            };
+
+            for(var s in ((this.activePlane = i.XYZE), i.YZ.rotation.set(0, Math.PI / 2, 0), i.XZ.rotation.set(-Math.PI / 2, 0, 0), i)) {
+                i[s].name = s;
+                this.planes.add(i[s]);
+                this.planes[s] = i[s];
+            }
+
             var n = function (e, t) {
-                for (var i in e)
+                for(var i in e) {
                     for (s = e[i].length; s--; ) {
-                        var n = e[i][s][0],
-                            r = e[i][s][1],
-                            a = e[i][s][2];
-                        (n.name = i), r && n.position.set(r[0], r[1], r[2]), a && n.rotation.set(a[0], a[1], a[2]), t.add(n);
+                        var n = e[i][s][0];
+                        var r = e[i][s][1];
+                        var a = e[i][s][2];
+                        n.name = i;
+                        r && n.position.set(r[0], r[1], r[2]);
+                        a && n.rotation.set(a[0], a[1], a[2]);
+                        t.add(n);
                     }
+                }
             };
             n(this.handleGizmos, this.handles),
-                n(this.pickerGizmos, this.pickers),
-                this.traverse(function (e) {
-                    if (e instanceof THREE.Mesh) {
-                        e.updateMatrix();
-                        var t = e.geometry.clone();
-                        t.applyMatrix(e.matrix), (e.geometry = t), e.position.set(0, 0, 0), e.rotation.set(0, 0, 0), e.scale.set(1, 1, 1);
-                    }
-                });
+            n(this.pickerGizmos, this.pickers),
+            this.traverse(function (e) {
+                if (e instanceof THREE.Mesh) {
+                    e.updateMatrix();
+                    var t = e.geometry.clone();
+                    t.applyMatrix(e.matrix), (e.geometry = t), e.position.set(0, 0, 0), e.rotation.set(0, 0, 0), e.scale.set(1, 1, 1);
+                }
+            });
         }),
             (this.highlight = function (e) {
                 this.traverse(function (t) {
@@ -276,13 +317,13 @@ const PZUIVERSION = "1.0.72";
             var o = new THREE.BufferGeometry();
             o.addAttribute("position", new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, 1], 3)),
                 (this.handleGizmos = {
-                    X: [[new THREE.Mesh(s, new e({ color: 16711680 })), [0.5, 0, 0], [0, 0, -Math.PI / 2]], [new THREE.Line(r, new t({ color: 16711680 }))]],
-                    Y: [[new THREE.Mesh(s, new e({ color: 65280 })), [0, 0.5, 0]], [new THREE.Line(a, new t({ color: 65280 }))]],
-                    Z: [[new THREE.Mesh(s, new e({ color: 255 })), [0, 0, 0.5], [Math.PI / 2, 0, 0]], [new THREE.Line(o, new t({ color: 255 }))]],
-                    XYZ: [[new THREE.Mesh(new THREE.OctahedronGeometry(0.1, 0), new e({ color: 16777215, opacity: 0.25 })), [0, 0, 0], [0, 0, 0]]],
-                    XY: [[new THREE.Mesh(new THREE.PlaneBufferGeometry(0.29, 0.29), new e({ color: 16776960, opacity: 0.25 })), [0.15, 0.15, 0]]],
-                    YZ: [[new THREE.Mesh(new THREE.PlaneBufferGeometry(0.29, 0.29), new e({ color: 65535, opacity: 0.25 })), [0, 0.15, 0.15], [0, Math.PI / 2, 0]]],
-                    XZ: [[new THREE.Mesh(new THREE.PlaneBufferGeometry(0.29, 0.29), new e({ color: 16711935, opacity: 0.25 })), [0.15, 0, 0.15], [-Math.PI / 2, 0, 0]]],
+                    X: [[new THREE.Mesh(s, new floorGrid({ color: 16711680 })), [0.5, 0, 0], [0, 0, -Math.PI / 2]], [new THREE.Line(r, new t({ color: 16711680 }))]],
+                    Y: [[new THREE.Mesh(s, new floorGrid({ color: 65280 })), [0, 0.5, 0]], [new THREE.Line(a, new t({ color: 65280 }))]],
+                    Z: [[new THREE.Mesh(s, new floorGrid({ color: 255 })), [0, 0, 0.5], [Math.PI / 2, 0, 0]], [new THREE.Line(o, new t({ color: 255 }))]],
+                    XYZ: [[new THREE.Mesh(new THREE.OctahedronGeometry(0.1, 0), new floorGrid({ color: 16777215, opacity: 0.25 })), [0, 0, 0], [0, 0, 0]]],
+                    XY: [[new THREE.Mesh(new THREE.PlaneBufferGeometry(0.29, 0.29), new floorGrid({ color: 16776960, opacity: 0.25 })), [0.15, 0.15, 0]]],
+                    YZ: [[new THREE.Mesh(new THREE.PlaneBufferGeometry(0.29, 0.29), new floorGrid({ color: 65535, opacity: 0.25 })), [0, 0.15, 0.15], [0, Math.PI / 2, 0]]],
+                    XZ: [[new THREE.Mesh(new THREE.PlaneBufferGeometry(0.29, 0.29), new floorGrid({ color: 16711935, opacity: 0.25 })), [0.15, 0, 0.15], [-Math.PI / 2, 0, 0]]],
                 }),
                 (this.pickerGizmos = {
                     X: [[new THREE.Mesh(new THREE.CylinderBufferGeometry(0.2, 0, 1, 4, 1, false), i), [0.6, 0, 0], [0, 0, -Math.PI / 2]]],
@@ -377,10 +418,10 @@ const PZUIVERSION = "1.0.72";
             var o = new THREE.BufferGeometry();
             o.addAttribute("position", new THREE.Float32BufferAttribute([0, 0, 0, 0, 0, 1], 3)),
                 (this.handleGizmos = {
-                    X: [[new THREE.Mesh(s, new e({ color: 16711680 })), [0.5, 0, 0], [0, 0, -Math.PI / 2]], [new THREE.Line(r, new t({ color: 16711680 }))]],
-                    Y: [[new THREE.Mesh(s, new e({ color: 65280 })), [0, 0.5, 0]], [new THREE.Line(a, new t({ color: 65280 }))]],
-                    Z: [[new THREE.Mesh(s, new e({ color: 255 })), [0, 0, 0.5], [Math.PI / 2, 0, 0]], [new THREE.Line(o, new t({ color: 255 }))]],
-                    XYZ: [[new THREE.Mesh(new THREE.BoxBufferGeometry(0.125, 0.125, 0.125), new e({ color: 16777215, opacity: 0.25 }))]],
+                    X: [[new THREE.Mesh(s, new floorGrid({ color: 16711680 })), [0.5, 0, 0], [0, 0, -Math.PI / 2]], [new THREE.Line(r, new t({ color: 16711680 }))]],
+                    Y: [[new THREE.Mesh(s, new floorGrid({ color: 65280 })), [0, 0.5, 0]], [new THREE.Line(a, new t({ color: 65280 }))]],
+                    Z: [[new THREE.Mesh(s, new floorGrid({ color: 255 })), [0, 0, 0.5], [Math.PI / 2, 0, 0]], [new THREE.Line(o, new t({ color: 255 }))]],
+                    XYZ: [[new THREE.Mesh(new THREE.BoxBufferGeometry(0.125, 0.125, 0.125), new floorGrid({ color: 16777215, opacity: 0.25 }))]],
                 }),
                 (this.pickerGizmos = {
                     X: [[new THREE.Mesh(new THREE.CylinderBufferGeometry(0.2, 0, 1, 4, 1, false), i), [0.6, 0, 0], [0, 0, -Math.PI / 2]]],
