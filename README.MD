@@ -1,13 +1,13 @@
 # openzoid, the Clipmaker 3 Open Source Project
 
-[!NOTE]
 This is the **unminified** branch.
 This is where code is made more readable by unminifying, and no functionality to openzoid is being added or removed.
 Everything is functionally the same as what you can find on panzoid.com.
 Performance may be slightly worse, as the files being loaded are larger, and take slightly longer for the browser to parse and understand.
 
-[!NOTE]
 **Anything involving connecting to panzoid.com will not work** here due to CORS blocking.
+
+---
 
 **Thanks to the team at (panzoid.com)[https://panzoid.com/] for creating one of the best (if not the best) web-based video editors available on the Internet right now**
 
