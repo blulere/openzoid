@@ -14,7 +14,13 @@ Everything is functionally the same as what you can find on panzoid.com.
 
 ---
 
-Because **the Panzoid developers abandoned Panzoid cm3** (Clipmaker 3) sometime in 2019, openzoid is an attempt to:
+## Current issues
+- The repository is missing a license. This is a pretty big problem.
+- The unminified branch is the most active, but is not the default branch. This is less of a problem.
+
+## What is openzoid?
+
+openzoid is an attempt to:
 1. Firstly, make it so that it is possible to **run Panzoid cm3 locally** without going to panzoid.com
 2. After this, make Panzoid cm3 less of a pain to use, by **adding quality of life functionality**, such as autosaving
 
@@ -24,6 +30,8 @@ An offline version of Panzoid has been desired by a few users, and as far as I c
 
 https://panzoid.com/community/search/85948?q=user%3ARedTubePoop
 https://panzoid.com/community/18345
+
+<!--
 
 ## How to use
 
@@ -47,6 +55,8 @@ There is currently no index.html, so you have to go to clipmaker.html to not rec
 
 3. Clipmaker 3 should now be loaded; you might have to reload the page once or twice if you notice any oddities. Enjoy!
 
+-->
+
 ## Important information, or 'Why is some stuff missing?'
 
 When you open Panzoid cm3 from the website, you will be taken to the webpage [panzoid.com/tools/gen3/clipmaker](https://panzoid.com/tools/gen3/clipmaker). **This is not actually where Panzoid cm3 is located**, it is simply a webpage with the Panzoid navbar, some functionality / scripts to run ads, and an [iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe).
@@ -55,11 +65,11 @@ The Panzoid team also has had a history of changing the URL that the navbar's Cl
 
 ### **The URL for Panzoid cm3 is actually [panzoid.com/legacy/gen3/clipmaker.html](https://panzoid.com/legacy/gen3/clipmaker.html).**
 
-This version is fully functional compared to the iframe-d one (as far as I can tell; there is a bug where all of the Project media become unusable, but a refresh usually fixes this), but lacks the navbar, giving you more vertical space to use cm3.
+This version is fully functional compared to the iframe-d one, but lacks the navbar, giving you more vertical space to use cm3. The main branch also features the removed ad banner by default. Not like the ad banner showed anything, anyways.
 
 This project therefore aims to mirror the latter **clipmaker.html** instead of the former **tools/gen3/clipmaker**.
 
-## Quality of life version
+<!-- ## Quality of life version
 
 Once archiving cm3 is finished, there will be three versions of openzoid:
 
@@ -72,3 +82,5 @@ Once archiving cm3 is finished, there will be three versions of openzoid:
 3 will recieve updates for everything: refactors, bugfixes and more.
 
 There are no plans to archive gen4. I wanted to archive gen3 as it has been abandoned even though it is such a great editor and I refuse to let it remain as abandonware.
+
+-->
