@@ -9,13 +9,11 @@ Performance may be slightly worse, as the files being loaded are larger, and tak
 [!NOTE]
 **Anything involving connecting to panzoid.com will not work** here due to CORS blocking.
 
-**Thanks to the team at (panzoid.com)[https://panzoid.com/] for creating one of the best (if not the best) web-based video editors available on the Internet right now**, even if it had to be abandoned.
+**Thanks to the team at (panzoid.com)[https://panzoid.com/] for creating one of the best (if not the best) web-based video editors available on the Internet right now**
 
 ---
 
 ## Current issues
-- The repository is missing a license. This is a pretty big problem.
-- The unminified branch is the most active, but is not the default branch. This is less of a problem.
 - There is a memory leaking issue that causes performance issues over time, but currently it is unknown whether this is caused by openzoid or Clipmaker 3.
 
 ## What is openzoid?
