@@ -1,18 +1,21 @@
 # openzoid, the Clipmaker 3 Open Source Project
 
+## Information
+
 This is the **archive** branch.
+
 This code was archived entirely by-hand from panzoid.com. The task finished on 2025-02-09.
+
 **The code is still minified**, as it is on the official website. No further modifications will be made to the Panzoid code in this branch. Some other things may change.
+
 **Do not build new features using this branch.** Use the **unminified** branch instead.
+
 Everything is functionally the same as what you can find on panzoid.com.
+
 
 **Anything involving connecting to panzoid.com will not work** here due to CORS blocking.
 
----
-
-**Thanks to the team at [panzoid.com](https://panzoid.com) for creating one of the best (if not the best) web-based video editors available on the Internet right now**
-
----
+### **Thanks to the team at [panzoid.com](https://panzoid.com/) for creating one of the best (if not the best) web-based video editors available on the Internet right now**
 
 ## What is openzoid?
 
@@ -25,6 +28,7 @@ This project also **counts as archival**, as if panzoid.com ever goes down for a
 An offline version of Panzoid has been desired by a few users, and as far as I can tell, **no public copies exist.**
 
 https://panzoid.com/community/search/85948?q=user%3ARedTubePoop
+
 https://panzoid.com/community/18345
 
 <!--
