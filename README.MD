@@ -1,29 +1,32 @@
 # openzoid, the Clipmaker 3 Open Source Project
 
+## Information
+
 This is the **main** branch.
+
 This branch builds off of the work being done on the **unminified** branch, which aims to make the minified Panzoid code readable enough to be worked on without issues.
+
 This branch may include **major functional differences** to what you can find on panzoid.com.
+
 Performance may be slightly worse, as the files being loaded are larger, and take slightly longer for the browser to parse and understand.
+
 
 **Anything involving connecting to panzoid.com will not work** here due to CORS blocking.
 
----
+### **Thanks to the team at [panzoid.com](https://panzoid.com/) for creating one of the best (if not the best) web-based video editors available on the Internet right now**
 
-**Thanks to the team at [panzoid.com](https://panzoid.com/) for creating one of the best (if not the best) web-based video editors available on the Internet right now**
-
----
-
-## What is openzoid?
+# What is openzoid?
 
 openzoid is an attempt to:
 1. Firstly, make it so that it is possible to **run Panzoid cm3 locally** without going to panzoid.com
 2. After this, make Panzoid cm3 less of a pain to use, by **adding quality of life functionality**, such as autosaving
 
-This project also **counts as archival**, as if panzoid.com ever goes down for any reason, or if the Panzoid team ever decides to delete Clipmaker 3 entirely, **one of the strongest web video editors** (that even **runs flawlessly on school Chromebooks**) **could be lost to time.**
+This project also **counts as archival**, as if panzoid.com ever goes down for any reason, or if the Panzoid team ever decides to delete Clipmaker 3 entirely, **one of the strongest web video editors** (that even **runs flawlessly on Chromebooks**) **could be lost to time.**
 
 An offline version of Panzoid has been desired by a few users, and as far as I can tell, **no public copies exist.**
 
 https://panzoid.com/community/search/85948?q=user%3ARedTubePoop
+
 https://panzoid.com/community/18345
 
 <!--
@@ -54,7 +57,7 @@ There is currently no index.html, so you have to go to clipmaker.html to not rec
 
 ## Important information, or 'Why is some stuff missing?'
 
-When you open Panzoid cm3 from the website, you will be taken to the webpage [panzoid.com/tools/gen3/clipmaker](https://panzoid.com/tools/gen3/clipmaker). **This is not actually where Panzoid cm3 is located**, it is simply a webpage with the Panzoid navbar, some functionality / scripts to run ads, and an [iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe).
+When you open Panzoid cm3 from the website, you will be taken to the webpage [panzoid.com/tools/gen3/clipmaker](https://panzoid.com/tools/gen3/clipmaker). **This is not really where Panzoid cm3 is located**, it is simply a webpage with the Panzoid navbar, some functionality / scripts to run ads, and an [iframe](https://developer.mozilla.org/en-US/docs/Web/HTML/Element/iframe).
 
 The Panzoid team also has had a history of changing the URL that the navbar's Clipmaker 3 button leads to.
 
