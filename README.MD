@@ -1,20 +1,18 @@
 # openzoid, the Clipmaker 3 Open Source Project
 
+### Information
+
 This is the **unminified** branch.
+
 This is where code is made more readable by unminifying, and no functionality to openzoid is being added or removed.
+
 Everything is functionally the same as what you can find on panzoid.com.
+
 Performance may be slightly worse, as the files being loaded are larger, and take slightly longer for the browser to parse and understand.
 
 **Anything involving connecting to panzoid.com will not work** here due to CORS blocking.
 
----
-
-**Thanks to the team at (panzoid.com)[https://panzoid.com/] for creating one of the best (if not the best) web-based video editors available on the Internet right now**
-
----
-
-## Current issues
-- There is a memory leaking issue that causes performance issues over time, but currently it is unknown whether this is caused by openzoid or Clipmaker 3.
+### **Thanks to the team at [panzoid.com](https://panzoid.com/) for creating one of the best (if not the best) web-based video editors available on the Internet right now**
 
 ## What is openzoid?
 
@@ -28,6 +26,9 @@ An offline version of Panzoid has been desired by a few users, and as far as I c
 
 https://panzoid.com/community/search/85948?q=user%3ARedTubePoop
 https://panzoid.com/community/18345
+
+## Current issues
+- There is a memory leaking issue that causes performance issues over time, but currently it is unknown whether this is caused by openzoid or Clipmaker 3.
 
 <!--
 
