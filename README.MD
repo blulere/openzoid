@@ -10,13 +10,9 @@ Everything is functionally the same as what you can find on panzoid.com.
 [!NOTE]
 **Anything involving connecting to panzoid.com will not work** here due to CORS blocking.
 
-**Thanks to the team at (panzoid.com)[https://panzoid.com] for creating one of the best (if not the best) web-based video editors available on the Internet right now**, even if it had to be abandoned.
+**Thanks to the team at [panzoid.com](https://panzoid.com) for creating one of the best (if not the best) web-based video editors available on the Internet right now**
 
 ---
-
-## Current issues
-- The repository is missing a license. This is a pretty big problem.
-- The unminified branch is the most active, but is not the default branch. This is less of a problem.
 
 ## What is openzoid?
 
