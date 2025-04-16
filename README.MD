@@ -4,11 +4,11 @@
 
 This is the **unminified** branch.
 
-This is where code is made more readable by unminifying, and no functionality to openzoid is being added or removed.
+This is where **code is made more readable** by unminifying, and no functionality to openzoid is being added or removed.
 
-Everything is functionally the same as what you can find on panzoid.com.
+**Everything is functionally the same as what you can find on panzoid.com.**
 
-Performance may be slightly worse, as the files being loaded are larger, and take slightly longer for the browser to parse and understand.
+**Performance may be slightly worse**, as the files being loaded are larger, and take slightly longer for the browser to parse and understand.
 
 **Anything involving connecting to panzoid.com will not work** here due to CORS blocking.
 
@@ -25,10 +25,11 @@ This project also **counts as archival**, as if panzoid.com ever goes down for a
 An offline version of Panzoid has been desired by a few users, and as far as I can tell, **no public copies exist.**
 
 https://panzoid.com/community/search/85948?q=user%3ARedTubePoop
+
 https://panzoid.com/community/18345
 
 ## Current issues
-- There is a memory leaking issue that causes performance issues over time, but currently it is unknown whether this is caused by unminified branch, archive branch, or Clipmaker 3.
+- There is a **memory leaking issue that causes performance issues over time**, but currently it is unknown whether this is caused by unminified branch, archive branch, or Clipmaker 3 — if the origin is in archive, it will likely be fixed in main, whereas if the origin is in unminified, a lot of work will have to be done to fix it...
 
 <!--
 
