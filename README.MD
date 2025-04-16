@@ -31,7 +31,7 @@ https://panzoid.com/community/search/85948?q=user%3ARedTubePoop
 https://panzoid.com/community/18345
 
 ## Current issues
-- There is a **memory leaking issue that causes performance issues over time**, but currently it is unknown whether this is caused by unminified branch, archive branch, or Clipmaker 3 — if the origin is in archive, it will likely be fixed in main, whereas if the origin is in unminified, a lot of work will have to be done to fix it...
+- There is a **memory leaking issue that causes performance issues over time**, but currently it is unknown whether this is caused by unminified branch or archive branch. If the origin is in archive, it's an upstream problem and will likely be fixed in main. If the origin is in unminified, it's a downstream problem, meaning something changed functionally, and a lot of work will have to be done to undo that...
 
 <!--
 
