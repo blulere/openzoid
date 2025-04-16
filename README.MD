@@ -28,7 +28,7 @@ https://panzoid.com/community/search/85948?q=user%3ARedTubePoop
 https://panzoid.com/community/18345
 
 ## Current issues
-- There is a memory leaking issue that causes performance issues over time, but currently it is unknown whether this is caused by openzoid or Clipmaker 3.
+- There is a memory leaking issue that causes performance issues over time, but currently it is unknown whether this is caused by unminified branch, archive branch, or Clipmaker 3.
 
 <!--
 
