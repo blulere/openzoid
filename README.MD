@@ -8,8 +8,7 @@ This branch builds off of the work being done on the **unminified** branch, whic
 
 This branch may include **major functional differences** to what you can find on panzoid.com.
 
-Performance may be slightly worse, as the files being loaded are larger, and take slightly longer for the browser to parse and understand.
-
+Just like with the unminified branch, **performance may be slightly worse**, as the files being loaded are larger, and take slightly longer for the browser to parse and understand, but also because this branch may have additional features that Clipmaker 3 does not already have.
 
 **Anything involving connecting to panzoid.com will not work** here due to CORS blocking.
 
