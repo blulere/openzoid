@@ -8,6 +8,8 @@ This is where **code is made more readable** by unminifying, and no functionalit
 
 **Everything is functionally the same as what you can find on panzoid.com.**
 
+The unminified project started when the archive project finished. The unminified project has no completion point, only a common goal. The code here can be continuously improved and refactored. But always keep the main branch in mind.
+
 **Performance may be slightly worse**, as the files being loaded are larger, and take slightly longer for the browser to parse and understand.
 
 **Anything involving connecting to panzoid.com will not work** here due to CORS blocking.
