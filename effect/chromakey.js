@@ -1,30 +1,35 @@
-this.defaultName = "Chroma Key", this.shaderfile = "fx_chromakey", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
+this.defaultName = "Chroma Key";
+this.shaderfile = "fx_chromakey";
+this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl";
+this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl");
+this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl);
+this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     backgroundColor: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Color.R",
             type: PZ.property.type.NUMBER,
             value: .157,
             min: 0,
             max: 1
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Color.G",
             type: PZ.property.type.NUMBER,
             value: .776,
             min: 0,
             max: 1
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Color.B",
             type: PZ.property.type.NUMBER,
             value: .129,
@@ -35,10 +40,10 @@ this.defaultName = "Chroma Key", this.shaderfile = "fx_chromakey", this.shaderUr
         type: PZ.property.type.COLOR
     },
     weights: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Weights.H",
             type: PZ.property.type.NUMBER,
             value: 4,
@@ -47,7 +52,7 @@ this.defaultName = "Chroma Key", this.shaderfile = "fx_chromakey", this.shaderUr
             step: .1,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Weights.S",
             type: PZ.property.type.NUMBER,
             value: 1,
@@ -56,7 +61,7 @@ this.defaultName = "Chroma Key", this.shaderfile = "fx_chromakey", this.shaderUr
             step: .1,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Weights.V",
             type: PZ.property.type.NUMBER,
             value: 2,
@@ -70,7 +75,7 @@ this.defaultName = "Chroma Key", this.shaderfile = "fx_chromakey", this.shaderUr
         decimals: 3
     },
     soften: {
-        dynamic: !0,
+        dynamic: true,
         name: "Soften",
         type: PZ.property.type.NUMBER,
         value: .5,
@@ -85,7 +90,7 @@ this.defaultName = "Chroma Key", this.shaderfile = "fx_chromakey", this.shaderUr
         items: "off;on",
         changed: function() {
             let e = this.parentObject;
-            e.pass.material.defines.KEY_INVERT = !!this.value, e.pass.material.needsUpdate = !0
+            e.pass.material.defines.KEY_INVERT = !!this.value, e.pass.material.needsUpdate = true;
         }
     },
     mask: {
@@ -95,11 +100,14 @@ this.defaultName = "Chroma Key", this.shaderfile = "fx_chromakey", this.shaderUr
         items: "result;mask",
         changed: function() {
             let e = this.parentObject;
-            e.pass.material.defines.KEY_MASK = !!this.value, e.pass.material.needsUpdate = !0
+            e.pass.material.defines.KEY_MASK = !!this.value, e.pass.material.needsUpdate = true;
         }
     }
-}, this.properties.addAll(this.propertyDefinitions, this), this.load = async function(e) {
-    this.vertShader = new PZ.asset.shader(this.parentProject.assets.load(this.vertShader)), this.fragShader = new PZ.asset.shader(this.parentProject.assets.load(this.fragShader));
+};
+this.properties.addAll(this.propertyDefinitions, this);
+this.load = async function(e) {
+    this.vertShader = new PZ.asset.shader(this.parentProject.assets.load(this.vertShader));
+    this.fragShader = new PZ.asset.shader(this.parentProject.assets.load(this.fragShader));
     var t = new THREE.ShaderMaterial({
         uniforms: {
             tDiffuse: {
@@ -126,16 +134,27 @@ this.defaultName = "Chroma Key", this.shaderfile = "fx_chromakey", this.shaderUr
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader()
     });
-    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = !0, this.properties.load(e && e.properties)
-}, this.toJSON = function() {
+    this.pass = new THREE.ShaderPass(t);
+    this.pass.material.premultipliedAlpha = true;
+    this.properties.load(e && e.properties);
+};
+this.toJSON = function() {
     return {
         type: this.type,
         properties: this.properties
-    }
-}, this.unload = function(e) {
-    this.parentProject.assets.unload(this.vertShader), this.parentProject.assets.unload(this.fragShader)
-}, this.update = function(e) {
-    if (!this.pass) return;
+    };
+};
+this.unload = function(e) {
+    this.parentProject.assets.unload(this.vertShader);
+    this.parentProject.assets.unload(this.fragShader);
+};
+this.update = function(e) {
+    if(!this.pass) return;
     let t;
-    this.pass.enabled = this.properties.enabled.get(e), t = this.properties.backgroundColor.get(e), this.pass.uniforms.backgroundColor.value.set(t[0], t[1], t[2]), t = this.properties.weights.get(e), this.pass.uniforms.weights.value.set(t[0], t[1], t[2]), this.pass.uniforms.soften.value = this.properties.soften.get(e)
+    this.pass.enabled = this.properties.enabled.get(e);
+    t = this.properties.backgroundColor.get(e);
+    this.pass.uniforms.backgroundColor.value.set(t[0], t[1], t[2]);
+    t = this.properties.weights.get(e);
+    this.pass.uniforms.weights.value.set(t[0], t[1], t[2]);
+    this.pass.uniforms.soften.value = this.properties.soften.get(e);
 };

@@ -164,10 +164,10 @@ THREE.LuminosityHighPassShader || (THREE.LuminosityHighPassShader = {
 // don't overwrite already existing THREE.ALFPass
 THREE.ALFPass || (THREE.ALFPass = function(t, e, r, i) {
     THREE.Pass.call(this);
-    this.strength = void 0 !== e ? e : 1;
+    this.strength = undefined !== e ? e : 1;
     this.radius = r;
     this.threshold = i;
-    this.resolution = void 0 !== t ? new THREE.Vector2(t.x, t.y) : new THREE.Vector2(256, 256),
+    this.resolution = undefined !== t ? new THREE.Vector2(t.x, t.y) : new THREE.Vector2(256, 256),
     this.uniforms = {
         uvScale: {
             type: "v2",

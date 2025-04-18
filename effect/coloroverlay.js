@@ -1,30 +1,35 @@
-this.defaultName = "Color Overlay", this.shaderfile = "blend", this.texture = null, this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/overlay.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
+this.defaultName = "Color Overlay";
+this.shaderfile = "blend";
+this.texture = null;
+this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl";this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/overlay.glsl");
+this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl);
+this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     color: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Color.R",
             type: PZ.property.type.NUMBER,
             value: 1,
             min: 0,
             max: 1
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Color.G",
             type: PZ.property.type.NUMBER,
             value: 1,
             min: 0,
             max: 1
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Color.B",
             type: PZ.property.type.NUMBER,
             value: 1,
@@ -35,7 +40,7 @@ this.defaultName = "Color Overlay", this.shaderfile = "blend", this.texture = nu
         type: PZ.property.type.COLOR
     },
     opacity: {
-        dynamic: !0,
+        dynamic: true,
         name: "Opacity",
         type: PZ.property.type.NUMBER,
         value: 1,
@@ -53,11 +58,14 @@ this.defaultName = "Color Overlay", this.shaderfile = "blend", this.texture = nu
             e.pass.material.defines = {
                 BLEND_SRC_COLOR: 1,
                 OVERLAP_MODE: 3
-            }, e.pass.material.defines[this.value] = 1, e.pass.material.needsUpdate = !0
+            }, e.pass.material.defines[this.value] = 1, e.pass.material.needsUpdate = true
         }
     }
-}, this.properties.addAll(this.propertyDefinitions, this), this.load = async function(e) {
-    this.vertShader = new PZ.asset.shader(this.parentProject.assets.load(this.vertShader)), this.fragShader = new PZ.asset.shader(this.parentProject.assets.load(this.fragShader));
+};
+this.properties.addAll(this.propertyDefinitions, this);
+this.load = async function(e) {
+    this.vertShader = new PZ.asset.shader(this.parentProject.assets.load(this.vertShader));
+    this.fragShader = new PZ.asset.shader(this.parentProject.assets.load(this.fragShader));
     var t = new THREE.ShaderMaterial({
         uniforms: {
             tBG: {
@@ -87,19 +95,27 @@ this.defaultName = "Color Overlay", this.shaderfile = "blend", this.texture = nu
         },
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader(),
-        premultipliedAlpha: !0
+        premultipliedAlpha: true
     });
-    this.pass = new THREE.OverlayPass(t), this.properties.load(e && e.properties), this.pass.material.defines.BLEND_SRC_COLOR = 1, this.pass.material.defines.OVERLAP_MODE = 3, this.pass.material.defines[this.properties.blending.get()] = 1
-}, this.toJSON = function() {
+    this.pass = new THREE.OverlayPass(t);
+    this.properties.load(e && e.properties);
+    this.pass.material.defines.BLEND_SRC_COLOR = 1;
+    this.pass.material.defines.OVERLAP_MODE = 3;
+    this.pass.material.defines[this.properties.blending.get()] = 1
+};
+this.toJSON = function() {
     return {
         type: this.type,
         properties: this.properties
     }
-}, this.unload = function() {
-    this.parentProject.assets.unload(this.vertShader), this.parentProject.assets.unload(this.fragShader)
-}, this.update = function(e) {
-    if (!this.pass) return;
+};
+this.unload = function() {
+    this.parentProject.assets.unload(this.vertShader);
+    this.parentProject.assets.unload(this.fragShader);
+};
+this.update = function(e) {
+    if(!this.pass) return;
     this.pass.uniforms.opacity.value = this.properties.opacity.get(e);
     let t = this.properties.color.get(e);
-    this.pass.uniforms.color.value.set(t[0], t[1], t[2]), this.pass.enabled = this.properties.enabled.get(e)
+    this.pass.uniforms.color.value.set(t[0], t[1], t[2]), this.pass.enabled = this.properties.enabled.get(e);
 };

@@ -1,13 +1,19 @@
-this.defaultName = "Crop", this.shaderfile = "fx_crop", this.texture = null, this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
+this.defaultName = "Crop";
+this.shaderfile = "fx_crop";
+this.texture = null;
+this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl";
+this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl");
+this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl);
+this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     left: {
-        dynamic: !0,
+        dynamic: true,
         name: "Left",
         type: PZ.property.type.NUMBER,
         value: 0,
@@ -17,7 +23,7 @@ this.defaultName = "Crop", this.shaderfile = "fx_crop", this.texture = null, thi
         step: .1
     },
     top: {
-        dynamic: !0,
+        dynamic: true,
         name: "Top",
         type: PZ.property.type.NUMBER,
         value: 0,
@@ -27,7 +33,7 @@ this.defaultName = "Crop", this.shaderfile = "fx_crop", this.texture = null, thi
         step: .1
     },
     right: {
-        dynamic: !0,
+        dynamic: true,
         name: "Right",
         type: PZ.property.type.NUMBER,
         value: 0,
@@ -37,7 +43,7 @@ this.defaultName = "Crop", this.shaderfile = "fx_crop", this.texture = null, thi
         step: .1
     },
     bottom: {
-        dynamic: !0,
+        dynamic: true,
         name: "Bottom",
         type: PZ.property.type.NUMBER,
         value: 0,
@@ -46,8 +52,11 @@ this.defaultName = "Crop", this.shaderfile = "fx_crop", this.texture = null, thi
         max: 1,
         step: .1
     }
-}, this.properties.addAll(this.propertyDefinitions, this), this.load = async function(e) {
-    this.vertShader = new PZ.asset.shader(this.parentProject.assets.load(this.vertShader)), this.fragShader = new PZ.asset.shader(this.parentProject.assets.load(this.fragShader));
+};
+this.properties.addAll(this.propertyDefinitions, this);
+this.load = async function(e) {
+    this.vertShader = new PZ.asset.shader(this.parentProject.assets.load(this.vertShader));
+    this.fragShader = new PZ.asset.shader(this.parentProject.assets.load(this.fragShader));
     var t = new THREE.ShaderMaterial({
         uniforms: {
             uvScale: {
@@ -62,19 +71,27 @@ this.defaultName = "Crop", this.shaderfile = "fx_crop", this.texture = null, thi
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader()
     });
-    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = !0, this.properties.load(e && e.properties)
-}, this.toJSON = function() {
+    this.pass = new THREE.ShaderPass(t);
+    this.pass.material.premultipliedAlpha = true;
+    this.properties.load(e && e.properties);
+};
+this.toJSON = function() {
     return {
         type: this.type,
         properties: this.properties
     }
-}, this.unload = function() {
-    this.parentProject.assets.unload(this.vertShader), this.parentProject.assets.unload(this.fragShader)
-}, this.update = function(e) {
+};
+this.unload = function() {
+    this.parentProject.assets.unload(this.vertShader);
+    this.parentProject.assets.unload(this.fragShader);
+};
+this.update = function(e) {
     if (!this.pass) return;
-    let t = this.properties.left.get(e),
-        s = this.properties.right.get(e),
-        a = this.properties.top.get(e),
-        r = this.properties.bottom.get(e);
-    this.pass.quad.position.set(t - s, r - a, 0), this.pass.quad.scale.set(1 - t - s, 1 - a - r, 1), this.pass.enabled = this.properties.enabled.get(e)
+    let t = this.properties.left.get(e);
+    let s = this.properties.right.get(e);
+    let a = this.properties.top.get(e);
+    let r = this.properties.bottom.get(e);
+    this.pass.quad.position.set(t - s, r - a, 0);
+    this.pass.quad.scale.set(1 - t - s, 1 - a - r, 1);
+    this.pass.enabled = this.properties.enabled.get(e);
 };

@@ -1,16 +1,21 @@
-this.defaultName = "Color Adjustment", this.shaderfile = "fx_colorcorrection", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
+this.defaultName = "Color Adjustment";
+this.shaderfile = "fx_colorcorrection";
+this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl";
+this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl");
+this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl);
+this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     powRGB: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Power.R",
             type: PZ.property.type.NUMBER,
             value: 1,
@@ -19,7 +24,7 @@ this.defaultName = "Color Adjustment", this.shaderfile = "fx_colorcorrection", t
             step: .1,
             decimals: 2
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Power.G",
             type: PZ.property.type.NUMBER,
             value: 1,
@@ -28,7 +33,7 @@ this.defaultName = "Color Adjustment", this.shaderfile = "fx_colorcorrection", t
             step: .1,
             decimals: 2
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Power.B",
             type: PZ.property.type.NUMBER,
             value: 1,
@@ -41,10 +46,10 @@ this.defaultName = "Color Adjustment", this.shaderfile = "fx_colorcorrection", t
         type: PZ.property.type.VECTOR3
     },
     mulRGB: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Multiply.R",
             type: PZ.property.type.NUMBER,
             value: .8,
@@ -53,7 +58,7 @@ this.defaultName = "Color Adjustment", this.shaderfile = "fx_colorcorrection", t
             step: .1,
             decimals: 2
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Multiply.G",
             type: PZ.property.type.NUMBER,
             value: .8,
@@ -62,7 +67,7 @@ this.defaultName = "Color Adjustment", this.shaderfile = "fx_colorcorrection", t
             step: .1,
             decimals: 2
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Multiply.B",
             type: PZ.property.type.NUMBER,
             value: .8,
@@ -75,10 +80,10 @@ this.defaultName = "Color Adjustment", this.shaderfile = "fx_colorcorrection", t
         type: PZ.property.type.VECTOR3
     },
     addRGB: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Add.R",
             type: PZ.property.type.NUMBER,
             value: .08,
@@ -87,7 +92,7 @@ this.defaultName = "Color Adjustment", this.shaderfile = "fx_colorcorrection", t
             step: .01,
             decimals: 2
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Add.G",
             type: PZ.property.type.NUMBER,
             value: .08,
@@ -96,7 +101,7 @@ this.defaultName = "Color Adjustment", this.shaderfile = "fx_colorcorrection", t
             step: .01,
             decimals: 2
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Add.B",
             type: PZ.property.type.NUMBER,
             value: .08,
@@ -108,8 +113,11 @@ this.defaultName = "Color Adjustment", this.shaderfile = "fx_colorcorrection", t
         name: "Add",
         type: PZ.property.type.VECTOR3
     }
-}, this.properties.addAll(this.propertyDefinitions, this), this.load = async function(e) {
-    this.vertShader = new PZ.asset.shader(this.parentProject.assets.load(this.vertShader)), this.fragShader = new PZ.asset.shader(this.parentProject.assets.load(this.fragShader));
+};
+this.properties.addAll(this.propertyDefinitions, this);
+this.load = async function(e) {
+    this.vertShader = new PZ.asset.shader(this.parentProject.assets.load(this.vertShader));
+    this.fragShader = new PZ.asset.shader(this.parentProject.assets.load(this.fragShader));
     var t = new THREE.ShaderMaterial({
         uniforms: {
             tDiffuse: {
@@ -136,16 +144,28 @@ this.defaultName = "Color Adjustment", this.shaderfile = "fx_colorcorrection", t
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader()
     });
-    this.pass = new THREE.ShaderPass(t), this.pass.material.transparent = !0, this.pass.material.premultipliedAlpha = !0, this.properties.load(e && e.properties)
-}, this.toJSON = function() {
+    this.pass = new THREE.ShaderPass(t);
+    this.pass.material.transparent = true;
+    this.pass.material.premultipliedAlpha = true;
+    this.properties.load(e && e.properties);
+};
+this.toJSON = function() {
     return {
         type: this.type,
         properties: this.properties
-    }
-}, this.unload = function(e) {
-    this.parentProject.assets.unload(this.vertShader), this.parentProject.assets.unload(this.fragShader)
-}, this.update = function(e) {
+    };
+};
+this.unload = function(e) {
+    this.parentProject.assets.unload(this.vertShader), this.parentProject.assets.unload(this.fragShader);
+};
+this.update = function(e) {
     if (!this.pass) return;
     let t;
-    this.pass.enabled = this.properties.enabled.get(e), t = this.properties.powRGB.get(e), this.pass.uniforms.powRGB.value.set(t[0], t[1], t[2]), t = this.properties.mulRGB.get(e), this.pass.uniforms.mulRGB.value.set(t[0], t[1], t[2]), t = this.properties.addRGB.get(e), this.pass.uniforms.addRGB.value.set(t[0], t[1], t[2])
+    this.pass.enabled = this.properties.enabled.get(e);
+    t = this.properties.powRGB.get(e);
+    this.pass.uniforms.powRGB.value.set(t[0], t[1], t[2]);
+    t = this.properties.mulRGB.get(e);
+    this.pass.uniforms.mulRGB.value.set(t[0], t[1], t[2]);
+    t = this.properties.addRGB.get(e);
+    this.pass.uniforms.addRGB.value.set(t[0], t[1], t[2]);
 };
