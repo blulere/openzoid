@@ -1,6 +1,6 @@
 this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", this.texture = null, this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/overlay.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
@@ -16,24 +16,24 @@ this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", t
             let e = this.parentObject;
             if (e.texture && (e.parentProject.assets.unload(e.texture), e.texture = null, e.pass.uniforms.tDisplacement.value.dispose(), e.pass.uniforms.tDisplacement.value = null), this.value) {
                 e.texture = new PZ.asset.image(e.parentProject.assets.load(this.value));
-                let t = e.texture.getTexture(!0);
-                t.minFilter = t.magFilter = THREE.LinearFilter, t.wrapS = t.wrapT = THREE.RepeatWrapping, t.generateMipmaps = !1, e.pass.uniforms.tDisplacement.value = t
+                let t = e.texture.getTexture(true);
+                t.minFilter = t.magFilter = THREE.LinearFilter, t.wrapS = t.wrapT = THREE.RepeatWrapping, t.generateMipmaps = false, e.pass.uniforms.tDisplacement.value = t
             }
-            e.pass.material.needsUpdate = !0
+            e.pass.material.needsUpdate = true
         }
     },
     displacementOffset: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Displacement offset.X",
             type: PZ.property.type.NUMBER,
             value: 0,
             step: .01,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Displacement offset.Y",
             type: PZ.property.type.NUMBER,
             value: 0,
@@ -46,10 +46,10 @@ this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", t
         decimals: 3
     },
     uDisplacement: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "X displacement.R",
             type: PZ.property.type.NUMBER,
             value: 1,
@@ -57,7 +57,7 @@ this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", t
             max: 1,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "X displacement.G",
             type: PZ.property.type.NUMBER,
             value: 0,
@@ -65,7 +65,7 @@ this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", t
             max: 1,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "X displacement.B",
             type: PZ.property.type.NUMBER,
             value: 0,
@@ -77,10 +77,10 @@ this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", t
         type: PZ.property.type.VECTOR3
     },
     vDisplacement: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Y displacement.R",
             type: PZ.property.type.NUMBER,
             value: 1,
@@ -88,7 +88,7 @@ this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", t
             max: 1,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Y displacement.G",
             type: PZ.property.type.NUMBER,
             value: 0,
@@ -96,7 +96,7 @@ this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", t
             max: 1,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Y displacement.B",
             type: PZ.property.type.NUMBER,
             value: 0,
@@ -108,7 +108,7 @@ this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", t
         type: PZ.property.type.VECTOR3
     },
     amount: {
-        dynamic: !0,
+        dynamic: true,
         name: "Amount",
         type: PZ.property.type.NUMBER,
         value: .1,
@@ -116,17 +116,17 @@ this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", t
         decimals: 3
     },
     offset: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Offset.X",
             type: PZ.property.type.NUMBER,
             value: 0,
             step: .05,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Offset.Y",
             type: PZ.property.type.NUMBER,
             value: 0,
@@ -137,10 +137,10 @@ this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", t
         type: PZ.property.type.VECTOR2
     },
     scale: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Scale.X",
             type: PZ.property.type.NUMBER,
             value: 1,
@@ -148,7 +148,7 @@ this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", t
             step: .05,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Scale.Y",
             type: PZ.property.type.NUMBER,
             value: 1,
@@ -158,10 +158,10 @@ this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", t
         }],
         name: "Scale",
         type: PZ.property.type.VECTOR2,
-        linkRatio: !0
+        linkRatio: true
     },
     rotation: {
-        dynamic: !0,
+        dynamic: true,
         name: "Rotation",
         type: PZ.property.type.NUMBER,
         scaleFactor: Math.PI / 180,
@@ -176,7 +176,7 @@ this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", t
         type: PZ.property.type.OPTION,
         changed: function() {
             let e = this.parentObject;
-            e.pass.material.defines.REPEAT_MODE = this.value, e.pass.material.needsUpdate = !0, e.resize()
+            e.pass.material.defines.REPEAT_MODE = this.value, e.pass.material.needsUpdate = true, e.resize()
         }
     }
 }, this.properties.addAll(this.propertyDefinitions, this), this.load = async function(e) {
@@ -218,9 +218,9 @@ this.defaultName = "Displacement Map", this.shaderfile = "fx_displacementmap", t
         },
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader(),
-        premultipliedAlpha: !0,
+        premultipliedAlpha: true,
         defines: {
-            HAS_OFFSET: !0
+            HAS_OFFSET: true
         }
     });
     this.pass = new THREE.ShaderPass(t), this.pass.material.defines.REPEAT_MODE = 2, this.properties.load(e && e.properties)

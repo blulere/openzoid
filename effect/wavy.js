@@ -1,13 +1,13 @@
 this.defaultName = "Wavy", this.shaderfile = "fx_wavy", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     amount: {
-        dynamic: !0,
+        dynamic: true,
         name: "Amount",
         type: PZ.property.type.NUMBER,
         value: 3,
@@ -15,7 +15,7 @@ this.defaultName = "Wavy", this.shaderfile = "fx_wavy", this.shaderUrl = "/asset
         step: .1
     },
     size: {
-        dynamic: !0,
+        dynamic: true,
         name: "Density",
         type: PZ.property.type.NUMBER,
         value: 25,
@@ -24,7 +24,7 @@ this.defaultName = "Wavy", this.shaderfile = "fx_wavy", this.shaderUrl = "/asset
         step: .2
     },
     time: {
-        dynamic: !0,
+        dynamic: true,
         name: "Time",
         type: PZ.property.type.NUMBER,
         value: 0,
@@ -32,7 +32,7 @@ this.defaultName = "Wavy", this.shaderfile = "fx_wavy", this.shaderUrl = "/asset
         step: .2
     },
     angle: {
-        dynamic: !0,
+        dynamic: true,
         name: "Angle",
         type: PZ.property.type.NUMBER,
         value: 0,
@@ -70,7 +70,7 @@ this.defaultName = "Wavy", this.shaderfile = "fx_wavy", this.shaderUrl = "/asset
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader()
     });
-    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = !0, this.pass.material.defines.ANGLE = 1, this.properties.load(e && e.properties)
+    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = true, this.pass.material.defines.ANGLE = 1, this.properties.load(e && e.properties)
 }, this.toJSON = function() {
     return {
         type: this.type,

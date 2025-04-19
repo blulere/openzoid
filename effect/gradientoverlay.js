@@ -1,6 +1,6 @@
-this.defaultName = "Gradient Overlay", this.shaderfile = "blend", this.texture = null, this.gradientNeedsUpdate = !0, this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/overlay.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
+this.defaultName = "Gradient Overlay", this.shaderfile = "blend", this.texture = null, this.gradientNeedsUpdate = true, this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/overlay.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
@@ -14,7 +14,7 @@ this.defaultName = "Gradient Overlay", this.shaderfile = "blend", this.texture =
             color: "rgba(255, 255, 255, 1)"
         }],
         changed: function() {
-            this.parentObject.gradientNeedsUpdate = !0
+            this.parentObject.gradientNeedsUpdate = true
         }
     },
     gradientType: {
@@ -24,21 +24,21 @@ this.defaultName = "Gradient Overlay", this.shaderfile = "blend", this.texture =
         items: "linear;radial;angular;reflected;diamond",
         changed: function() {
             let e = this.parentObject;
-            e.pass.material.defines.BLEND_GRADIENT_TYPE = this.value, e.pass.material.needsUpdate = !0
+            e.pass.material.defines.BLEND_GRADIENT_TYPE = this.value, e.pass.material.needsUpdate = true
         }
     },
     offset: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Offset.X",
             type: PZ.property.type.NUMBER,
             value: 0,
             step: .05,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Offset.Y",
             type: PZ.property.type.NUMBER,
             value: 0,
@@ -49,10 +49,10 @@ this.defaultName = "Gradient Overlay", this.shaderfile = "blend", this.texture =
         type: PZ.property.type.VECTOR2
     },
     scale: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Scale.X",
             type: PZ.property.type.NUMBER,
             value: 1,
@@ -60,7 +60,7 @@ this.defaultName = "Gradient Overlay", this.shaderfile = "blend", this.texture =
             step: .05,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Scale.Y",
             type: PZ.property.type.NUMBER,
             value: 1,
@@ -70,10 +70,10 @@ this.defaultName = "Gradient Overlay", this.shaderfile = "blend", this.texture =
         }],
         name: "Scale",
         type: PZ.property.type.VECTOR2,
-        linkRatio: !0
+        linkRatio: true
     },
     rotation: {
-        dynamic: !0,
+        dynamic: true,
         name: "Rotation",
         type: PZ.property.type.NUMBER,
         scaleFactor: Math.PI / 180,
@@ -82,7 +82,7 @@ this.defaultName = "Gradient Overlay", this.shaderfile = "blend", this.texture =
         decimals: 1
     },
     opacity: {
-        dynamic: !0,
+        dynamic: true,
         name: "Opacity",
         type: PZ.property.type.NUMBER,
         value: 1,
@@ -101,7 +101,7 @@ this.defaultName = "Gradient Overlay", this.shaderfile = "blend", this.texture =
                 BLEND_SRC_GRADIENT: 1,
                 OVERLAP_MODE: 3,
                 BLEND_GRADIENT_TYPE: e.pass.material.defines.BLEND_GRADIENT_TYPE
-            }, e.pass.material.defines[this.value] = 1, e.pass.material.needsUpdate = !0
+            }, e.pass.material.defines[this.value] = 1, e.pass.material.needsUpdate = true
         }
     }
 }, this.properties.addAll(this.propertyDefinitions, this), this.load = async function(e) {
@@ -141,10 +141,10 @@ this.defaultName = "Gradient Overlay", this.shaderfile = "blend", this.texture =
 }, this.unload = function() {
     this.gradient.dispose(), this.parentProject.assets.unload(this.vertShader), this.parentProject.assets.unload(this.fragShader)
 }, this.updateGradient = function() {
-    PZ.object3d.particles.prototype.redrawGradient(this.gradient.image.data, this.properties.gradient.get()), this.gradient.needsUpdate = !0
+    PZ.object3d.particles.prototype.redrawGradient(this.gradient.image.data, this.properties.gradient.get()), this.gradient.needsUpdate = true
 }, this.update = function(e) {
     if (!this.pass) return;
-    this.gradientNeedsUpdate && (this.updateGradient(), this.gradientNeedsUpdate = !1), this.pass.uniforms.opacity.value = this.properties.opacity.get(e);
+    this.gradientNeedsUpdate && (this.updateGradient(), this.gradientNeedsUpdate = false), this.pass.uniforms.opacity.value = this.properties.opacity.get(e);
     let t = this.properties.offset.get(e),
         a = this.properties.scale.get(e),
         s = this.properties.rotation.get(e),

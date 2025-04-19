@@ -1,13 +1,13 @@
 this.defaultName = "Swirl", this.shaderfile = "fx_swirl", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     angle: {
-        dynamic: !0,
+        dynamic: true,
         name: "Angle",
         type: PZ.property.type.NUMBER,
         value: .2,
@@ -40,7 +40,7 @@ this.defaultName = "Swirl", this.shaderfile = "fx_swirl", this.shaderUrl = "/ass
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader()
     });
-    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = !0, this.properties.load(e && e.properties)
+    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = true, this.properties.load(e && e.properties)
 }, this.toJSON = function() {
     return {
         type: this.type,

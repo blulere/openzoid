@@ -1,30 +1,30 @@
 this.defaultName = "Scan Lines", this.shaderfile = "fx_scanlines", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     color: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Color.R",
             type: PZ.property.type.NUMBER,
             value: 0,
             min: 0,
             max: 1
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Color.G",
             type: PZ.property.type.NUMBER,
             value: 0,
             min: 0,
             max: 1
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Color.B",
             type: PZ.property.type.NUMBER,
             value: 0,
@@ -35,7 +35,7 @@ this.defaultName = "Scan Lines", this.shaderfile = "fx_scanlines", this.shaderUr
         type: PZ.property.type.COLOR
     },
     opacity: {
-        dynamic: !0,
+        dynamic: true,
         name: "Opacity",
         type: PZ.property.type.NUMBER,
         value: 1,
@@ -44,7 +44,7 @@ this.defaultName = "Scan Lines", this.shaderfile = "fx_scanlines", this.shaderUr
         step: .1
     },
     thickness: {
-        dynamic: !0,
+        dynamic: true,
         name: "Thickness",
         type: PZ.property.type.NUMBER,
         value: 1,
@@ -52,7 +52,7 @@ this.defaultName = "Scan Lines", this.shaderfile = "fx_scanlines", this.shaderUr
         decimals: 1
     },
     offset: {
-        dynamic: !0,
+        dynamic: true,
         name: "Offset",
         type: PZ.property.type.NUMBER,
         value: 0,
@@ -60,7 +60,7 @@ this.defaultName = "Scan Lines", this.shaderfile = "fx_scanlines", this.shaderUr
         decimals: 1
     },
     feather: {
-        dynamic: !0,
+        dynamic: true,
         name: "Feather",
         type: PZ.property.type.NUMBER,
         value: .25,
@@ -70,7 +70,7 @@ this.defaultName = "Scan Lines", this.shaderfile = "fx_scanlines", this.shaderUr
         decimals: 3
     },
     angle: {
-        dynamic: !0,
+        dynamic: true,
         name: "Angle",
         type: PZ.property.type.NUMBER,
         value: .5 * Math.PI,
@@ -122,7 +122,7 @@ this.defaultName = "Scan Lines", this.shaderfile = "fx_scanlines", this.shaderUr
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader()
     });
-    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = !0, this.properties.load(e && e.properties)
+    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = true, this.properties.load(e && e.properties)
 }, this.toJSON = function() {
     return {
         type: this.type,

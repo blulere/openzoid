@@ -1,23 +1,23 @@
 this.defaultName = "Glitch", this.shaderfile = "fx_glitch", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     time: {
-        dynamic: !0,
+        dynamic: true,
         name: "Time",
         type: PZ.property.type.NUMBER,
         value: 0,
         step: .01,
         value: e => {
-            e.animated = !0, e.expression = new PZ.expression("time")
+            e.animated = true, e.expression = new PZ.expression("time")
         }
     },
     amount: {
-        dynamic: !0,
+        dynamic: true,
         name: "Amount",
         type: PZ.property.type.NUMBER,
         value: .4,
@@ -26,7 +26,7 @@ this.defaultName = "Glitch", this.shaderfile = "fx_glitch", this.shaderUrl = "/a
         step: .01
     },
     offset: {
-        dynamic: !0,
+        dynamic: true,
         name: "Displacement",
         type: PZ.property.type.NUMBER,
         value: .1,
@@ -35,7 +35,7 @@ this.defaultName = "Glitch", this.shaderfile = "fx_glitch", this.shaderUrl = "/a
         step: .01
     },
     speed: {
-        dynamic: !0,
+        dynamic: true,
         name: "Speed",
         type: PZ.property.type.NUMBER,
         value: 4,

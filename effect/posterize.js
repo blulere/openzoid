@@ -1,13 +1,13 @@
 this.defaultName = "Posterize", this.shaderfile = "fx_posterize", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     gamma: {
-        dynamic: !0,
+        dynamic: true,
         name: "Gamma",
         type: PZ.property.type.NUMBER,
         value: .6,
@@ -17,7 +17,7 @@ this.defaultName = "Posterize", this.shaderfile = "fx_posterize", this.shaderUrl
         decimals: 2
     },
     regions: {
-        dynamic: !0,
+        dynamic: true,
         name: "Colors",
         type: PZ.property.type.NUMBER,
         value: 8,

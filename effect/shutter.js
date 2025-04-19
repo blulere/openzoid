@@ -1,6 +1,6 @@
 this.defaultName = "Shutter", this.shaderfile = "fx_shutter", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
@@ -12,29 +12,29 @@ this.defaultName = "Shutter", this.shaderfile = "fx_shutter", this.shaderUrl = "
         value: 1,
         changed: function() {
             let e = this.parentObject;
-            e.pass.material.defines.SHUTTER_TYPE = 2 & this.value, e.pass.material.defines.SHUTTER_SIDE = 1 & this.value, e.pass.material.needsUpdate = !0
+            e.pass.material.defines.SHUTTER_TYPE = 2 & this.value, e.pass.material.defines.SHUTTER_SIDE = 1 & this.value, e.pass.material.needsUpdate = true
         },
         items: "linear;linear doublesided;radial"
     },
     color: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Color.R",
             type: PZ.property.type.NUMBER,
             value: 0,
             min: 0,
             max: 1
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Color.G",
             type: PZ.property.type.NUMBER,
             value: 0,
             min: 0,
             max: 1
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Color.B",
             type: PZ.property.type.NUMBER,
             value: 0,
@@ -45,7 +45,7 @@ this.defaultName = "Shutter", this.shaderfile = "fx_shutter", this.shaderUrl = "
         type: PZ.property.type.COLOR
     },
     opacity: {
-        dynamic: !0,
+        dynamic: true,
         name: "Opacity",
         type: PZ.property.type.NUMBER,
         value: 1,
@@ -54,7 +54,7 @@ this.defaultName = "Shutter", this.shaderfile = "fx_shutter", this.shaderUrl = "
         step: .1
     },
     covered: {
-        dynamic: !0,
+        dynamic: true,
         name: "Cover",
         type: PZ.property.type.NUMBER,
         value: .25,
@@ -64,7 +64,7 @@ this.defaultName = "Shutter", this.shaderfile = "fx_shutter", this.shaderUrl = "
         decimals: 3
     },
     angle: {
-        dynamic: !0,
+        dynamic: true,
         name: "Angle",
         type: PZ.property.type.NUMBER,
         value: .5 * Math.PI,
@@ -73,7 +73,7 @@ this.defaultName = "Shutter", this.shaderfile = "fx_shutter", this.shaderUrl = "
         decimals: 3
     },
     fade: {
-        dynamic: !0,
+        dynamic: true,
         name: "Fade",
         type: PZ.property.type.NUMBER,
         value: .001,
@@ -122,7 +122,7 @@ this.defaultName = "Shutter", this.shaderfile = "fx_shutter", this.shaderUrl = "
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader()
     });
-    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = !0, this.properties.load(e && e.properties), this.pass.material.defines = {
+    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = true, this.properties.load(e && e.properties), this.pass.material.defines = {
         SHUTTER_TYPE: 2 & this.properties.mode.get(),
         SHUTTER_SIDE: 1 & this.properties.mode.get()
     }

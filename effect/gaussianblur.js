@@ -1,13 +1,13 @@
 this.defaultName = "Gaussian Blur", this.shaderfile = "fx_boxblur", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     delta: {
-        dynamic: !0,
+        dynamic: true,
         name: "Delta",
         type: PZ.property.type.NUMBER,
         value: 1,
@@ -16,11 +16,11 @@ this.defaultName = "Gaussian Blur", this.shaderfile = "fx_boxblur", this.shaderU
         step: .1
     }
 }, this.properties.addAll(this.propertyDefinitions, this), THREE.GaussianBlurPass || (THREE.GaussianBlurPass = function(e, t) {
-    this.material_h = e, this.material_v = e.clone(), this.material_h.transparent = !0, this.material_h.premultipliedAlpha = !0, this.material_v.transparent = !0, this.material_v.premultipliedAlpha = !0, this.material_h.defines = {
+    this.material_h = e, this.material_v = e.clone(), this.material_h.transparent = true, this.material_h.premultipliedAlpha = true, this.material_v.transparent = true, this.material_v.premultipliedAlpha = true, this.material_h.defines = {
         BLUR_DIR: 0
     }, this.material_v.defines = {
         BLUR_DIR: 1
-    }, this.uniforms = this.material_h.uniforms = this.material_v.uniforms, this.renderToScreen = !1, this.enabled = !0, this.needsSwap = !1, this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1), this.scene = new THREE.Scene, this.quad = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), null), this.scene.add(this.quad)
+    }, this.uniforms = this.material_h.uniforms = this.material_v.uniforms, this.renderToScreen = false, this.enabled = true, this.needsSwap = false, this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1), this.scene = new THREE.Scene, this.quad = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), null), this.scene.add(this.quad)
 }, THREE.GaussianBlurPass.prototype = {
     render: function(e, t, s, a) {
         for (var r = 0; r < 3; r++) this.quad.material = this.material_h, this.uniforms.tDiffuse.value = s.texture, e.render(this.scene, this.camera, t, a), this.quad.material = this.material_v, this.uniforms.tDiffuse.value = t.texture, e.render(this.scene, this.camera, s, a)

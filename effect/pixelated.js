@@ -1,16 +1,16 @@
 this.defaultName = "Pixelated", this.shaderfile = "fx_pixelated", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     size: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Pixel size.X",
             type: PZ.property.type.NUMBER,
             value: 16,
@@ -18,7 +18,7 @@ this.defaultName = "Pixelated", this.shaderfile = "fx_pixelated", this.shaderUrl
             decimals: 0,
             min: 1
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Pixel size.Y",
             type: PZ.property.type.NUMBER,
             value: 9,
@@ -28,7 +28,7 @@ this.defaultName = "Pixelated", this.shaderfile = "fx_pixelated", this.shaderUrl
         }],
         name: "Pixel size",
         type: PZ.property.type.VECTOR2,
-        linkRatio: !0
+        linkRatio: true
     }
 }, this.properties.addAll(this.propertyDefinitions, this), this.load = async function(e) {
     this.vertShader = new PZ.asset.shader(this.parentProject.assets.load(this.vertShader)), this.fragShader = new PZ.asset.shader(this.parentProject.assets.load(this.fragShader));
@@ -54,7 +54,7 @@ this.defaultName = "Pixelated", this.shaderfile = "fx_pixelated", this.shaderUrl
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader()
     });
-    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = !0, this.properties.load(e && e.properties)
+    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = true, this.properties.load(e && e.properties)
 }, this.toJSON = function() {
     return {
         type: this.type,

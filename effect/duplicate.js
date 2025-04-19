@@ -1,16 +1,16 @@
 this.defaultName = "Duplicate", this.shaderfile = "fx_repeat", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/remap.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     offset: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Offset.X",
             type: PZ.property.type.NUMBER,
             value: 0,
@@ -18,7 +18,7 @@ this.defaultName = "Duplicate", this.shaderfile = "fx_repeat", this.shaderUrl = 
             dragstep: .001,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Offset.Y",
             type: PZ.property.type.NUMBER,
             value: 0,
@@ -30,10 +30,10 @@ this.defaultName = "Duplicate", this.shaderfile = "fx_repeat", this.shaderUrl = 
         type: PZ.property.type.VECTOR2
     },
     multiplier: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Multiplier.X",
             type: PZ.property.type.NUMBER,
             value: 3,
@@ -41,7 +41,7 @@ this.defaultName = "Duplicate", this.shaderfile = "fx_repeat", this.shaderUrl = 
             step: .01,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Multiplier.Y",
             type: PZ.property.type.NUMBER,
             value: 3,
@@ -51,10 +51,10 @@ this.defaultName = "Duplicate", this.shaderfile = "fx_repeat", this.shaderUrl = 
         }],
         name: "Multiplier",
         type: PZ.property.type.VECTOR2,
-        linkRatio: !0
+        linkRatio: true
     },
     rotation: {
-        dynamic: !0,
+        dynamic: true,
         name: "Rotation",
         type: PZ.property.type.NUMBER,
         scaleFactor: Math.PI / 180,
@@ -69,7 +69,7 @@ this.defaultName = "Duplicate", this.shaderfile = "fx_repeat", this.shaderUrl = 
         value: 0,
         changed: function() {
             let e = this.parentObject;
-            e.pass.material.defines.REPEAT_MODE = this.value, e.pass.material.needsUpdate = !0
+            e.pass.material.defines.REPEAT_MODE = this.value, e.pass.material.needsUpdate = true
         }
     }
 }, this.properties.addAll(this.propertyDefinitions, this), this.load = async function(e) {
@@ -92,7 +92,7 @@ this.defaultName = "Duplicate", this.shaderfile = "fx_repeat", this.shaderUrl = 
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader()
     });
-    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = !0, this.pass.material.defines.REPEAT_MODE = 0, this.properties.load(e && e.properties)
+    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = true, this.pass.material.defines.REPEAT_MODE = 0, this.properties.load(e && e.properties)
 }, this.toJSON = function() {
     return {
         type: this.type,

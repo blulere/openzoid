@@ -1,6 +1,6 @@
 this.defaultName = "Image Overlay", this.shaderfile = "blend", this.texture = null, this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/overlay.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
@@ -16,10 +16,10 @@ this.defaultName = "Image Overlay", this.shaderfile = "blend", this.texture = nu
             let e = this.parentObject;
             if (e.texture && (e.parentProject.assets.unload(e.texture), e.texture = null, e.pass.uniforms.tDiffuse.value.dispose(), e.pass.uniforms.tDiffuse.value = null), this.value) {
                 e.texture = new PZ.asset.image(e.parentProject.assets.load(this.value));
-                let t = e.texture.getTexture(!0);
-                t.minFilter = t.magFilter = THREE.LinearFilter, t.wrapS = t.wrapT = THREE.RepeatWrapping, t.generateMipmaps = !1, e.pass.uniforms.tDiffuse.value = t
+                let t = e.texture.getTexture(true);
+                t.minFilter = t.magFilter = THREE.LinearFilter, t.wrapS = t.wrapT = THREE.RepeatWrapping, t.generateMipmaps = false, e.pass.uniforms.tDiffuse.value = t
             }
-            e.pass.material.needsUpdate = !0
+            e.pass.material.needsUpdate = true
         }
     },
     repeat: {
@@ -29,21 +29,21 @@ this.defaultName = "Image Overlay", this.shaderfile = "blend", this.texture = nu
         items: "off;on",
         changed: function() {
             let e = this.parentObject;
-            e.pass.material.defines.BLEND_NO_REPEAT = !this.value, e.pass.material.needsUpdate = !0
+            e.pass.material.defines.BLEND_NO_REPEAT = !this.value, e.pass.material.needsUpdate = true
         }
     },
     offset: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Offset.X",
             type: PZ.property.type.NUMBER,
             value: 0,
             step: .05,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Offset.Y",
             type: PZ.property.type.NUMBER,
             value: 0,
@@ -54,17 +54,17 @@ this.defaultName = "Image Overlay", this.shaderfile = "blend", this.texture = nu
         type: PZ.property.type.VECTOR2
     },
     scale: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Scale.X",
             type: PZ.property.type.NUMBER,
             value: 1,
             step: .05,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Scale.Y",
             type: PZ.property.type.NUMBER,
             value: 1,
@@ -73,10 +73,10 @@ this.defaultName = "Image Overlay", this.shaderfile = "blend", this.texture = nu
         }],
         name: "Scale",
         type: PZ.property.type.VECTOR2,
-        linkRatio: !0
+        linkRatio: true
     },
     rotation: {
-        dynamic: !0,
+        dynamic: true,
         name: "Rotation",
         type: PZ.property.type.NUMBER,
         scaleFactor: Math.PI / 180,
@@ -85,7 +85,7 @@ this.defaultName = "Image Overlay", this.shaderfile = "blend", this.texture = nu
         decimals: 1
     },
     opacity: {
-        dynamic: !0,
+        dynamic: true,
         name: "Opacity",
         type: PZ.property.type.NUMBER,
         value: 1,
@@ -103,7 +103,7 @@ this.defaultName = "Image Overlay", this.shaderfile = "blend", this.texture = nu
             e.pass.material.defines = {
                 OVERLAP_MODE: 3,
                 BLEND_NO_REPEAT: e.pass.material.defines.BLEND_NO_REPEAT
-            }, e.pass.material.defines[this.value] = 1, e.pass.material.needsUpdate = !0
+            }, e.pass.material.defines[this.value] = 1, e.pass.material.needsUpdate = true
         }
     }
 }, this.properties.addAll(this.propertyDefinitions, this), this.load = async function(e) {
@@ -133,12 +133,12 @@ this.defaultName = "Image Overlay", this.shaderfile = "blend", this.texture = nu
         },
         defines: {
             OVERLAP_MODE: 3,
-            BLEND_NO_REPEAT: !1,
+            BLEND_NO_REPEAT: false,
             BLEND_SRC_OVER: 1
         },
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader(),
-        premultipliedAlpha: !0
+        premultipliedAlpha: true
     });
     this.pass = new THREE.OverlayPass(t), this.properties.load(e && e.properties)
 }, this.toJSON = function() {

@@ -1,13 +1,13 @@
 this.defaultName = "Sharpen", this.shaderfile = "fx_sharpen", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     delta: {
-        dynamic: !0,
+        dynamic: true,
         name: "Delta",
         type: PZ.property.type.NUMBER,
         value: 1,

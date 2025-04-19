@@ -1,20 +1,20 @@
 this.defaultName = "Flip", this.shaderfile = "fx_repeat", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/remap.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     horizontal: {
-        dynamic: !0,
+        dynamic: true,
         name: "Horizontal flip",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     vertical: {
-        dynamic: !0,
+        dynamic: true,
         name: "Vertical flip",
         type: PZ.property.type.OPTION,
         value: 0,

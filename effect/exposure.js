@@ -1,13 +1,13 @@
 this.defaultName = "Exposure", this.shaderfile = "fx_exposure", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     exposure: {
-        dynamic: !0,
+        dynamic: true,
         name: "Exposure",
         type: PZ.property.type.NUMBER,
         value: 0,
@@ -16,7 +16,7 @@ this.defaultName = "Exposure", this.shaderfile = "fx_exposure", this.shaderUrl =
         step: .1
     },
     gamma: {
-        dynamic: !0,
+        dynamic: true,
         name: "Gamma",
         type: PZ.property.type.NUMBER,
         value: 0,
@@ -48,7 +48,7 @@ this.defaultName = "Exposure", this.shaderfile = "fx_exposure", this.shaderUrl =
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader()
     });
-    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = !0, this.properties.load(e && e.properties)
+    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = true, this.properties.load(e && e.properties)
 }, this.toJSON = function() {
     return {
         type: this.type,

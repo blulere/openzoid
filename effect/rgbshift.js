@@ -1,20 +1,20 @@
 this.defaultName = "RGB Shift", this.shaderfile = "fx_rgbshift", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     amount: {
-        dynamic: !0,
+        dynamic: true,
         name: "Amount",
         type: PZ.property.type.NUMBER,
         value: 10,
         step: .1
     },
     angle: {
-        dynamic: !0,
+        dynamic: true,
         name: "Angle",
         type: PZ.property.type.NUMBER,
         value: 0,

@@ -1,13 +1,13 @@
 this.defaultName = "Radial Blur", this.shaderfile = "fx_radialblur", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     density: {
-        dynamic: !0,
+        dynamic: true,
         name: "Delta",
         type: PZ.property.type.NUMBER,
         value: .5,
@@ -17,7 +17,7 @@ this.defaultName = "Radial Blur", this.shaderfile = "fx_radialblur", this.shader
         decimals: 3
     },
     dither: {
-        dynamic: !0,
+        dynamic: true,
         name: "Dither",
         type: PZ.property.type.NUMBER,
         value: .5,
@@ -27,7 +27,7 @@ this.defaultName = "Radial Blur", this.shaderfile = "fx_radialblur", this.shader
         decimals: 3
     },
     decay: {
-        dynamic: !0,
+        dynamic: true,
         name: "Decay",
         type: PZ.property.type.NUMBER,
         value: .9,
@@ -37,17 +37,17 @@ this.defaultName = "Radial Blur", this.shaderfile = "fx_radialblur", this.shader
         decimals: 3
     },
     center: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Center.X",
             type: PZ.property.type.NUMBER,
             value: 0,
             step: .05,
             decimals: 3
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Center.Y",
             type: PZ.property.type.NUMBER,
             value: 0,
@@ -63,12 +63,12 @@ this.defaultName = "Radial Blur", this.shaderfile = "fx_radialblur", this.shader
         value: 0,
         changed: function() {
             let e = this.parentObject;
-            0 === this.value ? e.pass.material.defines.CONSTANT_BRIGHTNESS = 1 : delete e.pass.material.defines.CONSTANT_BRIGHTNESS, e.pass.material.needsUpdate = !0
+            0 === this.value ? e.pass.material.defines.CONSTANT_BRIGHTNESS = 1 : delete e.pass.material.defines.CONSTANT_BRIGHTNESS, e.pass.material.needsUpdate = true
         },
         items: "off;on"
     },
     weight: {
-        dynamic: !0,
+        dynamic: true,
         name: "Weight",
         type: PZ.property.type.NUMBER,
         value: .2,
@@ -117,7 +117,7 @@ this.defaultName = "Radial Blur", this.shaderfile = "fx_radialblur", this.shader
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader()
     });
-    t.premultipliedAlpha = !0, t.defines.DITHER = 1, t.defines.CONSTANT_BRIGHTNESS = 1, this.pass = new THREE.ShaderPass(t), this.properties.load(e && e.properties)
+    t.premultipliedAlpha = true, t.defines.DITHER = 1, t.defines.CONSTANT_BRIGHTNESS = 1, this.pass = new THREE.ShaderPass(t), this.properties.load(e && e.properties)
 }, this.toJSON = function() {
     return {
         type: this.type,

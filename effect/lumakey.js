@@ -1,13 +1,13 @@
 this.defaultName = "Luma Key", this.shaderfile = "fx_lumakey", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     threshold: {
-        dynamic: !0,
+        dynamic: true,
         name: "Threshold",
         type: PZ.property.type.NUMBER,
         value: .5,
@@ -17,7 +17,7 @@ this.defaultName = "Luma Key", this.shaderfile = "fx_lumakey", this.shaderUrl = 
         decimals: 3
     },
     soften: {
-        dynamic: !0,
+        dynamic: true,
         name: "Soften",
         type: PZ.property.type.NUMBER,
         value: .1,
@@ -33,7 +33,7 @@ this.defaultName = "Luma Key", this.shaderfile = "fx_lumakey", this.shaderUrl = 
         items: "off;on",
         changed: function() {
             let e = this.parentObject;
-            e.pass.material.defines.KEY_INVERT = !!this.value, e.pass.material.needsUpdate = !0
+            e.pass.material.defines.KEY_INVERT = !!this.value, e.pass.material.needsUpdate = true
         }
     },
     mask: {
@@ -43,7 +43,7 @@ this.defaultName = "Luma Key", this.shaderfile = "fx_lumakey", this.shaderUrl = 
         items: "result;mask",
         changed: function() {
             let e = this.parentObject;
-            e.pass.material.defines.KEY_MASK = !!this.value, e.pass.material.needsUpdate = !0
+            e.pass.material.defines.KEY_MASK = !!this.value, e.pass.material.needsUpdate = true
         }
     }
 }, this.properties.addAll(this.propertyDefinitions, this), this.load = async function(e) {
@@ -70,7 +70,7 @@ this.defaultName = "Luma Key", this.shaderfile = "fx_lumakey", this.shaderUrl = 
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader()
     });
-    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = !0, this.properties.load(e && e.properties)
+    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = true, this.properties.load(e && e.properties)
 }, this.toJSON = function() {
     return {
         type: this.type,

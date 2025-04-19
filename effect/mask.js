@@ -5,7 +5,7 @@ this.vertShader=this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER,
 this.fragShader=this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl),
 this.propertyDefinitions= {
     enabled: {
-        dynamic:  !0, name:"Enabled", type:PZ.property.type.OPTION, value:1, items:"off;on"
+        dynamic:  true, name:"Enabled", type:PZ.property.type.OPTION, value:1, items:"off;on"
     }
     ,
     mode: {
@@ -15,21 +15,21 @@ this.propertyDefinitions= {
         changed:function() {
             let e=this.parentObject;
             e.pass.mask.material.defines.MASK_MODE=this.value,
-            e.pass.mask.material.needsUpdate= !0
+            e.pass.mask.material.needsUpdate= true
         }
         ,
         items:"rectangle;ellipse"
     }
     ,
     position: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects:[ {
-            dynamic:  !0, name:"Position.X", type:PZ.property.type.NUMBER, value:0, decimals:0, step:10
+            dynamic:  true, name:"Position.X", type:PZ.property.type.NUMBER, value:0, decimals:0, step:10
         }
         ,
             {
-            dynamic:  !0, name:"Position.Y", type:PZ.property.type.NUMBER, value:0, decimals:0, step:10
+            dynamic:  true, name:"Position.Y", type:PZ.property.type.NUMBER, value:0, decimals:0, step:10
         }
         ],
         name:"Position",
@@ -37,23 +37,23 @@ this.propertyDefinitions= {
     }
     ,
     size: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects:[ {
-            dynamic:  !0, name:"Size.X", type:PZ.property.type.NUMBER, min:.01, value:250, decimals:0, step:10
+            dynamic:  true, name:"Size.X", type:PZ.property.type.NUMBER, min:.01, value:250, decimals:0, step:10
         }
         ,
             {
-            dynamic:  !0, name:"Size.Y", type:PZ.property.type.NUMBER, min:.01, value:250, decimals:0, step:10
+            dynamic:  true, name:"Size.Y", type:PZ.property.type.NUMBER, min:.01, value:250, decimals:0, step:10
         }
         ],
         name:"Size",
         type:PZ.property.type.VECTOR2,
-        linkRatio: !0
+        linkRatio: true
     }
     ,
     rotation: {
-        dynamic:  !0, name:"Rotation", type:PZ.property.type.NUMBER, value:0, step:.1
+        dynamic:  true, name:"Rotation", type:PZ.property.type.NUMBER, value:0, step:.1
     }
     ,
     invert: {
@@ -64,11 +64,11 @@ this.propertyDefinitions= {
     }
     ,
     feather: {
-        dynamic:  !0, name:"Feather", type:PZ.property.type.NUMBER, value:.1, min:0, max:1, step:.1
+        dynamic:  true, name:"Feather", type:PZ.property.type.NUMBER, value:.1, min:0, max:1, step:.1
     }
     ,
     opacity: {
-        dynamic:  !0, name:"Opacity", type:PZ.property.type.NUMBER, value:1, max:1, min:0, step:.1
+        dynamic:  true, name:"Opacity", type:PZ.property.type.NUMBER, value:1, max:1, min:0, step:.1
     }
 }
 
@@ -98,21 +98,21 @@ this.load=async function(e) {
         , vertexShader:await this.vertShader.getShader(), fragmentShader:await this.fragShader.getShader()
     }
     );
-    t.premultipliedAlpha= !0,
+    t.premultipliedAlpha= true,
     this.pass=new THREE.ShaderPass(new THREE.ShaderMaterial( {
         uniforms: THREE.UniformsUtils.clone(THREE.CopyShader.uniforms), fragmentShader:THREE.CopyShader.fragmentShader, vertexShader:THREE.CopyShader.vertexShader
     }
     )),
-    this.pass.camera.matrixAutoUpdate= !1,
-    this.pass.quad.matrixAutoUpdate= !1,
-    this.pass.material.premultipliedAlpha= !0,
-    this.pass.material.transparent= !0,
+    this.pass.camera.matrixAutoUpdate= false,
+    this.pass.quad.matrixAutoUpdate= false,
+    this.pass.material.premultipliedAlpha= true,
+    this.pass.material.transparent= true,
     this.pass.material.blending=THREE.CustomBlending,
     this.pass.material.blendEquation=THREE.AddEquation,
     this.pass.material.blendDst=THREE.ZeroFactor,
     this.pass.mask=new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), t),
-    this.pass.mask.material.premultipliedAlpha= !0,
-    this.pass.mask.material.transparent= !0,
+    this.pass.mask.material.premultipliedAlpha= true,
+    this.pass.mask.material.transparent= true,
     this.pass.scene.add(this.pass.mask),
     this.properties.load(e&&e.properties),
     this.properties.invert.get()?this.pass.material.blendSrc=THREE.OneMinusDstColorFactor:this.pass.material.blendSrc=THREE.DstColorFactor,
@@ -162,7 +162,7 @@ this.resize=function() {
     t.array[0]=t.array[6]=-.5*e[0],
     t.array[1]=t.array[4]=.5*e[1],
     t.array[7]=t.array[10]=-.5*e[1],
-    t.needsUpdate= !0,
+    t.needsUpdate= true,
     this.pass.camera.left=-.5*e[0],
     this.pass.camera.right=.5*e[0],
     this.pass.camera.top=.5*e[1],

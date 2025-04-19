@@ -1,13 +1,13 @@
 this.defaultName = "Static", this.shaderfile = "fx_static", this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl", this.vertShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, "/assets/shaders/vertex/common.glsl"), this.fragShader = this.parentProject.assets.createFromPreset(PZ.asset.type.SHADER, this.shaderUrl), this.propertyDefinitions = {
     enabled: {
-        dynamic: !0,
+        dynamic: true,
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
         items: "off;on"
     },
     size: {
-        dynamic: !0,
+        dynamic: true,
         name: "Size",
         type: PZ.property.type.NUMBER,
         value: 1,
@@ -16,7 +16,7 @@ this.defaultName = "Static", this.shaderfile = "fx_static", this.shaderUrl = "/a
         decimals: 0
     },
     amount: {
-        dynamic: !0,
+        dynamic: true,
         name: "Amount",
         type: PZ.property.type.NUMBER,
         value: .5,
@@ -30,7 +30,7 @@ this.defaultName = "Static", this.shaderfile = "fx_static", this.shaderUrl = "/a
         value: 1,
         changed: function() {
             let e = this.parentObject;
-            e.pass.material.defines.NOISE_BLEND = this.value, e.pass.material.needsUpdate = !0
+            e.pass.material.defines.NOISE_BLEND = this.value, e.pass.material.needsUpdate = true
         },
         items: "none;add;subtract;multiply"
     }
@@ -66,7 +66,7 @@ this.defaultName = "Static", this.shaderfile = "fx_static", this.shaderUrl = "/a
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader()
     });
-    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = !0, this.properties.load(e && e.properties), this.pass.material.defines = {
+    this.pass = new THREE.ShaderPass(t), this.pass.material.premultipliedAlpha = true, this.properties.load(e && e.properties), this.pass.material.defines = {
         NOISE_BLEND: this.properties.blending.get()
     }
 }, this.toJSON = function() {
