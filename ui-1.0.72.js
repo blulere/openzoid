@@ -443,8 +443,8 @@ THREE.EditorControls.prototype.constructor = THREE.EditorControls;
         (THREE.TransformGizmoScale.prototype.constructor = THREE.TransformGizmoScale),
         (THREE.TransformControls = function (e, t) {
             THREE.Object3D.call(this),
-                (t = void 0 !== t ? t : document),
-                (this.object = void 0),
+                (t = undefined !== t ? t : document),
+                (this.object = undefined),
                 (this.visible = false),
                 (this.translationSnap = null),
                 (this.rotationSnap = null),
@@ -494,16 +494,16 @@ THREE.EditorControls.prototype.constructor = THREE.EditorControls;
                 N = new THREE.Vector3(),
                 B = new THREE.Euler();
             function H(e) {
-                if (void 0 !== i.object && true !== n && (void 0 === e.button || 0 === e.button)) {
+                if (undefined !== i.object && true !== n && (undefined === e.button || 0 === e.button)) {
                     var t = Y(e.changedTouches ? e.changedTouches[0] : e, r[s].pickers.children),
                         a = null;
                     t && ((a = t.object.name), e.preventDefault()), i.axis !== a && ((i.axis = a), i.update(), i.dispatchEvent(l));
                 }
             }
             function K(e) {
-                if (void 0 !== i.object && true !== n && (void 0 === e.button || 0 === e.button)) {
+                if (undefined !== i.object && true !== n && (undefined === e.button || 0 === e.button)) {
                     var t = e.changedTouches ? e.changedTouches[0] : e;
-                    if (0 === t.button || void 0 === t.button) {
+                    if (0 === t.button || undefined === t.button) {
                         var a = Y(t, r[s].pickers.children);
                         if (a) {
                             e.preventDefault(), e.stopPropagation(), i.dispatchEvent(h), (i.axis = a.object.name), i.update(), x.copy(N).sub(I).normalize(), r[s].setActivePlane(i.axis, x);
@@ -522,7 +522,7 @@ THREE.EditorControls.prototype.constructor = THREE.EditorControls;
                 }
             }
             function q(e) {
-                if (void 0 !== i.object && null !== i.axis && false !== n && (void 0 === e.button || 0 === e.button)) {
+                if (undefined !== i.object && null !== i.axis && false !== n && (undefined === e.button || 0 === e.button)) {
                     var t = Y(e.changedTouches ? e.changedTouches[0] : e, [r[s].activePlane]);
                     false !== t &&
                         (e.preventDefault(),
@@ -623,7 +623,7 @@ THREE.EditorControls.prototype.constructor = THREE.EditorControls;
             }
             function V(e) {
                 e.preventDefault(),
-                    (void 0 !== e.button && 0 !== e.button) ||
+                    (undefined !== e.button && 0 !== e.button) ||
                         (n && null !== i.axis && ((c.mode = s), i.dispatchEvent(c)), (n = false), "TouchEvent" in window && e instanceof TouchEvent ? ((i.axis = null), i.update(), i.dispatchEvent(l)) : H(e));
             }
             function Y(i, s) {
@@ -662,7 +662,7 @@ THREE.EditorControls.prototype.constructor = THREE.EditorControls;
                     (this.object = e), (this.visible = true), this.update();
                 }),
                 (this.detach = function () {
-                    (this.object = void 0), (this.visible = false), (this.axis = null);
+                    (this.object = undefined), (this.visible = false), (this.axis = null);
                 }),
                 (this.getMode = function () {
                     return s;
@@ -684,7 +684,7 @@ THREE.EditorControls.prototype.constructor = THREE.EditorControls;
                     (i.space = e), this.update(), i.dispatchEvent(l);
                 }),
                 (this.update = function () {
-                    void 0 !== i.object &&
+                    undefined !== i.object &&
                         (i.object.updateMatrixWorld(),
                         I.setFromMatrixPosition(i.object.matrixWorld),
                         R.setFromRotationMatrix(P.extractRotation(i.object.matrixWorld)),
@@ -713,7 +713,7 @@ return i.setAttributeNS("http://www.w3.org/1999/xlink", "href", PZ_ICONS + "#" +
     e.children[0].setAttribute("href", PZ_ICONS + "#" + t);
 }),
 (PZ.dateString = function (e) {
-    return e.toLocaleDateString(void 0, { month: "short", day: "numeric", year: "numeric" });
+    return e.toLocaleDateString(undefined, { month: "short", day: "numeric", year: "numeric" });
 }),
 (PZ.ui.ad = function (e) {
     PZ.ui.panel.call(this, e),
@@ -840,7 +840,7 @@ return i.setAttributeNS("http://www.w3.org/1999/xlink", "href", PZ_ICONS + "#" +
                         t = this.windows[i];
                         break;
                     }
-                return false !== t.secondary && void 0;
+                return false !== t.secondary && undefined;
             }
         }.bind(this)),
         (t.window.onunload = function (e) {
@@ -1080,7 +1080,7 @@ return i.setAttributeNS("http://www.w3.org/1999/xlink", "href", PZ_ICONS + "#" +
             (this.panels[0].enabled = this.enabled), (this.panels[1].enabled = this.enabled);
         }),
         (this.options = { splitSize: 3, ratio: 0.5, direction: -1 }),
-        (this.options.direction = void 0 === n ? -1 : n),
+        (this.options.direction = undefined === n ? -1 : n),
         (this.splitSize = 3),
         (this.ratio = s),
         (this.panels = new Array(2)),
@@ -1237,7 +1237,7 @@ return i.setAttributeNS("http://www.w3.org/1999/xlink", "href", PZ_ICONS + "#" +
     }
     toggle(e) {
         var t = this.container.classList.contains("open");
-        (t = void 0 !== e ? e : !t) ? (this.container.classList.add("open"), (this.tabcontainer.style.overflowY = "auto")) : (this.container.classList.remove("open"), (this.tabcontainer.style.overflowY = ""));
+        (t = undefined !== e ? e : !t) ? (this.container.classList.add("open"), (this.tabcontainer.style.overflowY = "auto")) : (this.container.classList.remove("open"), (this.tabcontainer.style.overflowY = ""));
     }
     buttonClick(e) {
         let t = e.currentTarget;
@@ -1298,7 +1298,7 @@ return i.setAttributeNS("http://www.w3.org/1999/xlink", "href", PZ_ICONS + "#" +
             alwaysShowListItemButtons: true,
             hideAllListItemButtons: false,
             columnLayout: 0,
-            defaultColumnWidth: void 0,
+            defaultColumnWidth: undefined,
             emptyMessage: "select an object",
             objectFilter: (e) => true,
             objectMap: (e) => e,
@@ -1315,7 +1315,7 @@ return i.setAttributeNS("http://www.w3.org/1999/xlink", "href", PZ_ICONS + "#" +
     constructor: PZ.ui.edit,
     createObject(e) {
         let t = this.editor.project.addressLookup(e.newParentAddress);
-        void 0 === e.newIdx && (e.newIdx = t.length);
+        undefined === e.newIdx && (e.newIdx = t.length);
         let i = e.baseType.create(e.subType);
         t.splice(e.newIdx, 0, i), (i.loading = i.load(e.data)), this.editor.history.pushCommand(PZ.ui.edit.prototype.deleteObject.bind(this), { oldParentAddress: e.newParentAddress, oldIdx: e.newIdx });
     },
@@ -1323,7 +1323,7 @@ return i.setAttributeNS("http://www.w3.org/1999/xlink", "href", PZ_ICONS + "#" +
         let t = this.editor.project.addressLookup(e.oldParentAddress),
             i = this.editor.project.addressLookup(e.newParentAddress),
             s = t.splice(e.oldIdx, 1)[0];
-        void 0 === e.newIdx && (e.newIdx = i.length),
+        undefined === e.newIdx && (e.newIdx = i.length),
             i.splice(e.newIdx, 0, s),
             (e.oldParentAddress = t.getAddress()),
             (e.newParentAddress = i.getAddress()),
@@ -1601,7 +1601,7 @@ return i.setAttributeNS("http://www.w3.org/1999/xlink", "href", PZ_ICONS + "#" +
         ) {
             let e = s.getElementsByClassName("editbox")[0];
             s.pz_changed = e.pz_update.bind(e);
-            let i = void 0 !== t.value;
+            let i = undefined !== t.value;
             t.onChanged.watch(s.pz_changed, i);
         }
         if (t instanceof PZ.propertyList) (a.innerText = "Properties"), (a.title = a.innerText), this.generatePropertyList(s, t);
@@ -1719,7 +1719,7 @@ return i.setAttributeNS("http://www.w3.org/1999/xlink", "href", PZ_ICONS + "#" +
                             let a = i.splice(r, 1)[0].data;
                             for (let i = 0; i < a.length; i++)
                                 e instanceof PZ.objectSingleton && e.length > 0 && this.deleteObject({ oldParentAddress: n, oldIdx: 0 }),
-                                    this.createObject({ newParentAddress: n, baseType: s, subType: a[i].type, data: a[i], newIdx: t ? t++ : void 0 });
+                                    this.createObject({ newParentAddress: n, baseType: s, subType: a[i].type, data: a[i], newIdx: t ? t++ : undefined });
                         }
                 };
             this.editor.history.startOperation(), (s = this.selection.length ? this.selection : Array.from(this.list.children).map((e) => e.pz_object));
@@ -1871,7 +1871,7 @@ return i.setAttributeNS("http://www.w3.org/1999/xlink", "href", PZ_ICONS + "#" +
     },
     resize() {
         this.columnTemplate ||
-            (void 0 === this.options.defaultColumnWidth && (this.options.defaultColumnWidth = 0.5 * this.el.clientWidth + "px"),
+            (undefined === this.options.defaultColumnWidth && (this.options.defaultColumnWidth = 0.5 * this.el.clientWidth + "px"),
             2 === this.options.columnLayout
                 ? this.setColumnTemplate("auto auto")
                 : 1 === this.options.columnLayout
@@ -2246,7 +2246,7 @@ PZ.ui.objectTypes.set(PZ.draw, [
 (PZ.editor = {}),
 (PZ.editor.showEaseDropDown = function (e) {
     var t = PZ.editor.easeDropDown;
-    if (void 0 === PZ.editor.easeDropDown) {
+    if (undefined === PZ.editor.easeDropDown) {
         (t = PZ.editor.easeDropDown = document.createElement("ul")).classList.add("pz-dropdown"),
             t.setAttribute("tabindex", "-1"),
             (t.onkeydown = function (e) {
@@ -2310,7 +2310,7 @@ PZ.ui.objectTypes.set(PZ.draw, [
 }),
 (PZ.editor.showFontDropDown = function (e) {
     var t = PZ.editor.fontDropDown;
-    if (void 0 === PZ.editor.fontDropDown) {
+    if (undefined === PZ.editor.fontDropDown) {
         (t = PZ.editor.fontDropDown = document.createElement("ul")).classList.add("pz-dropdown"),
             t.setAttribute("tabindex", "-1"),
             (t.style = "width: auto"),
@@ -3073,7 +3073,7 @@ PZ.ui.objectTypes.set(PZ.draw, [
     return (t = Math.floor(t % 60)), (e %= 60), ("0" + i).slice(-2) + ":" + ("0" + t).slice(-2) + ":" + ("0" + e.toFixed(3)).slice(-6);
 }),
 (PZ.ui.controls.getTimeString = function (e) {
-    if (void 0 === e || isNaN(e) || e === 1 / 0) return "calculating...";
+    if (undefined === e || isNaN(e) || e === 1 / 0) return "calculating...";
     var t = "",
         i = Math.floor(e / 60 / 60),
         s = Math.floor(e / 60) % 60,
@@ -3417,7 +3417,7 @@ PZ.ui.objectTypes.set(PZ.draw, [
         (this.min = Number.NEGATIVE_INFINITY),
         (this.decimals = 2),
         (this.step = 1),
-        Object.keys(e).forEach((t) => void 0 === e[t] && delete e[t]),
+        Object.keys(e).forEach((t) => undefined === e[t] && delete e[t]),
         Object.assign(this, e),
         this.el.addEventListener("focus", this.focus.bind(this)),
         this.el.addEventListener("blur", this.blur.bind(this)),
@@ -3835,7 +3835,7 @@ styleToColor(e, t) {
 }
 click(e) {
     let t = 0;
-    if (void 0 !== e.pageX) {
+    if (undefined !== e.pageX) {
         let i = e.currentTarget.getBoundingClientRect();
         t = Math.min(Math.max((e.pageX - i.x) / i.width, 0), 1);
     }
@@ -3982,7 +3982,7 @@ update(e, t) {
     }
     click(e) {
         let t = 0;
-        if (void 0 !== e.pageX) {
+        if (undefined !== e.pageX) {
             let i = e.currentTarget.getBoundingClientRect();
             t = Math.min(Math.max((e.pageX - i.x) / i.width, 0), 1);
         }
@@ -4282,7 +4282,7 @@ update(e, t) {
     this.setValue(s);
 }),
 (PZ.ui.properties.prototype.toggleAnimation = function (e, t, i, s) {
-    if (void 0 === s) s = !e.animated;
+    if (undefined === s) s = !e.animated;
     else if (s === e.animated) return;
     if (e instanceof PZ.property.dynamic.group && (!s || !i) && (s || !e.expression)) {
         for (let n = 0; n < e.objects.length; n++) this.toggleAnimation(e.objects[n], t, i, s);
@@ -4321,7 +4321,7 @@ update(e, t) {
     this.setAnimated(r);
 }),
 (PZ.ui.properties.prototype.toggleKeyframe = function (e, t, i) {
-    if (void 0 === i) i = !e.hasKeyframe(t);
+    if (undefined === i) i = !e.hasKeyframe(t);
     else if (!e.animated || i === e.hasKeyframe(t)) return;
     if (e instanceof PZ.property.dynamic.group) for (let s = 0; s < e.objects.length; s++) this.toggleKeyframe(e.objects[s], t, i);
     else if (i) {
@@ -4354,8 +4354,8 @@ update(e, t) {
     let t = this.editor.project.addressLookup(e.property),
         i = e.oldValue;
     if (
-        (void 0 === i && (i = JSON.parse(JSON.stringify(t.get(e.frame)))),
-        void 0 !== e.value && t.set(e.value, e.frame),
+        (undefined === i && (i = JSON.parse(JSON.stringify(t.get(e.frame)))),
+        undefined !== e.value && t.set(e.value, e.frame),
         this.editor.history.pushCommand(PZ.ui.properties.prototype.setValue.bind(this), { property: e.property, frame: e.frame, value: i }),
         t instanceof PZ.property.dynamic.group)
     )
@@ -4373,8 +4373,8 @@ update(e, t) {
 (PZ.ui.properties.prototype.setControlPoints = function (e) {
     let t = this.editor.project.addressLookup(e.property),
         i = t.getKeyframe(e.frame);
-    void 0 === e.oldControlPoints && (e.oldControlPoints = [i.controlPoints[0].slice(), i.controlPoints[1].slice()]),
-        void 0 !== e.controlPoints && ((i.controlPoints[0][0] = e.controlPoints[0][0]), (i.controlPoints[0][1] = e.controlPoints[0][1]), (i.controlPoints[1][0] = e.controlPoints[1][0]), (i.controlPoints[1][1] = e.controlPoints[1][1])),
+    undefined === e.oldControlPoints && (e.oldControlPoints = [i.controlPoints[0].slice(), i.controlPoints[1].slice()]),
+        undefined !== e.controlPoints && ((i.controlPoints[0][0] = e.controlPoints[0][0]), (i.controlPoints[0][1] = e.controlPoints[0][1]), (i.controlPoints[1][0] = e.controlPoints[1][0]), (i.controlPoints[1][1] = e.controlPoints[1][1])),
         this.editor.history.pushCommand(PZ.ui.properties.prototype.setControlPoints.bind(this), { property: e.property, frame: e.frame, controlPoints: e.oldControlPoints }),
         t.onKeyframeChanged.update(i);
 }),
@@ -6131,7 +6131,7 @@ update(e, t) {
 (PZ.ui.timeline.tracks.prototype.linkAfterCreation = function (e, t) {
     var i = [0, e.type + 1, e.newTrackIdx, 0, e.newIdx],
         s = e.data.link;
-    if (void 0 !== s && null !== s) {
+    if (undefined !== s && null !== s) {
         t.has(s) || t.set(s, this.sequence.clipLinks.generateKey());
         var n = { clip: i, link: t.get(s) };
         this.linkClip(n);
@@ -6150,7 +6150,7 @@ update(e, t) {
 (PZ.ui.timeline.tracks.prototype.unlinkBeforeDeletion = function (e) {
     var t = [0, e.type + 1, e.oldTrackIdx, 0, e.oldIdx],
         i = this.sequence.addressLookup(t, 1);
-    if (void 0 === i.link || null === i.link) return;
+    if (undefined === i.link || null === i.link) return;
     let s = i.link.key;
     this.unlinkClip({ clip: t }), this.cleanUpLink(s);
 }),
@@ -6172,7 +6172,7 @@ update(e, t) {
     var t,
         i,
         s = 2;
-    for (1 === e[1] ? (t = this.videoContainer) : 2 === e[1] && (t = this.audioContainer); void 0 !== (i = e[s]); ) (t = t.children[i]), (s += 2);
+    for (1 === e[1] ? (t = this.videoContainer) : 2 === e[1] && (t = this.audioContainer); undefined !== (i = e[s]); ) (t = t.children[i]), (s += 2);
     return t;
 }),
 (PZ.ui.timeline.tracks.prototype.containerDragStart = function (e) {
@@ -6308,7 +6308,7 @@ update(e, t) {
         for (var i, s = e.children.length, n = 0; n < s; n++) {
             var r = e.children[n].getElementsByClassName("clip selected");
             if (0 !== r.length) {
-                var o = ((i = void 0), ((i = document.createElement("div")).style = "height:40px; position:absolute; box-sizing: border-box;"), i);
+                var o = ((i = undefined), ((i = document.createElement("div")).style = "height:40px; position:absolute; box-sizing: border-box;"), i);
                 e.appendChild(o), this.track_proxies.push(o);
                 for (var l = 0; l < r.length; l++) {
                     (this.minFrame = Math.min(this.minFrame, r[l].pz_object.start)), (this.minTrackOffset = Math.min(this.minTrackOffset, n - t)), (this.maxTrackOffset = Math.max(this.maxTrackOffset, n - t));
@@ -6450,7 +6450,7 @@ update(e, t) {
         e.stopPropagation();
 }),
 (PZ.ui.timeline.tracks.prototype.moveClip = function (e) {
-    void 0 === e.newTrackIdx && (e.newTrackIdx = e.oldTrackIdx), void 0 === e.newIdx && (e.newIdx = e.oldIdx);
+    undefined === e.newTrackIdx && (e.newTrackIdx = e.oldTrackIdx), undefined === e.newIdx && (e.newIdx = e.oldIdx);
     var t,
         i,
         s,
@@ -6465,12 +6465,12 @@ update(e, t) {
     }
     var c = l.clips[e.newIdx];
     if (
-        (void 0 !== e.start && ((t = c.start), (c.start = e.start)),
-        void 0 !== e.length && ((i = c.length), (c.length = e.length), c.properties.time.animated || (c.properties.time.keyframes[1].frame = c.length)),
-        void 0 !== e.offset && 0 !== e.offset)
+        (undefined !== e.start && ((t = c.start), (c.start = e.start)),
+        undefined !== e.length && ((i = c.length), (c.length = e.length), c.properties.time.animated || (c.properties.time.keyframes[1].frame = c.length)),
+        undefined !== e.offset && 0 !== e.offset)
     ) {
         if ((c.forEachItemOfType(PZ.property.dynamic.keyframes, (t) => t.shiftKeyframes(e.offset)), !c.properties.time.animated)) {
-            if (void 0 === e.timeStart) {
+            if (undefined === e.timeStart) {
                 0;
                 let t = c.getParentOfType(PZ.sequence).properties.rate.get();
                 (e.timeStart = c.properties.time.keyframes[0].value), (e.timeStart -= e.offset / t);
@@ -6479,13 +6479,13 @@ update(e, t) {
         }
         e.offset = -e.offset;
     }
-    void 0 !== e.scale &&
+    undefined !== e.scale &&
         1 !== e.scale &&
         (c.forEachItemOfType(PZ.property.dynamic.keyframes, (t) => t.scaleKeyframes(e.scale)),
         c.properties.time.animated || ((c.properties.time.keyframes[0].frame = 0), (c.properties.time.keyframes[1].frame = c.length)),
         (e.scale = 1 / e.scale)),
-        void 0 !== e.timeStart && ((s = c.properties.time.keyframes[0].value), (c.properties.time.keyframes[0].value = e.timeStart)),
-        void 0 !== e.timeEnd && ((n = c.properties.time.keyframes[1].value), (c.properties.time.keyframes[1].value = e.timeEnd)),
+        undefined !== e.timeStart && ((s = c.properties.time.keyframes[0].value), (c.properties.time.keyframes[0].value = e.timeStart)),
+        undefined !== e.timeEnd && ((n = c.properties.time.keyframes[1].value), (c.properties.time.keyframes[1].value = e.timeEnd)),
         e.newIdx + 1 === l.clips.length && this.updateSequenceLength(),
         this.timeline.editor.history.pushCommand(PZ.ui.timeline.tracks.prototype.moveClip.bind(this), {
             type: e.type,
@@ -7397,8 +7397,8 @@ update(e, t) {
         (this.export = e), (this.editor = this.export.editor), (this.CLOUD_FORMATS = ["mp4_h264_aac", "mkv_vp8_vorbis", "webm_vp8_vorbis", "mkv_vp9_opus", "webm_vp9_opus"]), (this.params = null), (this.pageCache = {});
     }
     updateQuote() {
-        (this.cloudCredits = void 0),
-            (this.cloudPrice = void 0),
+        (this.cloudCredits = undefined),
+            (this.cloudPrice = undefined),
             this.cloudTotalEl.pz_update(),
             (this.quoteLoading = new Promise(async (e, t) => {
                 var i = await PZ.api("/renders/quote", "post", this.params),
@@ -7481,7 +7481,7 @@ update(e, t) {
                     {
                         title: "Render credits:",
                         get: function () {
-                            return void 0 === this.cloudCredits ? "" : this.cloudCredits.toFixed(0);
+                            return undefined === this.cloudCredits ? "" : this.cloudCredits.toFixed(0);
                         },
                     },
                     this
@@ -7492,7 +7492,7 @@ update(e, t) {
                     {
                         title: "Total:",
                         get: function () {
-                            return void 0 === this.cloudPrice ? "" : "$" + this.cloudPrice.toFixed(2);
+                            return undefined === this.cloudPrice ? "" : "$" + this.cloudPrice.toFixed(2);
                         },
                     },
                     this
@@ -7975,7 +7975,7 @@ update(e, t) {
             .then(
                 function (i) {
                     clearInterval(e),
-                        void 0 === i
+                        undefined === i
                             ? ((n = n || "Output was empty."), this.export.navigate(this.createErrorPage(n)))
                             : ((PZ.downloadBlob = i), (PZ.downloadFilename = this.params.format.startsWith("mkv") ? "video.mkv" : "video.webm"), this.export.navigate(this.createFinishedPage())),
                         t.unload();
@@ -8107,7 +8107,7 @@ update(e, t) {
         var s = performance.now();
         this.render(t).then(
             function (i) {
-                clearInterval(e), void 0 === i ? this.export.navigate(this.createErrorPage()) : ((PZ.downloadBlob = i), (PZ.downloadFilename = "image." + this.params.format), this.export.navigate(this.createFinishedPage())), t.unload();
+                clearInterval(e), undefined === i ? this.export.navigate(this.createErrorPage()) : ((PZ.downloadBlob = i), (PZ.downloadFilename = "image." + this.params.format), this.export.navigate(this.createFinishedPage())), t.unload();
             }.bind(this)
         );
         let n = i.appendChild(
@@ -8330,7 +8330,7 @@ update(e, t) {
             (this.tags = []),
             (this.categoryId = 22),
             (this.privacyStatus = "public"),
-            (this.publishAt = void 0),
+            (this.publishAt = undefined),
             (this.license = "youtube"),
             (this.embeddable = true),
             (this.publicStatsViewable = true);
@@ -8340,12 +8340,12 @@ update(e, t) {
             !(0 === this.title.length || this.title.length > 100 || this.title.includes("<") || this.title.includes(">")) &&
             !(this.description.length > 5e3 || this.description.includes("<") || this.description.includes(">")) &&
             !(this.tags.map((e) => (e.includes(" ") ? `"${e}"` : e)).join(",").length > 500) &&
-            (void 0 === this.publishAt || "private" === this.privacyStatus)
+            (undefined === this.publishAt || "private" === this.privacyStatus)
         );
     }
 }),
 (PZ.ui.query = function (e) {
-    void 0 !== e && this.parse(e);
+    undefined !== e && this.parse(e);
 }),
 (PZ.ui.query.prototype.parse = function (e) {
     this.keys = {};
@@ -8647,7 +8647,7 @@ update(e, t) {
                         );
                     })();
                 e.exports && (e.exports = i),
-                    void 0 !== l && (l.Prism = i),
+                    undefined !== l && (l.Prism = i),
                     (i.languages.markup = {
                         comment: /<!--[\s\S]*?-->/,
                         prolog: /<\?[\s\S]+?\?>/,
@@ -9781,7 +9781,7 @@ async keydown(e) {
         return "dev" === PZVERSION ? "1.0.101" : PZVERSION;
     }
     static getBuildNumber(e) {
-        return void 0 === e && (e = PZ.compatibility.getCurrentVersion()), null === e ? 21 : "dev" === e ? 96 : "1.0.18" === e ? 45 : parseInt(e.split(".")[2]);
+        return undefined === e && (e = PZ.compatibility.getCurrentVersion()), null === e ? 21 : "dev" === e ? 96 : "1.0.18" === e ? 45 : parseInt(e.split(".")[2]);
     }
     upgrade(e) {
         let t = PZ.compatibility.getBuildNumber(this.version);
@@ -9839,7 +9839,7 @@ async keydown(e) {
     core38(e) {
         let t = (e) => {
                 e.forEach((e) => {
-                    void 0 !== e.customGeometry && ((e.properties.customGeometry = e.customGeometry), delete e.customGeometry);
+                    undefined !== e.customGeometry && ((e.properties.customGeometry = e.customGeometry), delete e.customGeometry);
                 }),
                     e.objects && t(e.objects);
             },
@@ -9855,7 +9855,7 @@ async keydown(e) {
                 .map((e) => e.clips)
                 .reduce((e, t) => e.concat(t), [])
                 .concat(i);
-        for (let e = 0; e < s.length; e++) void 0 !== s[e].media && ((s[e].properties.media = s[e].media), delete s.media);
+        for (let e = 0; e < s.length; e++) undefined !== s[e].media && ((s[e].properties.media = s[e].media), delete s.media);
     }
     core60(e) {
         for (let t = e.media.length - 1; t >= 0; t--) {
@@ -9877,7 +9877,7 @@ async keydown(e) {
             a = (e, t) => {
                 for (let i in e) {
                     let s = e[i];
-                    "object" == typeof s && s && (void 0 !== s.animated && Array.isArray(s.keyframes) ? r(s, t) : a(s, t));
+                    "object" == typeof s && s && (undefined !== s.animated && Array.isArray(s.keyframes) ? r(s, t) : a(s, t));
                 }
             };
         for (let e = 0; e < n.length; e++) {
@@ -9888,9 +9888,9 @@ async keydown(e) {
     }
     core84(e) {
         let t = e.sequence;
-        const i = void 0 !== t.properties.motionBlurSamples ? t.properties.motionBlurSamples : 16;
+        const i = undefined !== t.properties.motionBlurSamples ? t.properties.motionBlurSamples : 16;
         t.properties.motionBlurSamples = { animated: false, keyframes: [{ value: i, frame: 0, tween: 1 }] };
-        const s = void 0 !== t.properties.motionBlurShutter ? t.properties.motionBlurShutter : 0.5;
+        const s = undefined !== t.properties.motionBlurShutter ? t.properties.motionBlurShutter : 0.5;
         t.properties.motionBlurShutter = { animated: false, keyframes: [{ value: s, frame: 0, tween: 1 }] };
     }
     core96(e) {
@@ -9926,7 +9926,7 @@ async keydown(e) {
                                         `{"objects":[{"animated":false,"keyframes":[{"value":${t[0]},"frame":0,"tween":1,"controlPoints":[[-10,0],[10,0]]}]},{"animated":false,"keyframes":[{"value":${t[1]},"frame":0,"tween":1,"controlPoints":[[-10,0],[10,0]]}]}]}`
                                     ));
                             } else if ("object" == typeof e)
-                                if (void 0 !== e.objects) {
+                                if (undefined !== e.objects) {
                                     let e = (e, t) => {
                                         e && 0 === e.keyframes.length && e.keyframes.push(JSON.parse(`{"value":${t},"frame":0,"tween":1,"controlPoints":[[-10,0],[10,0]]}`));
                                     };
@@ -9937,7 +9937,7 @@ async keydown(e) {
                                         e(s.material.properties.center.objects[0], 0),
                                         e(s.material.properties.center.objects[1], 0),
                                         e(s.material.properties.rotation, 0);
-                                } else if (void 0 !== e.keyframes) {
+                                } else if (undefined !== e.keyframes) {
                                     const t = e.animated;
                                     s.material.properties.repeat = JSON.parse(`{"objects":[{"animated":${t},"keyframes":[]},{"animated":${t},"keyframes":[]}]}`);
                                     const i = e.keyframes,
@@ -9993,7 +9993,7 @@ async keydown(e) {
 }),
 (PZ.compatibility.CM2.prototype.loadBasics = function () {
     var e = this.archive.getFileString("basics");
-    if (void 0 === e) return;
+    if (undefined === e) return;
     var t = JSON.parse(e);
     let i = this.sequence.properties;
     (i.resolution = [t.frameWidth, t.frameHeight]), (i.rate = t.frameRate), (this.sequence.length = t.totalFrames), (this.sequence.videoTracks[0].clips[0].length = t.totalFrames);
@@ -10017,7 +10017,7 @@ async keydown(e) {
                 (r = i[1]), e[t] || (e[t] = {}), (e = e[t]);
             } else "string" == typeof i && (r = i);
         }
-        if (Array.isArray(a) && a[0] && void 0 !== a[0].frame) {
+        if (Array.isArray(a) && a[0] && undefined !== a[0].frame) {
             e[r] = { animated: a.length > 1, keyframes: [] };
             for (let t = 0; t < a.length; t++) {
                 let n = a[t];
@@ -10027,31 +10027,31 @@ async keydown(e) {
                     true === i[r] && "number" == typeof n.value ? (n.value = [(n.value >> 16) / 255, ((n.value >> 8) & 255) / 255, (255 & n.value) / 255]) : (n.value = s(n.value)),
                     e[r].keyframes.push(n);
             }
-        } else void 0 !== a && (e[r] = s(a));
+        } else undefined !== a && (e[r] = s(a));
     }
     function r(e, t) {
         let i = Object.keys(t);
         for (let s = 0; s < i.length; s++) n(e, t, i[s]);
     }
-    void 0 !== e.keyframeProps && (r(e.properties, e.keyframeProps), delete e.keyframeProps), void 0 !== e.normalProps && (r(e.properties, e.normalProps), delete e.normalProps);
+    undefined !== e.keyframeProps && (r(e.properties, e.keyframeProps), delete e.keyframeProps), undefined !== e.normalProps && (r(e.properties, e.normalProps), delete e.normalProps);
 }),
 (PZ.compatibility.CM2.prototype.loadObject = async function (e, t) {
     var i = this.archive.getFileString(t);
-    if (void 0 === i) return;
+    if (undefined === i) return;
     var s = JSON.parse(i);
     let n;
     if (t.startsWith("fx")) {
-        if (void 0 === s.keyframeProps) s = { keyframeProps: s };
+        if (undefined === s.keyframeProps) s = { keyframeProps: s };
         if ("shutter" === e) {
             let e = s.keyframeProps.mode;
-            (e = void 0 === e ? 1 : e), (s.normalProps = { mode: e }), delete s.keyframeProps.mode;
+            (e = undefined === e ? 1 : e), (s.normalProps = { mode: e }), delete s.keyframeProps.mode;
         }
     }
     if (((s.type = e), t.includes("appearance") && s.normalProps && s.normalProps.repeat)) {
         let e = [1, 1];
         "object" == typeof s.normalProps.repeat ? ((e[0] = s.normalProps.repeat.x), (e[1] = s.normalProps.repeat.y)) : (e[0] = e[1] = s.normalProps.repeat),
             delete s.normalProps.repeat,
-            void 0 === s.keyframeProps && (s.keyframeProps = {}),
+            undefined === s.keyframeProps && (s.keyframeProps = {}),
             (s.keyframeProps.repeat = [{ frame: 1, value: { x: e[0], y: e[1] }, tweenfn: 1 }]);
     }
     if (0 === e) {
@@ -10093,7 +10093,7 @@ async keydown(e) {
                     case 7:
                         t = "path_";
                 }
-                return "position" !== e && "rotation" !== e && "scale" !== e && "name" !== e ? ["geometryProperties", (e = t + e)] : void 0;
+                return "position" !== e && "rotation" !== e && "scale" !== e && "name" !== e ? ["geometryProperties", (e = t + e)] : undefined;
             });
     } else if (1 === e) {
         if (this.archive.fileExists("font_" + s.normalProps.font)) {
@@ -10151,7 +10151,7 @@ async keydown(e) {
         return (r = await this.createAssetFromFile(PZ.asset.type.IMAGE, i)).sha256;
     }
     var s;
-    if (void 0 === (i = this.archive.getFileBlob(e))) return null;
+    if (undefined === (i = this.archive.getFileBlob(e))) return null;
     if (
         70 === i.size &&
         (s = await (async function (e) {
@@ -10197,7 +10197,7 @@ async keydown(e) {
 }),
 (PZ.compatibility.CM2.prototype.loadScene = async function () {
     var e = this.archive.getFileString("scenes");
-    if (void 0 !== e) {
+    if (undefined !== e) {
         var t = JSON.parse(e);
         if (t.src) {
             "outdoor" === t.src && (t.src = "sky");
@@ -10209,7 +10209,7 @@ async keydown(e) {
 }),
 (PZ.compatibility.CM2.prototype.loadObjects = async function () {
     var e = this.archive.getFileString("objects");
-    if (void 0 !== e)
+    if (undefined !== e)
         for (var t = JSON.parse(e), i = this.sequence.videoTracks[0].clips[0].object.objects, s = 0; s < t.length; s++) {
             var n = await this.loadObject(t[s], "object" + s);
             n && i.push(n);
@@ -10217,11 +10217,11 @@ async keydown(e) {
 }),
 (PZ.compatibility.CM2.prototype.loadEffects = async function () {
     var e = this.archive.getFileString("fx");
-    if (void 0 !== e) for (var t = JSON.parse(e), i = this.sequence.videoTracks[0].clips[0].object.effects, s = 0; s < t.length; s++) i.push(await this.loadObject(t[s], "fx" + s));
+    if (undefined !== e) for (var t = JSON.parse(e), i = this.sequence.videoTracks[0].clips[0].object.effects, s = 0; s < t.length; s++) i.push(await this.loadObject(t[s], "fx" + s));
 }),
 (PZ.compatibility.CM2.prototype.loadCamera = function () {
     var e = this.archive.getFileString("camsequence");
-    if (void 0 === e) return;
+    if (undefined === e) return;
     var t = JSON.parse(e),
         i = { type: 6 };
     (i.objectType = (t.projectionMode || 0) + 1), (i.keyframeProps = t.keyframeProps);
@@ -10247,10 +10247,10 @@ async keydown(e) {
 }),
 (PZ.compatibility.CM2.prototype.loadAudio = async function () {
     var e = this.archive.getFileBlob("audio_file", { type: "audio/*" });
-    if ((void 0 === e && (e = this.archive.getFileBlob("audio_mp3", { type: "audio/*" })), !e)) return;
+    if ((undefined === e && (e = this.archive.getFileBlob("audio_mp3", { type: "audio/*" })), !e)) return;
     var t = await this.createAssetFromFile(PZ.asset.type.AV, e),
         i = this.archive.getFileString("audio");
-    if (void 0 === i) return;
+    if (undefined === i) return;
     var s = JSON.parse(i);
     (s = s.properties),
         (this.sequence.clipLinks = {
@@ -10275,7 +10275,7 @@ async keydown(e) {
         (n.properties.time = { animated: false, keyframes: a }),
         (n.object = {}),
         (n.object.keyframeProps = s.keyframeProps || {}),
-        0 === s.volumeMode || void 0 === s.volumeMode)
+        0 === s.volumeMode || undefined === s.volumeMode)
     ) {
         var o = [];
         n.object.keyframeProps.volume = o;
