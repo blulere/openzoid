@@ -1,6 +1,6 @@
 const PZVERSION = "1.0.102";
 (THREE.OBJLoader = function (e) {
-    (this.manager = void 0 !== e ? e : THREE.DefaultLoadingManager),
+    (this.manager = undefined !== e ? e : THREE.DefaultLoadingManager),
         (this.materials = null),
         (this.regexp = {
             vertex_pattern: /^v\s+([\d|\.|\+|\-|e|E]+)\s+([\d|\.|\+|\-|e|E]+)\s+([\d|\.|\+|\-|e|E]+)/,
@@ -46,30 +46,30 @@ const PZVERSION = "1.0.102";
                 uvs: [],
                 materialLibraries: [],
                 startObject: function (e, t) {
-                    if (this.object && !1 === this.object.fromDeclaration) return (this.object.name = e), void (this.object.fromDeclaration = !1 !== t);
+                    if (this.object && false === this.object.fromDeclaration) return (this.object.name = e), void (this.object.fromDeclaration = false !== t);
                     this.object && "function" == typeof this.object._finalize && this.object._finalize();
-                    var r = this.object && "function" == typeof this.object.currentMaterial ? this.object.currentMaterial() : void 0;
+                    var r = this.object && "function" == typeof this.object.currentMaterial ? this.object.currentMaterial() : undefined;
                     if (
                         ((this.object = {
                             name: e || "",
-                            fromDeclaration: !1 !== t,
+                            fromDeclaration: false !== t,
                             geometry: { vertices: [], normals: [], uvs: [] },
                             materials: [],
-                            smooth: !0,
+                            smooth: true,
                             startMaterial: function (e, t) {
-                                var r = this._finalize(!1);
+                                var r = this._finalize(false);
                                 r && (r.inherited || r.groupCount <= 0) && this.materials.splice(r.index, 1);
                                 var i = {
                                     index: this.materials.length,
                                     name: e || "",
                                     mtllib: Array.isArray(t) && t.length > 0 ? t[t.length - 1] : "",
-                                    smooth: void 0 !== r ? r.smooth : this.smooth,
-                                    groupStart: void 0 !== r ? r.groupEnd : 0,
+                                    smooth: undefined !== r ? r.smooth : this.smooth,
+                                    groupStart: undefined !== r ? r.groupEnd : 0,
                                     groupEnd: -1,
                                     groupCount: -1,
-                                    inherited: !1,
+                                    inherited: false,
                                     clone: function (e) {
-                                        return { index: "number" == typeof e ? e : this.index, name: this.name, mtllib: this.mtllib, smooth: this.smooth, groupStart: this.groupEnd, groupEnd: -1, groupCount: -1, inherited: !1 };
+                                        return { index: "number" == typeof e ? e : this.index, name: this.name, mtllib: this.mtllib, smooth: this.smooth, groupStart: this.groupEnd, groupEnd: -1, groupCount: -1, inherited: false };
                                     },
                                 };
                                 return this.materials.push(i), i;
@@ -80,8 +80,8 @@ const PZVERSION = "1.0.102";
                             _finalize: function (e) {
                                 var t = this.currentMaterial();
                                 return (
-                                    t && -1 === t.groupEnd && ((t.groupEnd = this.geometry.vertices.length / 3), (t.groupCount = t.groupEnd - t.groupStart), (t.inherited = !1)),
-                                    !1 !== e && 0 === this.materials.length && this.materials.push({ name: "", smooth: this.smooth }),
+                                    t && -1 === t.groupEnd && ((t.groupEnd = this.geometry.vertices.length / 3), (t.groupCount = t.groupEnd - t.groupStart), (t.inherited = false)),
+                                    false !== e && 0 === this.materials.length && this.materials.push({ name: "", smooth: this.smooth }),
                                     t
                                 );
                             },
@@ -89,7 +89,7 @@ const PZVERSION = "1.0.102";
                         r && r.name && "function" == typeof r.clone)
                     ) {
                         var i = r.clone(0);
-                        (i.inherited = !0), this.object.materials.push(i);
+                        (i.inherited = true), this.object.materials.push(i);
                     }
                     this.objects.push(this.object);
                 },
@@ -139,16 +139,16 @@ const PZVERSION = "1.0.102";
                         f = this.parseVertexIndex(e, d),
                         m = this.parseVertexIndex(t, d),
                         y = this.parseVertexIndex(r, d);
-                    if ((void 0 === i ? this.addVertex(f, m, y) : ((u = this.parseVertexIndex(i, d)), this.addVertex(f, m, u), this.addVertex(m, y, u)), void 0 !== a)) {
+                    if ((undefined === i ? this.addVertex(f, m, y) : ((u = this.parseVertexIndex(i, d)), this.addVertex(f, m, u), this.addVertex(m, y, u)), undefined !== a)) {
                         var g = this.uvs.length;
-                        (f = this.parseUVIndex(a, g)), (m = this.parseUVIndex(s, g)), (y = this.parseUVIndex(n, g)), void 0 === i ? this.addUV(f, m, y) : ((u = this.parseUVIndex(o, g)), this.addUV(f, m, u), this.addUV(m, y, u));
+                        (f = this.parseUVIndex(a, g)), (m = this.parseUVIndex(s, g)), (y = this.parseUVIndex(n, g)), undefined === i ? this.addUV(f, m, y) : ((u = this.parseUVIndex(o, g)), this.addUV(f, m, u), this.addUV(m, y, u));
                     }
-                    if (void 0 !== p) {
+                    if (undefined !== p) {
                         var v = this.normals.length;
                         (f = this.parseNormalIndex(p, v)),
                             (m = p === l ? f : this.parseNormalIndex(l, v)),
                             (y = p === h ? f : this.parseNormalIndex(h, v)),
-                            void 0 === i ? this.addNormal(f, m, y) : ((u = this.parseNormalIndex(c, v)), this.addNormal(f, m, u), this.addNormal(m, y, u));
+                            undefined === i ? this.addNormal(f, m, y) : ((u = this.parseNormalIndex(c, v)), this.addNormal(f, m, u), this.addNormal(m, y, u));
                     }
                 },
                 addLineGeometry: function (e, t) {
@@ -158,7 +158,7 @@ const PZVERSION = "1.0.102";
                     for (s = t.length; n < s; n++) this.addUVLine(this.parseUVIndex(t[n], i));
                 },
             };
-            return e.startObject("", !1), e;
+            return e.startObject("", false), e;
         },
         parse: function (e) {
             console.time("OBJLoader");
@@ -176,7 +176,7 @@ const PZVERSION = "1.0.102";
                     else if ("f" === a)
                         if (null !== (n = this.regexp.face_vertex_uv_normal.exec(i))) t.addFace(n[1], n[4], n[7], n[10], n[2], n[5], n[8], n[11], n[3], n[6], n[9], n[12]);
                         else if (null !== (n = this.regexp.face_vertex_uv.exec(i))) t.addFace(n[1], n[3], n[5], n[7], n[2], n[4], n[6], n[8]);
-                        else if (null !== (n = this.regexp.face_vertex_normal.exec(i))) t.addFace(n[1], n[3], n[5], n[7], void 0, void 0, void 0, void 0, n[2], n[4], n[6], n[8]);
+                        else if (null !== (n = this.regexp.face_vertex_normal.exec(i))) t.addFace(n[1], n[3], n[5], n[7], undefined, undefined, undefined, undefined, n[2], n[4], n[6], n[8]);
                         else {
                             if (null === (n = this.regexp.face_vertex.exec(i))) throw new Error("Unexpected face line: '" + i + "'");
                             t.addFace(n[1], n[2], n[3], n[4]);
@@ -220,7 +220,7 @@ const PZVERSION = "1.0.102";
                         x.uvs.length > 0 && S.addAttribute("uv", new THREE.BufferAttribute(new Float32Array(x.uvs), 2));
                     for (var E, T = [], k = 0, O = P.length; k < O; k++) {
                         var Z = P[k],
-                            R = void 0;
+                            R = undefined;
                         if (null !== this.materials && ((R = this.materials.create(Z.name)), w && R && !(R instanceof THREE.LineBasicMaterial))) {
                             var C = new THREE.LineBasicMaterial();
                             C.copy(R), (R = C);
@@ -257,7 +257,7 @@ const PZVERSION = "1.0.102";
         fragmentShader: ["uniform float opacity;", "uniform sampler2D tDiffuse;", "varying vec2 vUvScaled;", "void main() {", "vec4 texel = texture2D( tDiffuse, vUvScaled );", "gl_FragColor = opacity * texel;", "}"].join("\n"),
     }),
     (THREE.RenderPass = function (e, t, r, i, a) {
-        (this.scene = e), (this.camera = t), (this.overrideMaterial = r), (this.clearColor = i), (this.clearAlpha = void 0 !== a ? a : 1), (this.enabled = !0), (this.clear = !0), (this.needsSwap = !1);
+        (this.scene = e), (this.camera = t), (this.overrideMaterial = r), (this.clearColor = i), (this.clearAlpha = undefined !== a ? a : 1), (this.enabled = true), (this.clear = true), (this.needsSwap = false);
     }),
     (THREE.RenderPass.prototype = {
         render: function (e, t, r, i) {
@@ -267,9 +267,9 @@ const PZVERSION = "1.0.102";
     (THREE.ShaderPass = function (e) {
         (this.material = e),
             (this.uniforms = e.uniforms),
-            (this.renderToScreen = !1),
-            (this.enabled = !0),
-            (this.needsSwap = !0),
+            (this.renderToScreen = false),
+            (this.enabled = true),
+            (this.needsSwap = true),
             (this.scene = new THREE.Scene()),
             (this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)),
             this.scene.add(this.camera),
@@ -320,7 +320,7 @@ const PZVERSION = "1.0.102";
     });
 ("use strict");
 (THREE.TTFLoader = function (e) {
-    (this.manager = void 0 !== e ? e : THREE.DefaultLoadingManager), (this.reversed = !1);
+    (this.manager = undefined !== e ? e : THREE.DefaultLoadingManager), (this.reversed = false);
 }),
     (THREE.TTFLoader.prototype.load = function (e, t, r, i) {
         var a = this,
@@ -329,7 +329,7 @@ const PZVERSION = "1.0.102";
             s.load(
                 e,
                 function (e) {
-                    void 0 !== t && t(a.parse(e));
+                    undefined !== t && t(a.parse(e));
                 },
                 r,
                 i
@@ -351,7 +351,7 @@ const PZVERSION = "1.0.102";
                     for (var r = e.length - 1; r > 0; r--) {
                         var a = e[r];
                         t = { type: a.type };
-                        void 0 !== a.x2 && void 0 !== a.y2 ? ((t.x1 = a.x2), (t.y1 = a.y2), (t.x2 = a.x1), (t.y2 = a.y1)) : void 0 !== a.x1 && void 0 !== a.y1 && ((t.x1 = a.x1), (t.y1 = a.y1)),
+                        undefined !== a.x2 && undefined !== a.y2 ? ((t.x1 = a.x2), (t.y1 = a.y2), (t.x2 = a.x1), (t.y2 = a.y1)) : undefined !== a.x1 && undefined !== a.y1 && ((t.x1 = a.x1), (t.y1 = a.y1)),
                             (t.x = e[r - 1].x),
                             (t.y = e[r - 1].y),
                             i.push(t);
@@ -363,15 +363,15 @@ const PZVERSION = "1.0.102";
         return (function (e, r) {
             for (var i = Math.round, a = {}, s = 1e5 / (72 * (e.unitsPerEm || 2048)), n = 0; n < e.glyphs.length; n++) {
                 var o = e.glyphs.glyphs[n];
-                if (void 0 !== o.unicode) {
+                if (undefined !== o.unicode) {
                     var p = { ha: i(o.advanceWidth * s), x_min: i(o.xMin * s), x_max: i(o.xMax * s), o: "" };
                     r && (o.path.commands = t(o.path.commands)),
                         o.path.commands.forEach(function (e, t) {
                             "c" === e.type.toLowerCase() && (e.type = "b"),
                                 (p.o += e.type.toLowerCase() + " "),
-                                void 0 !== e.x && void 0 !== e.y && (p.o += i(e.x * s) + " " + i(e.y * s) + " "),
-                                void 0 !== e.x1 && void 0 !== e.y1 && (p.o += i(e.x1 * s) + " " + i(e.y1 * s) + " "),
-                                void 0 !== e.x2 && void 0 !== e.y2 && (p.o += i(e.x2 * s) + " " + i(e.y2 * s) + " ");
+                                undefined !== e.x && undefined !== e.y && (p.o += i(e.x * s) + " " + i(e.y * s) + " "),
+                                undefined !== e.x1 && undefined !== e.y1 && (p.o += i(e.x1 * s) + " " + i(e.y1 * s) + " "),
+                                undefined !== e.x2 && undefined !== e.y2 && (p.o += i(e.x2 * s) + " " + i(e.y2 * s) + " ");
                         }),
                         (a[String.fromCharCode(o.unicode)] = p);
                 }
@@ -390,7 +390,7 @@ const PZVERSION = "1.0.102";
         })(opentype.parse(e), this.reversed);
     }),
     (PZ.downloadBlob = null),
-    "undefined" == typeof ISNODE && (ISNODE = !1),
+    "undefined" == typeof ISNODE && (ISNODE = false),
     (PZ.expression = class {
         constructor(e) {
             (this.source = e), (this.error = null), (this.fn = this.parse(e));
@@ -487,7 +487,7 @@ const PZVERSION = "1.0.102";
                     a = this.getCustomProperties(e, t);
                 return this.fn(e, i, PZ.expression.methods, a);
             } catch (e) {
-                return void 0;
+                return undefined;
             }
         }
     }),
@@ -1239,18 +1239,18 @@ const PZVERSION = "1.0.102";
                 ];
             function c(e, t) {
                 for (var r = 65536, i = 0; i < t.length; i += 2) {
-                    if ((r += t[i]) > e) return !1;
-                    if ((r += t[i + 1]) >= e) return !0;
+                    if ((r += t[i]) > e) return false;
+                    if ((r += t[i + 1]) >= e) return true;
                 }
             }
             function u(e, t) {
-                return e < 65 ? 36 === e : e < 91 || (e < 97 ? 95 === e : e < 123 || (e <= 65535 ? e >= 170 && o.test(String.fromCharCode(e)) : !1 !== t && c(e, l)));
+                return e < 65 ? 36 === e : e < 91 || (e < 97 ? 95 === e : e < 123 || (e <= 65535 ? e >= 170 && o.test(String.fromCharCode(e)) : false !== t && c(e, l)));
             }
             function d(e, t) {
-                return e < 48 ? 36 === e : e < 58 || (!(e < 65) && (e < 91 || (e < 97 ? 95 === e : e < 123 || (e <= 65535 ? e >= 170 && p.test(String.fromCharCode(e)) : !1 !== t && (c(e, l) || c(e, h))))));
+                return e < 48 ? 36 === e : e < 58 || (!(e < 65) && (e < 91 || (e < 97 ? 95 === e : e < 123 || (e <= 65535 ? e >= 170 && p.test(String.fromCharCode(e)) : false !== t && (c(e, l) || c(e, h))))));
             }
             var f = function (e, t) {
-                void 0 === t && (t = {}),
+                undefined === t && (t = {}),
                     (this.label = e),
                     (this.keyword = t.keyword),
                     (this.beforeExpr = !!t.beforeExpr),
@@ -1263,13 +1263,13 @@ const PZVERSION = "1.0.102";
                     (this.updateContext = null);
             };
             function m(e, t) {
-                return new f(e, { beforeExpr: !0, binop: t });
+                return new f(e, { beforeExpr: true, binop: t });
             }
-            var y = { beforeExpr: !0 },
-                g = { startsExpr: !0 },
+            var y = { beforeExpr: true },
+                g = { startsExpr: true },
                 v = {};
             function b(e, t) {
-                return void 0 === t && (t = {}), (t.keyword = e), (v[e] = new f(e, t));
+                return undefined === t && (t = {}), (t.keyword = e), (v[e] = new f(e, t));
             }
             var x = {
                     num: new f("num", g),
@@ -1277,11 +1277,11 @@ const PZVERSION = "1.0.102";
                     string: new f("string", g),
                     name: new f("name", g),
                     eof: new f("eof"),
-                    bracketL: new f("[", { beforeExpr: !0, startsExpr: !0 }),
+                    bracketL: new f("[", { beforeExpr: true, startsExpr: true }),
                     bracketR: new f("]"),
-                    braceL: new f("{", { beforeExpr: !0, startsExpr: !0 }),
+                    braceL: new f("{", { beforeExpr: true, startsExpr: true }),
                     braceR: new f("}"),
-                    parenL: new f("(", { beforeExpr: !0, startsExpr: !0 }),
+                    parenL: new f("(", { beforeExpr: true, startsExpr: true }),
                     parenR: new f(")"),
                     comma: new f(",", y),
                     semi: new f(";", y),
@@ -1293,11 +1293,11 @@ const PZVERSION = "1.0.102";
                     invalidTemplate: new f("invalidTemplate"),
                     ellipsis: new f("...", y),
                     backQuote: new f("`", g),
-                    dollarBraceL: new f("${", { beforeExpr: !0, startsExpr: !0 }),
-                    eq: new f("=", { beforeExpr: !0, isAssign: !0 }),
-                    assign: new f("_=", { beforeExpr: !0, isAssign: !0 }),
-                    incDec: new f("++/--", { prefix: !0, postfix: !0, startsExpr: !0 }),
-                    prefix: new f("!/~", { beforeExpr: !0, prefix: !0, startsExpr: !0 }),
+                    dollarBraceL: new f("${", { beforeExpr: true, startsExpr: true }),
+                    eq: new f("=", { beforeExpr: true, isAssign: true }),
+                    assign: new f("_=", { beforeExpr: true, isAssign: true }),
+                    incDec: new f("++/--", { prefix: true, postfix: true, startsExpr: true }),
+                    prefix: new f("!/~", { beforeExpr: true, prefix: true, startsExpr: true }),
                     logicalOR: m("||", 1),
                     logicalAND: m("&&", 2),
                     bitwiseOR: m("|", 3),
@@ -1306,21 +1306,21 @@ const PZVERSION = "1.0.102";
                     equality: m("==/!=/===/!==", 6),
                     relational: m("</>/<=/>=", 7),
                     bitShift: m("<</>>/>>>", 8),
-                    plusMin: new f("+/-", { beforeExpr: !0, binop: 9, prefix: !0, startsExpr: !0 }),
+                    plusMin: new f("+/-", { beforeExpr: true, binop: 9, prefix: true, startsExpr: true }),
                     modulo: m("%", 10),
                     star: m("*", 10),
                     slash: m("/", 10),
-                    starstar: new f("**", { beforeExpr: !0 }),
+                    starstar: new f("**", { beforeExpr: true }),
                     _break: b("break"),
                     _case: b("case", y),
                     _catch: b("catch"),
                     _continue: b("continue"),
                     _debugger: b("debugger"),
                     _default: b("default", y),
-                    _do: b("do", { isLoop: !0, beforeExpr: !0 }),
+                    _do: b("do", { isLoop: true, beforeExpr: true }),
                     _else: b("else", y),
                     _finally: b("finally"),
-                    _for: b("for", { isLoop: !0 }),
+                    _for: b("for", { isLoop: true }),
                     _function: b("function", g),
                     _if: b("if"),
                     _return: b("return", y),
@@ -1329,9 +1329,9 @@ const PZVERSION = "1.0.102";
                     _try: b("try"),
                     _var: b("var"),
                     _const: b("const"),
-                    _while: b("while", { isLoop: !0 }),
+                    _while: b("while", { isLoop: true }),
                     _with: b("with"),
-                    _new: b("new", { beforeExpr: !0, startsExpr: !0 }),
+                    _new: b("new", { beforeExpr: true, startsExpr: true }),
                     _this: b("this", g),
                     _super: b("super", g),
                     _class: b("class", g),
@@ -1341,11 +1341,11 @@ const PZVERSION = "1.0.102";
                     _null: b("null", g),
                     _true: b("true", g),
                     _false: b("false", g),
-                    _in: b("in", { beforeExpr: !0, binop: 7 }),
-                    _instanceof: b("instanceof", { beforeExpr: !0, binop: 7 }),
-                    _typeof: b("typeof", { beforeExpr: !0, prefix: !0, startsExpr: !0 }),
-                    _void: b("void", { beforeExpr: !0, prefix: !0, startsExpr: !0 }),
-                    _delete: b("delete", { beforeExpr: !0, prefix: !0, startsExpr: !0 }),
+                    _in: b("in", { beforeExpr: true, binop: 7 }),
+                    _instanceof: b("instanceof", { beforeExpr: true, binop: 7 }),
+                    _typeof: b("typeof", { beforeExpr: true, prefix: true, startsExpr: true }),
+                    _void: b("void", { beforeExpr: true, prefix: true, startsExpr: true }),
+                    _delete: b("delete", { beforeExpr: true, prefix: true, startsExpr: true }),
                 },
                 P = /\r\n?|\n|\u2028|\u2029/,
                 w = new RegExp(P.source, "g");
@@ -1388,18 +1388,18 @@ const PZVERSION = "1.0.102";
                 onInsertedSemicolon: null,
                 onTrailingComma: null,
                 allowReserved: null,
-                allowReturnOutsideFunction: !1,
-                allowImportExportEverywhere: !1,
-                allowAwaitOutsideFunction: !1,
-                allowHashBang: !1,
-                locations: !1,
+                allowReturnOutsideFunction: false,
+                allowImportExportEverywhere: false,
+                allowAwaitOutsideFunction: false,
+                allowHashBang: false,
+                locations: false,
                 onToken: null,
                 onComment: null,
-                ranges: !1,
+                ranges: false,
                 program: null,
                 sourceFile: null,
                 directSourceFile: null,
-                preserveParens: !1,
+                preserveParens: false,
             };
             function I(e) {
                 var t = {};
@@ -1443,7 +1443,7 @@ const PZVERSION = "1.0.102";
                     (this.reservedWordsStrict = F(o)),
                         (this.reservedWordsStrictBind = F(o + " " + t.strictBind)),
                         (this.input = String(r)),
-                        (this.containsEsc = !1),
+                        (this.containsEsc = false),
                         a ? ((this.pos = a), (this.lineStart = this.input.lastIndexOf("\n", a - 1) + 1), (this.curLine = this.input.slice(0, this.lineStart).split(P).length)) : ((this.pos = this.lineStart = 0), (this.curLine = 1)),
                         (this.type = x.eof),
                         (this.value = null),
@@ -1452,7 +1452,7 @@ const PZVERSION = "1.0.102";
                         (this.lastTokEndLoc = this.lastTokStartLoc = null),
                         (this.lastTokStart = this.lastTokEnd = this.pos),
                         (this.context = this.initialContext()),
-                        (this.exprAllowed = !0),
+                        (this.exprAllowed = true),
                         (this.inModule = "module" === e.sourceType),
                         (this.strict = this.inModule || this.strictDirective(this.pos)),
                         (this.potentialArrowAt = -1),
@@ -1463,7 +1463,7 @@ const PZVERSION = "1.0.102";
                         this.enterScope(1),
                         (this.regexpState = null);
                 },
-                V = { inFunction: { configurable: !0 }, inGenerator: { configurable: !0 }, inAsync: { configurable: !0 }, allowSuper: { configurable: !0 }, allowDirectSuper: { configurable: !0 } };
+                V = { inFunction: { configurable: true }, inGenerator: { configurable: true }, inAsync: { configurable: true }, allowSuper: { configurable: true }, allowDirectSuper: { configurable: true } };
             (G.prototype.parse = function () {
                 var e = this.options.program || this.startNode();
                 return this.nextToken(), this.parseTopLevel(e);
@@ -1511,19 +1511,19 @@ const PZVERSION = "1.0.102";
                 for (;;) {
                     (T.lastIndex = e), (e += T.exec(this.input)[0].length);
                     var t = z.exec(this.input.slice(e));
-                    if (!t) return !1;
-                    if ("use strict" === (t[1] || t[2])) return !0;
+                    if (!t) return false;
+                    if ("use strict" === (t[1] || t[2])) return true;
                     e += t[0].length;
                 }
             }),
                 (H.eat = function (e) {
-                    return this.type === e && (this.next(), !0);
+                    return this.type === e && (this.next(), true);
                 }),
                 (H.isContextual = function (e) {
                     return this.type === x.name && this.value === e && !this.containsEsc;
                 }),
                 (H.eatContextual = function (e) {
-                    return !!this.isContextual(e) && (this.next(), !0);
+                    return !!this.isContextual(e) && (this.next(), true);
                 }),
                 (H.expectContextual = function (e) {
                     this.eatContextual(e) || this.unexpected();
@@ -1532,13 +1532,13 @@ const PZVERSION = "1.0.102";
                     return this.type === x.eof || this.type === x.braceR || P.test(this.input.slice(this.lastTokEnd, this.start));
                 }),
                 (H.insertSemicolon = function () {
-                    if (this.canInsertSemicolon()) return this.options.onInsertedSemicolon && this.options.onInsertedSemicolon(this.lastTokEnd, this.lastTokEndLoc), !0;
+                    if (this.canInsertSemicolon()) return this.options.onInsertedSemicolon && this.options.onInsertedSemicolon(this.lastTokEnd, this.lastTokEndLoc), true;
                 }),
                 (H.semicolon = function () {
                     this.eat(x.semi) || this.insertSemicolon() || this.unexpected();
                 }),
                 (H.afterTrailingComma = function (e, t) {
-                    if (this.type === e) return this.options.onTrailingComma && this.options.onTrailingComma(this.lastTokStart, this.lastTokStartLoc), t || this.next(), !0;
+                    if (this.type === e) return this.options.onTrailingComma && this.options.onTrailingComma(this.lastTokStart, this.lastTokStartLoc), t || this.next(), true;
                 }),
                 (H.expect = function (e) {
                     this.eat(e) || this.unexpected();
@@ -1554,7 +1554,7 @@ const PZVERSION = "1.0.102";
                     }
                 }),
                 (H.checkExpressionErrors = function (e, t) {
-                    if (!e) return !1;
+                    if (!e) return false;
                     var r = e.shorthandAssign,
                         i = e.doubleProto;
                     if (!t) return r >= 0 || i >= 0;
@@ -1571,7 +1571,7 @@ const PZVERSION = "1.0.102";
             W.parseTopLevel = function (e) {
                 var t = {};
                 for (e.body || (e.body = []); this.type !== x.eof; ) {
-                    var r = this.parseStatement(null, !0, t);
+                    var r = this.parseStatement(null, true, t);
                     e.body.push(r);
                 }
                 return this.adaptDirectivePrologue(e.body), this.next(), this.options.ecmaVersion >= 6 && (e.sourceType = this.options.sourceType), this.finishNode(e, "Program");
@@ -1579,21 +1579,21 @@ const PZVERSION = "1.0.102";
             var X = { kind: "loop" },
                 Y = { kind: "switch" };
             (W.isLet = function () {
-                if (this.options.ecmaVersion < 6 || !this.isContextual("let")) return !1;
+                if (this.options.ecmaVersion < 6 || !this.isContextual("let")) return false;
                 T.lastIndex = this.pos;
                 var e = T.exec(this.input),
                     t = this.pos + e[0].length,
                     r = this.input.charCodeAt(t);
-                if (91 === r || 123 === r) return !0;
-                if (u(r, !0)) {
-                    for (var i = t + 1; d(this.input.charCodeAt(i), !0); ) ++i;
+                if (91 === r || 123 === r) return true;
+                if (u(r, true)) {
+                    for (var i = t + 1; d(this.input.charCodeAt(i), true); ) ++i;
                     var s = this.input.slice(t, i);
-                    if (!a.test(s)) return !0;
+                    if (!a.test(s)) return true;
                 }
-                return !1;
+                return false;
             }),
                 (W.isAsyncFunction = function () {
-                    if (this.options.ecmaVersion < 8 || !this.isContextual("async")) return !1;
+                    if (this.options.ecmaVersion < 8 || !this.isContextual("async")) return false;
                     T.lastIndex = this.pos;
                     var e = T.exec(this.input),
                         t = this.pos + e[0].length;
@@ -1614,9 +1614,9 @@ const PZVERSION = "1.0.102";
                         case x._for:
                             return this.parseForStatement(s);
                         case x._function:
-                            return e && (this.strict || "if" !== e) && this.options.ecmaVersion >= 6 && this.unexpected(), this.parseFunctionStatement(s, !1, !e);
+                            return e && (this.strict || "if" !== e) && this.options.ecmaVersion >= 6 && this.unexpected(), this.parseFunctionStatement(s, false, !e);
                         case x._class:
-                            return e && this.unexpected(), this.parseClass(s, !0);
+                            return e && this.unexpected(), this.parseClass(s, true);
                         case x._if:
                             return this.parseIfStatement(s);
                         case x._return:
@@ -1635,7 +1635,7 @@ const PZVERSION = "1.0.102";
                         case x._with:
                             return this.parseWithStatement(s);
                         case x.braceL:
-                            return this.parseBlock(!0, s);
+                            return this.parseBlock(true, s);
                         case x.semi:
                             return this.parseEmptyStatement(s);
                         case x._export:
@@ -1646,7 +1646,7 @@ const PZVERSION = "1.0.102";
                                 a === x._import ? this.parseImport(s) : this.parseExport(s, r)
                             );
                         default:
-                            if (this.isAsyncFunction()) return e && this.unexpected(), this.next(), this.parseFunctionStatement(s, !0, !e);
+                            if (this.isAsyncFunction()) return e && this.unexpected(), this.next(), this.parseFunctionStatement(s, true, !e);
                             var n = this.value,
                                 o = this.parseExpression();
                             return a === x.name && "Identifier" === o.type && this.eat(x.colon) ? this.parseLabeledStatement(s, n, o, e) : this.parseExpressionStatement(s, o);
@@ -1689,7 +1689,7 @@ const PZVERSION = "1.0.102";
                             a = r ? "let" : this.value;
                         return (
                             this.next(),
-                            this.parseVar(i, !0, a),
+                            this.parseVar(i, true, a),
                             this.finishNode(i, "VariableDeclaration"),
                             !(this.type === x._in || (this.options.ecmaVersion >= 6 && this.isContextual("of"))) || 1 !== i.declarations.length || ("var" !== a && i.declarations[0].init)
                                 ? (t > -1 && this.unexpected(t), this.parseFor(e, i))
@@ -1697,13 +1697,13 @@ const PZVERSION = "1.0.102";
                         );
                     }
                     var s = new q(),
-                        n = this.parseExpression(!0, s);
+                        n = this.parseExpression(true, s);
                     return this.type === x._in || (this.options.ecmaVersion >= 6 && this.isContextual("of"))
-                        ? (this.options.ecmaVersion >= 9 && (this.type === x._in ? t > -1 && this.unexpected(t) : (e.await = t > -1)), this.toAssignable(n, !1, s), this.checkLVal(n), this.parseForIn(e, n))
-                        : (this.checkExpressionErrors(s, !0), t > -1 && this.unexpected(t), this.parseFor(e, n));
+                        ? (this.options.ecmaVersion >= 9 && (this.type === x._in ? t > -1 && this.unexpected(t) : (e.await = t > -1)), this.toAssignable(n, false, s), this.checkLVal(n), this.parseForIn(e, n))
+                        : (this.checkExpressionErrors(s, true), t > -1 && this.unexpected(t), this.parseFor(e, n));
                 }),
                 (W.parseFunctionStatement = function (e, t, r) {
-                    return this.next(), this.parseFunction(e, K | (r ? 0 : Q), !1, t);
+                    return this.next(), this.parseFunction(e, K | (r ? 0 : Q), false, t);
                 }),
                 (W.parseIfStatement = function (e) {
                     return this.next(), (e.test = this.parseParenExpression()), (e.consequent = this.parseStatement("if")), (e.alternate = this.eat(x._else) ? this.parseStatement("if") : null), this.finishNode(e, "IfStatement");
@@ -1719,14 +1719,14 @@ const PZVERSION = "1.0.102";
                 (W.parseSwitchStatement = function (e) {
                     var t;
                     this.next(), (e.discriminant = this.parseParenExpression()), (e.cases = []), this.expect(x.braceL), this.labels.push(Y), this.enterScope(0);
-                    for (var r = !1; this.type !== x.braceR; )
+                    for (var r = false; this.type !== x.braceR; )
                         if (this.type === x._case || this.type === x._default) {
                             var i = this.type === x._case;
                             t && this.finishNode(t, "SwitchCase"),
                                 e.cases.push((t = this.startNode())),
                                 (t.consequent = []),
                                 this.next(),
-                                i ? (t.test = this.parseExpression()) : (r && this.raiseRecoverable(this.lastTokStart, "Multiple default clauses"), (r = !0), (t.test = null)),
+                                i ? (t.test = this.parseExpression()) : (r && this.raiseRecoverable(this.lastTokStart, "Multiple default clauses"), (r = true), (t.test = null)),
                                 this.expect(x.colon);
                         } else t || this.unexpected(), t.consequent.push(this.parseStatement(null));
                     return this.exitScope(), t && this.finishNode(t, "SwitchCase"), this.next(), this.labels.pop(), this.finishNode(e, "SwitchStatement");
@@ -1749,12 +1749,12 @@ const PZVERSION = "1.0.102";
                         var r = "Identifier" === t.param.type;
                         this.enterScope(r ? 32 : 0), this.checkLVal(t.param, r ? 4 : 2), this.expect(x.parenR);
                     } else this.options.ecmaVersion < 10 && this.unexpected(), (t.param = null), this.enterScope(0);
-                    (t.body = this.parseBlock(!1)), this.exitScope(), (e.handler = this.finishNode(t, "CatchClause"));
+                    (t.body = this.parseBlock(false)), this.exitScope(), (e.handler = this.finishNode(t, "CatchClause"));
                 }
                 return (e.finalizer = this.eat(x._finally) ? this.parseBlock() : null), e.handler || e.finalizer || this.raise(e.start, "Missing catch or finally clause"), this.finishNode(e, "TryStatement");
             }),
                 (W.parseVarStatement = function (e, t) {
-                    return this.next(), this.parseVar(e, !1, t), this.semicolon(), this.finishNode(e, "VariableDeclaration");
+                    return this.next(), this.parseVar(e, false, t), this.semicolon(), this.finishNode(e, "VariableDeclaration");
                 }),
                 (W.parseWhileStatement = function (e) {
                     return this.next(), (e.test = this.parseParenExpression()), this.labels.push(X), (e.body = this.parseStatement("while")), this.labels.pop(), this.finishNode(e, "WhileStatement");
@@ -1789,7 +1789,7 @@ const PZVERSION = "1.0.102";
                     return (e.expression = t), this.semicolon(), this.finishNode(e, "ExpressionStatement");
                 }),
                 (W.parseBlock = function (e, t) {
-                    for (void 0 === e && (e = !0), void 0 === t && (t = this.startNode()), t.body = [], this.expect(x.braceL), e && this.enterScope(0); !this.eat(x.braceR); ) {
+                    for (undefined === e && (e = true), undefined === t && (t = this.startNode()), t.body = [], this.expect(x.braceL), e && this.enterScope(0); !this.eat(x.braceR); ) {
                         var r = this.parseStatement(null);
                         t.body.push(r);
                     }
@@ -1845,7 +1845,7 @@ const PZVERSION = "1.0.102";
                     return e;
                 }),
                 (W.parseVarId = function (e, t) {
-                    (e.id = this.parseBindingAtom(t)), this.checkLVal(e.id, "var" === t ? 1 : 2, !1);
+                    (e.id = this.parseBindingAtom(t)), this.checkLVal(e.id, "var" === t ? 1 : 2, false);
                 });
             var K = 1,
                 Q = 2;
@@ -1869,15 +1869,15 @@ const PZVERSION = "1.0.102";
                 );
             }),
                 (W.parseFunctionParams = function (e) {
-                    this.expect(x.parenL), (e.params = this.parseBindingList(x.parenR, !1, this.options.ecmaVersion >= 8)), this.checkYieldAwaitInDefaultParams();
+                    this.expect(x.parenL), (e.params = this.parseBindingList(x.parenR, false, this.options.ecmaVersion >= 8)), this.checkYieldAwaitInDefaultParams();
                 }),
                 (W.parseClass = function (e, t) {
                     this.next(), this.parseClassId(e, t), this.parseClassSuper(e);
                     var r = this.startNode(),
-                        i = !1;
+                        i = false;
                     for (r.body = [], this.expect(x.braceL); !this.eat(x.braceR); ) {
                         var a = this.parseClassElement(null !== e.superClass);
-                        a && (r.body.push(a), "MethodDefinition" === a.type && "constructor" === a.kind && (i && this.raise(a.start, "Duplicate constructor in the same class"), (i = !0)));
+                        a && (r.body.push(a), "MethodDefinition" === a.type && "constructor" === a.kind && (i && this.raise(a.start, "Duplicate constructor in the same class"), (i = true)));
                     }
                     return (e.body = this.finishNode(r, "ClassBody")), this.finishNode(e, t ? "ClassDeclaration" : "ClassExpression");
                 }),
@@ -1886,21 +1886,21 @@ const PZVERSION = "1.0.102";
                     if (this.eat(x.semi)) return null;
                     var r = this.startNode(),
                         i = function (e, i) {
-                            void 0 === i && (i = !1);
+                            undefined === i && (i = false);
                             var a = t.start,
                                 s = t.startLoc;
                             return (
                                 !!t.eatContextual(e) &&
-                                (!(t.type === x.parenL || (i && t.canInsertSemicolon())) || (r.key && t.unexpected(), (r.computed = !1), (r.key = t.startNodeAt(a, s)), (r.key.name = e), t.finishNode(r.key, "Identifier"), !1))
+                                (!(t.type === x.parenL || (i && t.canInsertSemicolon())) || (r.key && t.unexpected(), (r.computed = false), (r.key = t.startNodeAt(a, s)), (r.key.name = e), t.finishNode(r.key, "Identifier"), false))
                             );
                         };
                     (r.kind = "method"), (r.static = i("static"));
                     var a = this.eat(x.star),
-                        s = !1;
-                    a || (this.options.ecmaVersion >= 8 && i("async", !0) ? ((s = !0), (a = this.options.ecmaVersion >= 9 && this.eat(x.star))) : i("get") ? (r.kind = "get") : i("set") && (r.kind = "set")),
+                        s = false;
+                    a || (this.options.ecmaVersion >= 8 && i("async", true) ? ((s = true), (a = this.options.ecmaVersion >= 9 && this.eat(x.star))) : i("get") ? (r.kind = "get") : i("set") && (r.kind = "set")),
                         r.key || this.parsePropertyName(r);
                     var n = r.key,
-                        o = !1;
+                        o = false;
                     return (
                         r.computed || r.static || !(("Identifier" === n.type && "constructor" === n.name) || ("Literal" === n.type && "constructor" === n.value))
                             ? r.static && "Identifier" === n.type && "prototype" === n.name && this.raise(n.start, "Classes may not have a static property named prototype")
@@ -1920,7 +1920,7 @@ const PZVERSION = "1.0.102";
                     return (e.value = this.parseMethod(t, r, i)), this.finishNode(e, "MethodDefinition");
                 }),
                 (W.parseClassId = function (e, t) {
-                    e.id = this.type === x.name ? this.parseIdent() : !0 === t ? this.unexpected() : null;
+                    e.id = this.type === x.name ? this.parseIdent() : true === t ? this.unexpected() : null;
                 }),
                 (W.parseClassSuper = function (e) {
                     e.superClass = this.eat(x._extends) ? this.parseExprSubscripts() : null;
@@ -1931,7 +1931,7 @@ const PZVERSION = "1.0.102";
                         var r;
                         if ((this.checkExport(t, "default", this.lastTokStart), this.type === x._function || (r = this.isAsyncFunction()))) {
                             var i = this.startNode();
-                            this.next(), r && this.next(), (e.declaration = this.parseFunction(i, 4 | K, !1, r, !0));
+                            this.next(), r && this.next(), (e.declaration = this.parseFunction(i, 4 | K, false, r, true));
                         } else if (this.type === x._class) {
                             var a = this.startNode();
                             e.declaration = this.parseClass(a, "nullableID");
@@ -1957,7 +1957,7 @@ const PZVERSION = "1.0.102";
                     return this.finishNode(e, "ExportNamedDeclaration");
                 }),
                 (W.checkExport = function (e, t, r) {
-                    e && (R(e, t) && this.raiseRecoverable(r, "Duplicate export '" + t + "'"), (e[t] = !0));
+                    e && (R(e, t) && this.raiseRecoverable(r, "Duplicate export '" + t + "'"), (e[t] = true));
                 }),
                 (W.checkPatternExport = function (e, t) {
                     var r = t.type;
@@ -1993,12 +1993,12 @@ const PZVERSION = "1.0.102";
                 }),
                 (W.parseExportSpecifiers = function (e) {
                     var t = [],
-                        r = !0;
+                        r = true;
                     for (this.expect(x.braceL); !this.eat(x.braceR); ) {
-                        if (r) r = !1;
+                        if (r) r = false;
                         else if ((this.expect(x.comma), this.afterTrailingComma(x.braceR))) break;
                         var i = this.startNode();
-                        (i.local = this.parseIdent(!0)), (i.exported = this.eatContextual("as") ? this.parseIdent(!0) : i.local), this.checkExport(e, i.exported.name, i.exported.start), t.push(this.finishNode(i, "ExportSpecifier"));
+                        (i.local = this.parseIdent(true)), (i.exported = this.eatContextual("as") ? this.parseIdent(true) : i.local), this.checkExport(e, i.exported.name, i.exported.start), t.push(this.finishNode(i, "ExportSpecifier"));
                     }
                     return t;
                 }),
@@ -2014,7 +2014,7 @@ const PZVERSION = "1.0.102";
                 }),
                 (W.parseImportSpecifiers = function () {
                     var e = [],
-                        t = !0;
+                        t = true;
                     if (this.type === x.name) {
                         var r = this.startNode();
                         if (((r.local = this.parseIdent()), this.checkLVal(r.local, 2), e.push(this.finishNode(r, "ImportDefaultSpecifier")), !this.eat(x.comma))) return e;
@@ -2024,10 +2024,10 @@ const PZVERSION = "1.0.102";
                         return this.next(), this.expectContextual("as"), (i.local = this.parseIdent()), this.checkLVal(i.local, 2), e.push(this.finishNode(i, "ImportNamespaceSpecifier")), e;
                     }
                     for (this.expect(x.braceL); !this.eat(x.braceR); ) {
-                        if (t) t = !1;
+                        if (t) t = false;
                         else if ((this.expect(x.comma), this.afterTrailingComma(x.braceR))) break;
                         var a = this.startNode();
-                        (a.imported = this.parseIdent(!0)),
+                        (a.imported = this.parseIdent(true)),
                             this.eatContextual("as") ? (a.local = this.parseIdent()) : (this.checkUnreserved(a.imported), (a.local = a.imported)),
                             this.checkLVal(a.local, 2),
                             e.push(this.finishNode(a, "ImportSpecifier"));
@@ -2052,7 +2052,7 @@ const PZVERSION = "1.0.102";
                         case "RestElement":
                             break;
                         case "ObjectExpression":
-                            (e.type = "ObjectPattern"), r && this.checkPatternErrors(r, !0);
+                            (e.type = "ObjectPattern"), r && this.checkPatternErrors(r, true);
                             for (var i = 0, a = e.properties; i < a.length; i += 1) {
                                 var s = a[i];
                                 this.toAssignable(s, t), "RestElement" !== s.type || ("ArrayPattern" !== s.argument.type && "ObjectPattern" !== s.argument.type) || this.raise(s.argument.start, "Unexpected token");
@@ -2062,7 +2062,7 @@ const PZVERSION = "1.0.102";
                             "init" !== e.kind && this.raise(e.key.start, "Object pattern can't contain getter or setter"), this.toAssignable(e.value, t);
                             break;
                         case "ArrayExpression":
-                            (e.type = "ArrayPattern"), r && this.checkPatternErrors(r, !0), this.toAssignableList(e.elements, t);
+                            (e.type = "ArrayPattern"), r && this.checkPatternErrors(r, true), this.toAssignableList(e.elements, t);
                             break;
                         case "SpreadElement":
                             (e.type = "RestElement"), this.toAssignable(e.argument, t), "AssignmentPattern" === e.argument.type && this.raise(e.argument.start, "Rest elements cannot have a default value");
@@ -2079,7 +2079,7 @@ const PZVERSION = "1.0.102";
                         default:
                             this.raise(e.start, "Assigning to rvalue");
                     }
-                else r && this.checkPatternErrors(r, !0);
+                else r && this.checkPatternErrors(r, true);
                 return e;
             }),
                 ($.toAssignableList = function (e, t) {
@@ -2095,7 +2095,7 @@ const PZVERSION = "1.0.102";
                 }),
                 ($.parseSpread = function (e) {
                     var t = this.startNode();
-                    return this.next(), (t.argument = this.parseMaybeAssign(!1, e)), this.finishNode(t, "SpreadElement");
+                    return this.next(), (t.argument = this.parseMaybeAssign(false, e)), this.finishNode(t, "SpreadElement");
                 }),
                 ($.parseRestBinding = function () {
                     var e = this.startNode();
@@ -2106,15 +2106,15 @@ const PZVERSION = "1.0.102";
                         switch (this.type) {
                             case x.bracketL:
                                 var e = this.startNode();
-                                return this.next(), (e.elements = this.parseBindingList(x.bracketR, !0, !0)), this.finishNode(e, "ArrayPattern");
+                                return this.next(), (e.elements = this.parseBindingList(x.bracketR, true, true)), this.finishNode(e, "ArrayPattern");
                             case x.braceL:
-                                return this.parseObj(!0);
+                                return this.parseObj(true);
                         }
                     return this.parseIdent();
                 }),
                 ($.parseBindingList = function (e, t, r) {
-                    for (var i = [], a = !0; !this.eat(e); )
-                        if ((a ? (a = !1) : this.expect(x.comma), t && this.type === x.comma)) i.push(null);
+                    for (var i = [], a = true; !this.eat(e); )
+                        if ((a ? (a = false) : this.expect(x.comma), t && this.type === x.comma)) i.push(null);
                         else {
                             if (r && this.afterTrailingComma(e)) break;
                             if (this.type === x.ellipsis) {
@@ -2136,10 +2136,10 @@ const PZVERSION = "1.0.102";
                     return (i.left = r), (i.right = this.parseMaybeAssign()), this.finishNode(i, "AssignmentPattern");
                 }),
                 ($.checkLVal = function (e, t, r) {
-                    switch ((void 0 === t && (t = 0), e.type)) {
+                    switch ((undefined === t && (t = 0), e.type)) {
                         case "Identifier":
                             this.strict && this.reservedWordsStrictBind.test(e.name) && this.raiseRecoverable(e.start, (t ? "Binding " : "Assigning to ") + e.name + " in strict mode"),
-                                r && (R(r, e.name) && this.raiseRecoverable(e.start, "Argument name clash"), (r[e.name] = !0)),
+                                r && (R(r, e.name) && this.raiseRecoverable(e.start, "Argument name clash"), (r[e.name] = true)),
                                 0 !== t && 5 !== t && this.declareName(e.name, t, e.start);
                             break;
                         case "MemberExpression":
@@ -2190,12 +2190,12 @@ const PZVERSION = "1.0.102";
                     }
                     var s = e.kind;
                     if (this.options.ecmaVersion >= 6)
-                        "__proto__" === i && "init" === s && (t.proto && (r && r.doubleProto < 0 ? (r.doubleProto = a.start) : this.raiseRecoverable(a.start, "Redefinition of __proto__ property")), (t.proto = !0));
+                        "__proto__" === i && "init" === s && (t.proto && (r && r.doubleProto < 0 ? (r.doubleProto = a.start) : this.raiseRecoverable(a.start, "Redefinition of __proto__ property")), (t.proto = true));
                     else {
                         var n = t[(i = "$" + i)];
                         if (n) ("init" === s ? (this.strict && n.init) || n.get || n.set : n.init || n[s]) && this.raiseRecoverable(a.start, "Redefinition of property");
-                        else n = t[i] = { init: !1, get: !1, set: !1 };
-                        n[s] = !0;
+                        else n = t[i] = { init: false, get: false, set: false };
+                        n[s] = true;
                     }
                 }
             }),
@@ -2213,13 +2213,13 @@ const PZVERSION = "1.0.102";
                 (ee.parseMaybeAssign = function (e, t, r) {
                     if (this.isContextual("yield")) {
                         if (this.inGenerator) return this.parseYield();
-                        this.exprAllowed = !1;
+                        this.exprAllowed = false;
                     }
-                    var i = !1,
+                    var i = false,
                         a = -1,
                         s = -1,
                         n = -1;
-                    t ? ((a = t.parenthesizedAssign), (s = t.trailingComma), (n = t.shorthandAssign), (t.parenthesizedAssign = t.trailingComma = t.shorthandAssign = -1)) : ((t = new q()), (i = !0));
+                    t ? ((a = t.parenthesizedAssign), (s = t.trailingComma), (n = t.shorthandAssign), (t.parenthesizedAssign = t.trailingComma = t.shorthandAssign = -1)) : ((t = new q()), (i = true));
                     var o = this.start,
                         p = this.startLoc;
                     (this.type !== x.parenL && this.type !== x.name) || (this.potentialArrowAt = this.start);
@@ -2228,7 +2228,7 @@ const PZVERSION = "1.0.102";
                         var h = this.startNodeAt(o, p);
                         return (
                             (h.operator = this.value),
-                            (h.left = this.type === x.eq ? this.toAssignable(l, !1, t) : l),
+                            (h.left = this.type === x.eq ? this.toAssignable(l, false, t) : l),
                             i || q.call(t),
                             (t.shorthandAssign = -1),
                             this.checkLVal(l),
@@ -2237,7 +2237,7 @@ const PZVERSION = "1.0.102";
                             this.finishNode(h, "AssignmentExpression")
                         );
                     }
-                    return i && this.checkExpressionErrors(t, !0), a > -1 && (t.parenthesizedAssign = a), s > -1 && (t.trailingComma = s), n > -1 && (t.shorthandAssign = n), l;
+                    return i && this.checkExpressionErrors(t, true), a > -1 && (t.parenthesizedAssign = a), s > -1 && (t.trailingComma = s), n > -1 && (t.shorthandAssign = n), l;
                 }),
                 (ee.parseMaybeConditional = function (e, t) {
                     var r = this.start,
@@ -2253,7 +2253,7 @@ const PZVERSION = "1.0.102";
                 (ee.parseExprOps = function (e, t) {
                     var r = this.start,
                         i = this.startLoc,
-                        a = this.parseMaybeUnary(t, !1);
+                        a = this.parseMaybeUnary(t, false);
                     return this.checkExpressionErrors(t) ? a : a.start === r && "ArrowFunctionExpression" === a.type ? a : this.parseExprOp(a, r, i, -1, e);
                 }),
                 (ee.parseExprOp = function (e, t, r, i, a) {
@@ -2264,7 +2264,7 @@ const PZVERSION = "1.0.102";
                         this.next();
                         var p = this.start,
                             l = this.startLoc,
-                            h = this.parseExprOp(this.parseMaybeUnary(null, !1), p, l, s, a),
+                            h = this.parseExprOp(this.parseMaybeUnary(null, false), p, l, s, a),
                             c = this.buildBinary(t, r, e, h, o, n);
                         return this.parseExprOp(c, t, r, i, a);
                     }
@@ -2278,25 +2278,25 @@ const PZVERSION = "1.0.102";
                     var r,
                         i = this.start,
                         a = this.startLoc;
-                    if (this.isContextual("await") && (this.inAsync || (!this.inFunction && this.options.allowAwaitOutsideFunction))) (r = this.parseAwait()), (t = !0);
+                    if (this.isContextual("await") && (this.inAsync || (!this.inFunction && this.options.allowAwaitOutsideFunction))) (r = this.parseAwait()), (t = true);
                     else if (this.type.prefix) {
                         var s = this.startNode(),
                             n = this.type === x.incDec;
                         (s.operator = this.value),
-                            (s.prefix = !0),
+                            (s.prefix = true),
                             this.next(),
-                            (s.argument = this.parseMaybeUnary(null, !0)),
-                            this.checkExpressionErrors(e, !0),
-                            n ? this.checkLVal(s.argument) : this.strict && "delete" === s.operator && "Identifier" === s.argument.type ? this.raiseRecoverable(s.start, "Deleting local variable in strict mode") : (t = !0),
+                            (s.argument = this.parseMaybeUnary(null, true)),
+                            this.checkExpressionErrors(e, true),
+                            n ? this.checkLVal(s.argument) : this.strict && "delete" === s.operator && "Identifier" === s.argument.type ? this.raiseRecoverable(s.start, "Deleting local variable in strict mode") : (t = true),
                             (r = this.finishNode(s, n ? "UpdateExpression" : "UnaryExpression"));
                     } else {
                         if (((r = this.parseExprSubscripts(e)), this.checkExpressionErrors(e))) return r;
                         for (; this.type.postfix && !this.canInsertSemicolon(); ) {
                             var o = this.startNodeAt(i, a);
-                            (o.operator = this.value), (o.prefix = !1), (o.argument = r), this.checkLVal(r), this.next(), (r = this.finishNode(o, "UpdateExpression"));
+                            (o.operator = this.value), (o.prefix = false), (o.argument = r), this.checkLVal(r), this.next(), (r = this.finishNode(o, "UpdateExpression"));
                         }
                     }
-                    return !t && this.eat(x.starstar) ? this.buildBinary(i, a, r, this.parseMaybeUnary(null, !1), "**", !1) : r;
+                    return !t && this.eat(x.starstar) ? this.buildBinary(i, a, r, this.parseMaybeUnary(null, false), "**", false) : r;
                 }),
                 (ee.parseExprSubscripts = function (e) {
                     var t = this.start,
@@ -2308,25 +2308,25 @@ const PZVERSION = "1.0.102";
                     return e && "MemberExpression" === s.type && (e.parenthesizedAssign >= s.start && (e.parenthesizedAssign = -1), e.parenthesizedBind >= s.start && (e.parenthesizedBind = -1)), s;
                 }),
                 (ee.parseSubscripts = function (e, t, r, i) {
-                    for (var a = this.options.ecmaVersion >= 8 && "Identifier" === e.type && "async" === e.name && this.lastTokEnd === e.end && !this.canInsertSemicolon() && "async" === this.input.slice(e.start, e.end), s = void 0; ; )
+                    for (var a = this.options.ecmaVersion >= 8 && "Identifier" === e.type && "async" === e.name && this.lastTokEnd === e.end && !this.canInsertSemicolon() && "async" === this.input.slice(e.start, e.end), s = undefined; ; )
                         if ((s = this.eat(x.bracketL)) || this.eat(x.dot)) {
                             var n = this.startNodeAt(t, r);
-                            (n.object = e), (n.property = s ? this.parseExpression() : this.parseIdent(!0)), (n.computed = !!s), s && this.expect(x.bracketR), (e = this.finishNode(n, "MemberExpression"));
+                            (n.object = e), (n.property = s ? this.parseExpression() : this.parseIdent(true)), (n.computed = !!s), s && this.expect(x.bracketR), (e = this.finishNode(n, "MemberExpression"));
                         } else if (!i && this.eat(x.parenL)) {
                             var o = new q(),
                                 p = this.yieldPos,
                                 l = this.awaitPos;
                             (this.yieldPos = 0), (this.awaitPos = 0);
-                            var h = this.parseExprList(x.parenR, this.options.ecmaVersion >= 8, !1, o);
+                            var h = this.parseExprList(x.parenR, this.options.ecmaVersion >= 8, false, o);
                             if (a && !this.canInsertSemicolon() && this.eat(x.arrow))
-                                return this.checkPatternErrors(o, !1), this.checkYieldAwaitInDefaultParams(), (this.yieldPos = p), (this.awaitPos = l), this.parseArrowExpression(this.startNodeAt(t, r), h, !0);
-                            this.checkExpressionErrors(o, !0), (this.yieldPos = p || this.yieldPos), (this.awaitPos = l || this.awaitPos);
+                                return this.checkPatternErrors(o, false), this.checkYieldAwaitInDefaultParams(), (this.yieldPos = p), (this.awaitPos = l), this.parseArrowExpression(this.startNodeAt(t, r), h, true);
+                            this.checkExpressionErrors(o, true), (this.yieldPos = p || this.yieldPos), (this.awaitPos = l || this.awaitPos);
                             var c = this.startNodeAt(t, r);
                             (c.callee = e), (c.arguments = h), (e = this.finishNode(c, "CallExpression"));
                         } else {
                             if (this.type !== x.backQuote) return e;
                             var u = this.startNodeAt(t, r);
-                            (u.tag = e), (u.quasi = this.parseTemplate({ isTagged: !0 })), (e = this.finishNode(u, "TaggedTemplateExpression"));
+                            (u.tag = e), (u.quasi = this.parseTemplate({ isTagged: true })), (e = this.finishNode(u, "TaggedTemplateExpression"));
                         }
                 }),
                 (ee.parseExprAtom = function (e) {
@@ -2350,11 +2350,11 @@ const PZVERSION = "1.0.102";
                                 a = this.startLoc,
                                 s = this.containsEsc,
                                 n = this.parseIdent(this.type !== x.name);
-                            if (this.options.ecmaVersion >= 8 && !s && "async" === n.name && !this.canInsertSemicolon() && this.eat(x._function)) return this.parseFunction(this.startNodeAt(i, a), 0, !1, !0);
+                            if (this.options.ecmaVersion >= 8 && !s && "async" === n.name && !this.canInsertSemicolon() && this.eat(x._function)) return this.parseFunction(this.startNodeAt(i, a), 0, false, true);
                             if (r && !this.canInsertSemicolon()) {
-                                if (this.eat(x.arrow)) return this.parseArrowExpression(this.startNodeAt(i, a), [n], !1);
+                                if (this.eat(x.arrow)) return this.parseArrowExpression(this.startNodeAt(i, a), [n], false);
                                 if (this.options.ecmaVersion >= 8 && "async" === n.name && this.type === x.name && !s)
-                                    return (n = this.parseIdent()), (!this.canInsertSemicolon() && this.eat(x.arrow)) || this.unexpected(), this.parseArrowExpression(this.startNodeAt(i, a), [n], !0);
+                                    return (n = this.parseIdent()), (!this.canInsertSemicolon() && this.eat(x.arrow)) || this.unexpected(), this.parseArrowExpression(this.startNodeAt(i, a), [n], true);
                             }
                             return n;
                         case x.regexp:
@@ -2372,13 +2372,13 @@ const PZVERSION = "1.0.102";
                                 l = this.parseParenAndDistinguishExpression(r);
                             return e && (e.parenthesizedAssign < 0 && !this.isSimpleAssignTarget(l) && (e.parenthesizedAssign = p), e.parenthesizedBind < 0 && (e.parenthesizedBind = p)), l;
                         case x.bracketL:
-                            return (t = this.startNode()), this.next(), (t.elements = this.parseExprList(x.bracketR, !0, !0, e)), this.finishNode(t, "ArrayExpression");
+                            return (t = this.startNode()), this.next(), (t.elements = this.parseExprList(x.bracketR, true, true, e)), this.finishNode(t, "ArrayExpression");
                         case x.braceL:
-                            return this.parseObj(!1, e);
+                            return this.parseObj(false, e);
                         case x._function:
                             return (t = this.startNode()), this.next(), this.parseFunction(t, 0);
                         case x._class:
-                            return this.parseClass(this.startNode(), !1);
+                            return this.parseClass(this.startNode(), false);
                         case x._new:
                             return this.parseNew();
                         case x.backQuote:
@@ -2407,29 +2407,29 @@ const PZVERSION = "1.0.102";
                             n = this.start,
                             o = this.startLoc,
                             p = [],
-                            l = !0,
-                            h = !1,
+                            l = true,
+                            h = false,
                             c = new q(),
                             u = this.yieldPos,
                             d = this.awaitPos;
                         for (this.yieldPos = 0, this.awaitPos = 0; this.type !== x.parenR; ) {
-                            if ((l ? (l = !1) : this.expect(x.comma), a && this.afterTrailingComma(x.parenR, !0))) {
-                                h = !0;
+                            if ((l ? (l = false) : this.expect(x.comma), a && this.afterTrailingComma(x.parenR, true))) {
+                                h = true;
                                 break;
                             }
                             if (this.type === x.ellipsis) {
                                 (s = this.start), p.push(this.parseParenItem(this.parseRestBinding())), this.type === x.comma && this.raise(this.start, "Comma is not permitted after the rest element");
                                 break;
                             }
-                            p.push(this.parseMaybeAssign(!1, c, this.parseParenItem));
+                            p.push(this.parseMaybeAssign(false, c, this.parseParenItem));
                         }
                         var f = this.start,
                             m = this.startLoc;
                         if ((this.expect(x.parenR), e && !this.canInsertSemicolon() && this.eat(x.arrow)))
-                            return this.checkPatternErrors(c, !1), this.checkYieldAwaitInDefaultParams(), (this.yieldPos = u), (this.awaitPos = d), this.parseParenArrowList(r, i, p);
+                            return this.checkPatternErrors(c, false), this.checkYieldAwaitInDefaultParams(), (this.yieldPos = u), (this.awaitPos = d), this.parseParenArrowList(r, i, p);
                         (p.length && !h) || this.unexpected(this.lastTokStart),
                             s && this.unexpected(s),
-                            this.checkExpressionErrors(c, !0),
+                            this.checkExpressionErrors(c, true),
                             (this.yieldPos = u || this.yieldPos),
                             (this.awaitPos = d || this.awaitPos),
                             p.length > 1 ? (((t = this.startNodeAt(n, o)).expressions = p), this.finishNodeAt(t, "SequenceExpression", f, m)) : (t = p[0]);
@@ -2449,12 +2449,12 @@ const PZVERSION = "1.0.102";
             var te = [];
             (ee.parseNew = function () {
                 var e = this.startNode(),
-                    t = this.parseIdent(!0);
+                    t = this.parseIdent(true);
                 if (this.options.ecmaVersion >= 6 && this.eat(x.dot)) {
                     e.meta = t;
                     var r = this.containsEsc;
                     return (
-                        (e.property = this.parseIdent(!0)),
+                        (e.property = this.parseIdent(true)),
                         ("target" !== e.property.name || r) && this.raiseRecoverable(e.property.start, "The only valid meta property for new is new.target"),
                         this.inNonArrowFunction() || this.raiseRecoverable(e.start, "new.target can only be used in functions"),
                         this.finishNode(e, "MetaProperty")
@@ -2463,8 +2463,8 @@ const PZVERSION = "1.0.102";
                 var i = this.start,
                     a = this.startLoc;
                 return (
-                    (e.callee = this.parseSubscripts(this.parseExprAtom(), i, a, !0)),
-                    this.eat(x.parenL) ? (e.arguments = this.parseExprList(x.parenR, this.options.ecmaVersion >= 8, !1)) : (e.arguments = te),
+                    (e.callee = this.parseSubscripts(this.parseExprAtom(), i, a, true)),
+                    this.eat(x.parenL) ? (e.arguments = this.parseExprList(x.parenR, this.options.ecmaVersion >= 8, false)) : (e.arguments = te),
                     this.finishNode(e, "NewExpression")
                 );
             }),
@@ -2481,9 +2481,9 @@ const PZVERSION = "1.0.102";
                     );
                 }),
                 (ee.parseTemplate = function (e) {
-                    void 0 === e && (e = {});
+                    undefined === e && (e = {});
                     var t = e.isTagged;
-                    void 0 === t && (t = !1);
+                    undefined === t && (t = false);
                     var r = this.startNode();
                     this.next(), (r.expressions = []);
                     var i = this.parseTemplateElement({ isTagged: t });
@@ -2506,10 +2506,10 @@ const PZVERSION = "1.0.102";
                 }),
                 (ee.parseObj = function (e, t) {
                     var r = this.startNode(),
-                        i = !0,
+                        i = true,
                         a = {};
                     for (r.properties = [], this.next(); !this.eat(x.braceR); ) {
-                        if (i) i = !1;
+                        if (i) i = false;
                         else if ((this.expect(x.comma), this.afterTrailingComma(x.braceR))) break;
                         var s = this.parseProperty(e, t);
                         e || this.checkPropClash(s, a, t), r.properties.push(s);
@@ -2524,32 +2524,32 @@ const PZVERSION = "1.0.102";
                         n = this.startNode();
                     if (this.options.ecmaVersion >= 9 && this.eat(x.ellipsis))
                         return e
-                            ? ((n.argument = this.parseIdent(!1)), this.type === x.comma && this.raise(this.start, "Comma is not permitted after the rest element"), this.finishNode(n, "RestElement"))
+                            ? ((n.argument = this.parseIdent(false)), this.type === x.comma && this.raise(this.start, "Comma is not permitted after the rest element"), this.finishNode(n, "RestElement"))
                             : (this.type === x.parenL && t && (t.parenthesizedAssign < 0 && (t.parenthesizedAssign = this.start), t.parenthesizedBind < 0 && (t.parenthesizedBind = this.start)),
-                              (n.argument = this.parseMaybeAssign(!1, t)),
+                              (n.argument = this.parseMaybeAssign(false, t)),
                               this.type === x.comma && t && t.trailingComma < 0 && (t.trailingComma = this.start),
                               this.finishNode(n, "SpreadElement"));
-                    this.options.ecmaVersion >= 6 && ((n.method = !1), (n.shorthand = !1), (e || t) && ((a = this.start), (s = this.startLoc)), e || (r = this.eat(x.star)));
+                    this.options.ecmaVersion >= 6 && ((n.method = false), (n.shorthand = false), (e || t) && ((a = this.start), (s = this.startLoc)), e || (r = this.eat(x.star)));
                     var o = this.containsEsc;
                     return (
                         this.parsePropertyName(n),
-                        !e && !o && this.options.ecmaVersion >= 8 && !r && this.isAsyncProp(n) ? ((i = !0), (r = this.options.ecmaVersion >= 9 && this.eat(x.star)), this.parsePropertyName(n, t)) : (i = !1),
+                        !e && !o && this.options.ecmaVersion >= 8 && !r && this.isAsyncProp(n) ? ((i = true), (r = this.options.ecmaVersion >= 9 && this.eat(x.star)), this.parsePropertyName(n, t)) : (i = false),
                         this.parsePropertyValue(n, e, r, i, a, s, t, o),
                         this.finishNode(n, "Property")
                     );
                 }),
                 (ee.parsePropertyValue = function (e, t, r, i, a, s, n, o) {
-                    if (((r || i) && this.type === x.colon && this.unexpected(), this.eat(x.colon))) (e.value = t ? this.parseMaybeDefault(this.start, this.startLoc) : this.parseMaybeAssign(!1, n)), (e.kind = "init");
-                    else if (this.options.ecmaVersion >= 6 && this.type === x.parenL) t && this.unexpected(), (e.kind = "init"), (e.method = !0), (e.value = this.parseMethod(r, i));
+                    if (((r || i) && this.type === x.colon && this.unexpected(), this.eat(x.colon))) (e.value = t ? this.parseMaybeDefault(this.start, this.startLoc) : this.parseMaybeAssign(false, n)), (e.kind = "init");
+                    else if (this.options.ecmaVersion >= 6 && this.type === x.parenL) t && this.unexpected(), (e.kind = "init"), (e.method = true), (e.value = this.parseMethod(r, i));
                     else if (t || o || !(this.options.ecmaVersion >= 5) || e.computed || "Identifier" !== e.key.type || ("get" !== e.key.name && "set" !== e.key.name) || this.type === x.comma || this.type === x.braceR)
                         this.options.ecmaVersion >= 6 && !e.computed && "Identifier" === e.key.type
                             ? (this.checkUnreserved(e.key),
                               (e.kind = "init"),
                               t ? (e.value = this.parseMaybeDefault(a, s, e.key)) : this.type === x.eq && n ? (n.shorthandAssign < 0 && (n.shorthandAssign = this.start), (e.value = this.parseMaybeDefault(a, s, e.key))) : (e.value = e.key),
-                              (e.shorthand = !0))
+                              (e.shorthand = true))
                             : this.unexpected();
                     else {
-                        (r || i) && this.unexpected(), (e.kind = e.key.name), this.parsePropertyName(e), (e.value = this.parseMethod(!1));
+                        (r || i) && this.unexpected(), (e.kind = e.key.name), this.parsePropertyName(e), (e.value = this.parseMethod(false));
                         var p = "get" === e.kind ? 0 : 1;
                         if (e.value.params.length !== p) {
                             var l = e.value.start;
@@ -2559,13 +2559,13 @@ const PZVERSION = "1.0.102";
                 }),
                 (ee.parsePropertyName = function (e) {
                     if (this.options.ecmaVersion >= 6) {
-                        if (this.eat(x.bracketL)) return (e.computed = !0), (e.key = this.parseMaybeAssign()), this.expect(x.bracketR), e.key;
-                        e.computed = !1;
+                        if (this.eat(x.bracketL)) return (e.computed = true), (e.key = this.parseMaybeAssign()), this.expect(x.bracketR), e.key;
+                        e.computed = false;
                     }
-                    return (e.key = this.type === x.num || this.type === x.string ? this.parseExprAtom() : this.parseIdent(!0));
+                    return (e.key = this.type === x.num || this.type === x.string ? this.parseExprAtom() : this.parseIdent(true));
                 }),
                 (ee.initFunction = function (e) {
-                    (e.id = null), this.options.ecmaVersion >= 6 && (e.generator = e.expression = !1), this.options.ecmaVersion >= 8 && (e.async = !1);
+                    (e.id = null), this.options.ecmaVersion >= 6 && (e.generator = e.expression = false), this.options.ecmaVersion >= 8 && (e.async = false);
                 }),
                 (ee.parseMethod = function (e, t, r) {
                     var i = this.startNode(),
@@ -2579,9 +2579,9 @@ const PZVERSION = "1.0.102";
                         (this.awaitPos = 0),
                         this.enterScope(64 | _(t, i.generator) | (r ? 128 : 0)),
                         this.expect(x.parenL),
-                        (i.params = this.parseBindingList(x.parenR, !1, this.options.ecmaVersion >= 8)),
+                        (i.params = this.parseBindingList(x.parenR, false, this.options.ecmaVersion >= 8)),
                         this.checkYieldAwaitInDefaultParams(),
-                        this.parseFunctionBody(i, !1),
+                        this.parseFunctionBody(i, false),
                         (this.yieldPos = a),
                         (this.awaitPos = s),
                         this.finishNode(i, "FunctionExpression")
@@ -2591,13 +2591,13 @@ const PZVERSION = "1.0.102";
                     var i = this.yieldPos,
                         a = this.awaitPos;
                     return (
-                        this.enterScope(16 | _(r, !1)),
+                        this.enterScope(16 | _(r, false)),
                         this.initFunction(e),
                         this.options.ecmaVersion >= 8 && (e.async = !!r),
                         (this.yieldPos = 0),
                         (this.awaitPos = 0),
-                        (e.params = this.toAssignableList(t, !0)),
-                        this.parseFunctionBody(e, !0),
+                        (e.params = this.toAssignableList(t, true)),
+                        this.parseFunctionBody(e, true),
                         (this.yieldPos = i),
                         (this.awaitPos = a),
                         this.finishNode(e, "ArrowFunctionExpression")
@@ -2606,17 +2606,17 @@ const PZVERSION = "1.0.102";
                 (ee.parseFunctionBody = function (e, t) {
                     var r = t && this.type !== x.braceL,
                         i = this.strict,
-                        a = !1;
-                    if (r) (e.body = this.parseMaybeAssign()), (e.expression = !0), this.checkParams(e, !1);
+                        a = false;
+                    if (r) (e.body = this.parseMaybeAssign()), (e.expression = true), this.checkParams(e, false);
                     else {
                         var s = this.options.ecmaVersion >= 7 && !this.isSimpleParamList(e.params);
                         (i && !s) || ((a = this.strictDirective(this.end)) && s && this.raiseRecoverable(e.start, "Illegal 'use strict' directive in function with non-simple parameter list"));
                         var n = this.labels;
                         (this.labels = []),
-                            a && (this.strict = !0),
+                            a && (this.strict = true),
                             this.checkParams(e, !i && !a && !t && this.isSimpleParamList(e.params)),
-                            (e.body = this.parseBlock(!1)),
-                            (e.expression = !1),
+                            (e.body = this.parseBlock(false)),
+                            (e.expression = false),
                             this.adaptDirectivePrologue(e.body.body),
                             (this.labels = n);
                     }
@@ -2625,9 +2625,9 @@ const PZVERSION = "1.0.102";
                 (ee.isSimpleParamList = function (e) {
                     for (var t = 0, r = e; t < r.length; t += 1) {
                         var i = r[t];
-                        if ("Identifier" !== i.type) return !1;
+                        if ("Identifier" !== i.type) return false;
                     }
-                    return !0;
+                    return true;
                 }),
                 (ee.checkParams = function (e, t) {
                     for (var r = {}, i = 0, a = e.params; i < a.length; i += 1) {
@@ -2636,15 +2636,15 @@ const PZVERSION = "1.0.102";
                     }
                 }),
                 (ee.parseExprList = function (e, t, r, i) {
-                    for (var a = [], s = !0; !this.eat(e); ) {
-                        if (s) s = !1;
+                    for (var a = [], s = true; !this.eat(e); ) {
+                        if (s) s = false;
                         else if ((this.expect(x.comma), t && this.afterTrailingComma(e))) break;
-                        var n = void 0;
+                        var n = undefined;
                         r && this.type === x.comma
                             ? (n = null)
                             : this.type === x.ellipsis
                             ? ((n = this.parseSpread(i)), i && this.type === x.comma && i.trailingComma < 0 && (i.trailingComma = this.start))
-                            : (n = this.parseMaybeAssign(!1, i)),
+                            : (n = this.parseMaybeAssign(false, i)),
                             a.push(n);
                     }
                     return a;
@@ -2666,7 +2666,7 @@ const PZVERSION = "1.0.102";
                 (ee.parseIdent = function (e, t) {
                     var r = this.startNode();
                     return (
-                        e && "never" === this.options.allowReserved && (e = !1),
+                        e && "never" === this.options.allowReserved && (e = false),
                         this.type === x.name
                             ? (r.name = this.value)
                             : this.type.keyword
@@ -2684,7 +2684,7 @@ const PZVERSION = "1.0.102";
                     return (
                         this.next(),
                         this.type === x.semi || this.canInsertSemicolon() || (this.type !== x.star && !this.type.startsExpr)
-                            ? ((e.delegate = !1), (e.argument = null))
+                            ? ((e.delegate = false), (e.argument = null))
                             : ((e.delegate = this.eat(x.star)), (e.argument = this.parseMaybeAssign())),
                         this.finishNode(e, "YieldExpression")
                     );
@@ -2692,7 +2692,7 @@ const PZVERSION = "1.0.102";
                 (ee.parseAwait = function () {
                     this.awaitPos || (this.awaitPos = this.start);
                     var e = this.startNode();
-                    return this.next(), (e.argument = this.parseMaybeUnary(null, !0)), this.finishNode(e, "AwaitExpression");
+                    return this.next(), (e.argument = this.parseMaybeUnary(null, true)), this.finishNode(e, "AwaitExpression");
                 });
             var re = G.prototype;
             (re.raise = function (e, t) {
@@ -2717,7 +2717,7 @@ const PZVERSION = "1.0.102";
                     this.scopeStack.pop();
                 }),
                 (ie.declareName = function (e, t, r) {
-                    var i = !1;
+                    var i = false;
                     if (2 === t) {
                         var a = this.currentScope();
                         (i = a.lexical.indexOf(e) > -1 || a.var.indexOf(e) > -1), a.lexical.push(e);
@@ -2730,7 +2730,7 @@ const PZVERSION = "1.0.102";
                     } else
                         for (var o = this.scopeStack.length - 1; o >= 0; --o) {
                             var p = this.scopeStack[o];
-                            if ((p.lexical.indexOf(e) > -1 && !(32 & p.flags) && p.lexical[0] === e && (i = !0), p.var.push(e), p.flags & A)) break;
+                            if ((p.lexical.indexOf(e) > -1 && !(32 & p.flags) && p.lexical[0] === e && (i = true), p.var.push(e), p.flags & A)) break;
                         }
                     i && this.raiseRecoverable(r, "Identifier '" + e + "' has already been declared");
                 }),
@@ -2777,18 +2777,18 @@ const PZVERSION = "1.0.102";
                     (this.token = e), (this.isExpr = !!t), (this.preserveSpace = !!r), (this.override = i), (this.generator = !!a);
                 },
                 pe = {
-                    b_stat: new oe("{", !1),
-                    b_expr: new oe("{", !0),
-                    b_tmpl: new oe("${", !1),
-                    p_stat: new oe("(", !1),
-                    p_expr: new oe("(", !0),
-                    q_tmpl: new oe("`", !0, !0, function (e) {
+                    b_stat: new oe("{", false),
+                    b_expr: new oe("{", true),
+                    b_tmpl: new oe("${", false),
+                    p_stat: new oe("(", false),
+                    p_expr: new oe("(", true),
+                    q_tmpl: new oe("`", true, true, function (e) {
                         return e.tryReadTemplateToken();
                     }),
-                    f_stat: new oe("function", !1),
-                    f_expr: new oe("function", !0),
-                    f_expr_gen: new oe("function", !0, !1, null, !0),
-                    f_gen: new oe("function", !1, !1, null, !0),
+                    f_stat: new oe("function", false),
+                    f_expr: new oe("function", true),
+                    f_expr_gen: new oe("function", true, false, null, true),
+                    f_gen: new oe("function", false, false, null, true),
                 },
                 le = G.prototype;
             (le.initialContext = function () {
@@ -2811,49 +2811,49 @@ const PZVERSION = "1.0.102";
                         var t = this.context[e];
                         if ("function" === t.token) return t.generator;
                     }
-                    return !1;
+                    return false;
                 }),
                 (le.updateContext = function (e) {
                     var t,
                         r = this.type;
-                    r.keyword && e === x.dot ? (this.exprAllowed = !1) : (t = r.updateContext) ? t.call(this, e) : (this.exprAllowed = r.beforeExpr);
+                    r.keyword && e === x.dot ? (this.exprAllowed = false) : (t = r.updateContext) ? t.call(this, e) : (this.exprAllowed = r.beforeExpr);
                 }),
                 (x.parenR.updateContext = x.braceR.updateContext = function () {
                     if (1 !== this.context.length) {
                         var e = this.context.pop();
                         e === pe.b_stat && "function" === this.curContext().token && (e = this.context.pop()), (this.exprAllowed = !e.isExpr);
-                    } else this.exprAllowed = !0;
+                    } else this.exprAllowed = true;
                 }),
                 (x.braceL.updateContext = function (e) {
-                    this.context.push(this.braceIsBlock(e) ? pe.b_stat : pe.b_expr), (this.exprAllowed = !0);
+                    this.context.push(this.braceIsBlock(e) ? pe.b_stat : pe.b_expr), (this.exprAllowed = true);
                 }),
                 (x.dollarBraceL.updateContext = function () {
-                    this.context.push(pe.b_tmpl), (this.exprAllowed = !0);
+                    this.context.push(pe.b_tmpl), (this.exprAllowed = true);
                 }),
                 (x.parenL.updateContext = function (e) {
                     var t = e === x._if || e === x._for || e === x._with || e === x._while;
-                    this.context.push(t ? pe.p_stat : pe.p_expr), (this.exprAllowed = !0);
+                    this.context.push(t ? pe.p_stat : pe.p_expr), (this.exprAllowed = true);
                 }),
                 (x.incDec.updateContext = function () {}),
                 (x._function.updateContext = x._class.updateContext = function (e) {
                     !e.beforeExpr || e === x.semi || e === x._else || (e === x._return && P.test(this.input.slice(this.lastTokEnd, this.start))) || ((e === x.colon || e === x.braceL) && this.curContext() === pe.b_stat)
                         ? this.context.push(pe.f_stat)
                         : this.context.push(pe.f_expr),
-                        (this.exprAllowed = !1);
+                        (this.exprAllowed = false);
                 }),
                 (x.backQuote.updateContext = function () {
-                    this.curContext() === pe.q_tmpl ? this.context.pop() : this.context.push(pe.q_tmpl), (this.exprAllowed = !1);
+                    this.curContext() === pe.q_tmpl ? this.context.pop() : this.context.push(pe.q_tmpl), (this.exprAllowed = false);
                 }),
                 (x.star.updateContext = function (e) {
                     if (e === x._function) {
                         var t = this.context.length - 1;
                         this.context[t] === pe.f_expr ? (this.context[t] = pe.f_expr_gen) : (this.context[t] = pe.f_gen);
                     }
-                    this.exprAllowed = !0;
+                    this.exprAllowed = true;
                 }),
                 (x.name.updateContext = function (e) {
-                    var t = !1;
-                    this.options.ecmaVersion >= 6 && e !== x.dot && (("of" === this.value && !this.exprAllowed) || ("yield" === this.value && this.inGeneratorContext())) && (t = !0), (this.exprAllowed = t);
+                    var t = false;
+                    this.options.ecmaVersion >= 6 && e !== x.dot && (("of" === this.value && !this.exprAllowed) || ("yield" === this.value && this.inGeneratorContext())) && (t = true), (this.exprAllowed = t);
                 });
             var he = {
                 $LONE: [
@@ -3321,12 +3321,12 @@ const PZVERSION = "1.0.102";
                         (this.source = ""),
                         (this.flags = ""),
                         (this.start = 0),
-                        (this.switchU = !1),
-                        (this.switchN = !1),
+                        (this.switchU = false),
+                        (this.switchN = false),
                         (this.pos = 0),
                         (this.lastIntValue = 0),
                         (this.lastStringValue = ""),
-                        (this.lastAssertionIsQuantifiable = !1),
+                        (this.lastAssertionIsQuantifiable = false),
                         (this.numCapturingParens = 0),
                         (this.maxBackReference = 0),
                         (this.groupNames = []),
@@ -3390,7 +3390,7 @@ const PZVERSION = "1.0.102";
                     this.pos = this.nextIndex(this.pos);
                 }),
                 (ue.prototype.eat = function (e) {
-                    return this.current() === e && (this.advance(), !0);
+                    return this.current() === e && (this.advance(), true);
                 }),
                 (ce.validateRegExpFlags = function (e) {
                     for (var t = e.validFlags, r = e.flags, i = 0; i < r.length; i++) {
@@ -3399,13 +3399,13 @@ const PZVERSION = "1.0.102";
                     }
                 }),
                 (ce.validateRegExpPattern = function (e) {
-                    this.regexp_pattern(e), !e.switchN && this.options.ecmaVersion >= 9 && e.groupNames.length > 0 && ((e.switchN = !0), this.regexp_pattern(e));
+                    this.regexp_pattern(e), !e.switchN && this.options.ecmaVersion >= 9 && e.groupNames.length > 0 && ((e.switchN = true), this.regexp_pattern(e));
                 }),
                 (ce.regexp_pattern = function (e) {
                     (e.pos = 0),
                         (e.lastIntValue = 0),
                         (e.lastStringValue = ""),
-                        (e.lastAssertionIsQuantifiable = !1),
+                        (e.lastAssertionIsQuantifiable = false),
                         (e.numCapturingParens = 0),
                         (e.maxBackReference = 0),
                         (e.groupNames.length = 0),
@@ -3420,31 +3420,31 @@ const PZVERSION = "1.0.102";
                 }),
                 (ce.regexp_disjunction = function (e) {
                     for (this.regexp_alternative(e); e.eat(124); ) this.regexp_alternative(e);
-                    this.regexp_eatQuantifier(e, !0) && e.raise("Nothing to repeat"), e.eat(123) && e.raise("Lone quantifier brackets");
+                    this.regexp_eatQuantifier(e, true) && e.raise("Nothing to repeat"), e.eat(123) && e.raise("Lone quantifier brackets");
                 }),
                 (ce.regexp_alternative = function (e) {
                     for (; e.pos < e.source.length && this.regexp_eatTerm(e); );
                 }),
                 (ce.regexp_eatTerm = function (e) {
                     return this.regexp_eatAssertion(e)
-                        ? (e.lastAssertionIsQuantifiable && this.regexp_eatQuantifier(e) && e.switchU && e.raise("Invalid quantifier"), !0)
-                        : !(e.switchU ? !this.regexp_eatAtom(e) : !this.regexp_eatExtendedAtom(e)) && (this.regexp_eatQuantifier(e), !0);
+                        ? (e.lastAssertionIsQuantifiable && this.regexp_eatQuantifier(e) && e.switchU && e.raise("Invalid quantifier"), true)
+                        : !(e.switchU ? !this.regexp_eatAtom(e) : !this.regexp_eatExtendedAtom(e)) && (this.regexp_eatQuantifier(e), true);
                 }),
                 (ce.regexp_eatAssertion = function (e) {
                     var t = e.pos;
-                    if (((e.lastAssertionIsQuantifiable = !1), e.eat(94) || e.eat(36))) return !0;
+                    if (((e.lastAssertionIsQuantifiable = false), e.eat(94) || e.eat(36))) return true;
                     if (e.eat(92)) {
-                        if (e.eat(66) || e.eat(98)) return !0;
+                        if (e.eat(66) || e.eat(98)) return true;
                         e.pos = t;
                     }
                     if (e.eat(40) && e.eat(63)) {
-                        var r = !1;
-                        if ((this.options.ecmaVersion >= 9 && (r = e.eat(60)), e.eat(61) || e.eat(33))) return this.regexp_disjunction(e), e.eat(41) || e.raise("Unterminated group"), (e.lastAssertionIsQuantifiable = !r), !0;
+                        var r = false;
+                        if ((this.options.ecmaVersion >= 9 && (r = e.eat(60)), e.eat(61) || e.eat(33))) return this.regexp_disjunction(e), e.eat(41) || e.raise("Unterminated group"), (e.lastAssertionIsQuantifiable = !r), true;
                     }
-                    return (e.pos = t), !1;
+                    return (e.pos = t), false;
                 }),
                 (ce.regexp_eatQuantifier = function (e, t) {
-                    return void 0 === t && (t = !1), !!this.regexp_eatQuantifierPrefix(e, t) && (e.eat(63), !0);
+                    return undefined === t && (t = false), !!this.regexp_eatQuantifierPrefix(e, t) && (e.eat(63), true);
                 }),
                 (ce.regexp_eatQuantifierPrefix = function (e, t) {
                     return e.eat(42) || e.eat(43) || e.eat(63) || this.regexp_eatBracedQuantifier(e, t);
@@ -3455,10 +3455,10 @@ const PZVERSION = "1.0.102";
                         var i = 0,
                             a = -1;
                         if (this.regexp_eatDecimalDigits(e) && ((i = e.lastIntValue), e.eat(44) && this.regexp_eatDecimalDigits(e) && (a = e.lastIntValue), e.eat(125)))
-                            return -1 !== a && a < i && !t && e.raise("numbers out of order in {} quantifier"), !0;
+                            return -1 !== a && a < i && !t && e.raise("numbers out of order in {} quantifier"), true;
                         e.switchU && !t && e.raise("Incomplete quantifier"), (e.pos = r);
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_eatAtom = function (e) {
                     return this.regexp_eatPatternCharacters(e) || e.eat(46) || this.regexp_eatReverseSolidusAtomEscape(e) || this.regexp_eatCharacterClass(e) || this.regexp_eatUncapturingGroup(e) || this.regexp_eatCapturingGroup(e);
@@ -3466,28 +3466,28 @@ const PZVERSION = "1.0.102";
                 (ce.regexp_eatReverseSolidusAtomEscape = function (e) {
                     var t = e.pos;
                     if (e.eat(92)) {
-                        if (this.regexp_eatAtomEscape(e)) return !0;
+                        if (this.regexp_eatAtomEscape(e)) return true;
                         e.pos = t;
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_eatUncapturingGroup = function (e) {
                     var t = e.pos;
                     if (e.eat(40)) {
                         if (e.eat(63) && e.eat(58)) {
-                            if ((this.regexp_disjunction(e), e.eat(41))) return !0;
+                            if ((this.regexp_disjunction(e), e.eat(41))) return true;
                             e.raise("Unterminated group");
                         }
                         e.pos = t;
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_eatCapturingGroup = function (e) {
                     if (e.eat(40)) {
-                        if ((this.options.ecmaVersion >= 9 ? this.regexp_groupSpecifier(e) : 63 === e.current() && e.raise("Invalid group"), this.regexp_disjunction(e), e.eat(41))) return (e.numCapturingParens += 1), !0;
+                        if ((this.options.ecmaVersion >= 9 ? this.regexp_groupSpecifier(e) : 63 === e.current() && e.raise("Invalid group"), this.regexp_disjunction(e), e.eat(41))) return (e.numCapturingParens += 1), true;
                         e.raise("Unterminated group");
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_eatExtendedAtom = function (e) {
                     return (
@@ -3501,11 +3501,11 @@ const PZVERSION = "1.0.102";
                     );
                 }),
                 (ce.regexp_eatInvalidBracedQuantifier = function (e) {
-                    return this.regexp_eatBracedQuantifier(e, !0) && e.raise("Nothing to repeat"), !1;
+                    return this.regexp_eatBracedQuantifier(e, true) && e.raise("Nothing to repeat"), false;
                 }),
                 (ce.regexp_eatSyntaxCharacter = function (e) {
                     var t = e.current();
-                    return !!fe(t) && ((e.lastIntValue = t), e.advance(), !0);
+                    return !!fe(t) && ((e.lastIntValue = t), e.advance(), true);
                 }),
                 (ce.regexp_eatPatternCharacters = function (e) {
                     for (var t = e.pos, r = 0; -1 !== (r = e.current()) && !fe(r); ) e.advance();
@@ -3513,7 +3513,7 @@ const PZVERSION = "1.0.102";
                 }),
                 (ce.regexp_eatExtendedPatternCharacter = function (e) {
                     var t = e.current();
-                    return !(-1 === t || 36 === t || (t >= 40 && t <= 43) || 46 === t || 63 === t || 91 === t || 94 === t || 124 === t) && (e.advance(), !0);
+                    return !(-1 === t || 36 === t || (t >= 40 && t <= 43) || 46 === t || 63 === t || 91 === t || 94 === t || 124 === t) && (e.advance(), true);
                 }),
                 (ce.regexp_groupSpecifier = function (e) {
                     if (e.eat(63)) {
@@ -3523,17 +3523,17 @@ const PZVERSION = "1.0.102";
                 }),
                 (ce.regexp_eatGroupName = function (e) {
                     if (((e.lastStringValue = ""), e.eat(60))) {
-                        if (this.regexp_eatRegExpIdentifierName(e) && e.eat(62)) return !0;
+                        if (this.regexp_eatRegExpIdentifierName(e) && e.eat(62)) return true;
                         e.raise("Invalid capture group name");
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_eatRegExpIdentifierName = function (e) {
                     if (((e.lastStringValue = ""), this.regexp_eatRegExpIdentifierStart(e))) {
                         for (e.lastStringValue += de(e.lastIntValue); this.regexp_eatRegExpIdentifierPart(e); ) e.lastStringValue += de(e.lastIntValue);
-                        return !0;
+                        return true;
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_eatRegExpIdentifierStart = function (e) {
                     var t = e.pos,
@@ -3542,10 +3542,10 @@ const PZVERSION = "1.0.102";
                         e.advance(),
                         92 === r && this.regexp_eatRegExpUnicodeEscapeSequence(e) && (r = e.lastIntValue),
                         (function (e) {
-                            return u(e, !0) || 36 === e || 95 === e;
+                            return u(e, true) || 36 === e || 95 === e;
                         })(r)
-                            ? ((e.lastIntValue = r), !0)
-                            : ((e.pos = t), !1)
+                            ? ((e.lastIntValue = r), true)
+                            : ((e.pos = t), false)
                     );
                 }),
                 (ce.regexp_eatRegExpIdentifierPart = function (e) {
@@ -3555,34 +3555,34 @@ const PZVERSION = "1.0.102";
                         e.advance(),
                         92 === r && this.regexp_eatRegExpUnicodeEscapeSequence(e) && (r = e.lastIntValue),
                         (function (e) {
-                            return d(e, !0) || 36 === e || 95 === e || 8204 === e || 8205 === e;
+                            return d(e, true) || 36 === e || 95 === e || 8204 === e || 8205 === e;
                         })(r)
-                            ? ((e.lastIntValue = r), !0)
-                            : ((e.pos = t), !1)
+                            ? ((e.lastIntValue = r), true)
+                            : ((e.pos = t), false)
                     );
                 }),
                 (ce.regexp_eatAtomEscape = function (e) {
                     return (
                         !!(this.regexp_eatBackReference(e) || this.regexp_eatCharacterClassEscape(e) || this.regexp_eatCharacterEscape(e) || (e.switchN && this.regexp_eatKGroupName(e))) ||
-                        (e.switchU && (99 === e.current() && e.raise("Invalid unicode escape"), e.raise("Invalid escape")), !1)
+                        (e.switchU && (99 === e.current() && e.raise("Invalid unicode escape"), e.raise("Invalid escape")), false)
                     );
                 }),
                 (ce.regexp_eatBackReference = function (e) {
                     var t = e.pos;
                     if (this.regexp_eatDecimalEscape(e)) {
                         var r = e.lastIntValue;
-                        if (e.switchU) return r > e.maxBackReference && (e.maxBackReference = r), !0;
-                        if (r <= e.numCapturingParens) return !0;
+                        if (e.switchU) return r > e.maxBackReference && (e.maxBackReference = r), true;
+                        if (r <= e.numCapturingParens) return true;
                         e.pos = t;
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_eatKGroupName = function (e) {
                     if (e.eat(107)) {
-                        if (this.regexp_eatGroupName(e)) return e.backReferenceNames.push(e.lastStringValue), !0;
+                        if (this.regexp_eatGroupName(e)) return e.backReferenceNames.push(e.lastStringValue), true;
                         e.raise("Invalid named reference");
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_eatCharacterEscape = function (e) {
                     return (
@@ -3598,29 +3598,29 @@ const PZVERSION = "1.0.102";
                 (ce.regexp_eatCControlLetter = function (e) {
                     var t = e.pos;
                     if (e.eat(99)) {
-                        if (this.regexp_eatControlLetter(e)) return !0;
+                        if (this.regexp_eatControlLetter(e)) return true;
                         e.pos = t;
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_eatZero = function (e) {
-                    return 48 === e.current() && !ve(e.lookahead()) && ((e.lastIntValue = 0), e.advance(), !0);
+                    return 48 === e.current() && !ve(e.lookahead()) && ((e.lastIntValue = 0), e.advance(), true);
                 }),
                 (ce.regexp_eatControlEscape = function (e) {
                     var t = e.current();
                     return 116 === t
-                        ? ((e.lastIntValue = 9), e.advance(), !0)
+                        ? ((e.lastIntValue = 9), e.advance(), true)
                         : 110 === t
-                        ? ((e.lastIntValue = 10), e.advance(), !0)
+                        ? ((e.lastIntValue = 10), e.advance(), true)
                         : 118 === t
-                        ? ((e.lastIntValue = 11), e.advance(), !0)
+                        ? ((e.lastIntValue = 11), e.advance(), true)
                         : 102 === t
-                        ? ((e.lastIntValue = 12), e.advance(), !0)
-                        : 114 === t && ((e.lastIntValue = 13), e.advance(), !0);
+                        ? ((e.lastIntValue = 12), e.advance(), true)
+                        : 114 === t && ((e.lastIntValue = 13), e.advance(), true);
                 }),
                 (ce.regexp_eatControlLetter = function (e) {
                     var t = e.current();
-                    return !!me(t) && ((e.lastIntValue = t % 32), e.advance(), !0);
+                    return !!me(t) && ((e.lastIntValue = t % 32), e.advance(), true);
                 }),
                 (ce.regexp_eatRegExpUnicodeEscapeSequence = function (e) {
                     var t,
@@ -3632,21 +3632,21 @@ const PZVERSION = "1.0.102";
                                 var a = e.pos;
                                 if (e.eat(92) && e.eat(117) && this.regexp_eatFixedHexDigits(e, 4)) {
                                     var s = e.lastIntValue;
-                                    if (s >= 56320 && s <= 57343) return (e.lastIntValue = 1024 * (i - 55296) + (s - 56320) + 65536), !0;
+                                    if (s >= 56320 && s <= 57343) return (e.lastIntValue = 1024 * (i - 55296) + (s - 56320) + 65536), true;
                                 }
                                 (e.pos = a), (e.lastIntValue = i);
                             }
-                            return !0;
+                            return true;
                         }
-                        if (e.switchU && e.eat(123) && this.regexp_eatHexDigits(e) && e.eat(125) && (t = e.lastIntValue) >= 0 && t <= 1114111) return !0;
+                        if (e.switchU && e.eat(123) && this.regexp_eatHexDigits(e) && e.eat(125) && (t = e.lastIntValue) >= 0 && t <= 1114111) return true;
                         e.switchU && e.raise("Invalid unicode escape"), (e.pos = r);
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_eatIdentityEscape = function (e) {
-                    if (e.switchU) return !!this.regexp_eatSyntaxCharacter(e) || (!!e.eat(47) && ((e.lastIntValue = 47), !0));
+                    if (e.switchU) return !!this.regexp_eatSyntaxCharacter(e) || (!!e.eat(47) && ((e.lastIntValue = 47), true));
                     var t = e.current();
-                    return !(99 === t || (e.switchN && 107 === t)) && ((e.lastIntValue = t), e.advance(), !0);
+                    return !(99 === t || (e.switchN && 107 === t)) && ((e.lastIntValue = t), e.advance(), true);
                 }),
                 (ce.regexp_eatDecimalEscape = function (e) {
                     e.lastIntValue = 0;
@@ -3655,9 +3655,9 @@ const PZVERSION = "1.0.102";
                         do {
                             (e.lastIntValue = 10 * e.lastIntValue + (t - 48)), e.advance();
                         } while ((t = e.current()) >= 48 && t <= 57);
-                        return !0;
+                        return true;
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_eatCharacterClassEscape = function (e) {
                     var t = e.current();
@@ -3666,12 +3666,12 @@ const PZVERSION = "1.0.102";
                             return 100 === e || 68 === e || 115 === e || 83 === e || 119 === e || 87 === e;
                         })(t)
                     )
-                        return (e.lastIntValue = -1), e.advance(), !0;
+                        return (e.lastIntValue = -1), e.advance(), true;
                     if (e.switchU && this.options.ecmaVersion >= 9 && (80 === t || 112 === t)) {
-                        if (((e.lastIntValue = -1), e.advance(), e.eat(123) && this.regexp_eatUnicodePropertyValueExpression(e) && e.eat(125))) return !0;
+                        if (((e.lastIntValue = -1), e.advance(), e.eat(123) && this.regexp_eatUnicodePropertyValueExpression(e) && e.eat(125))) return true;
                         e.raise("Invalid property name");
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_eatUnicodePropertyValueExpression = function (e) {
                     var t = e.pos;
@@ -3679,14 +3679,14 @@ const PZVERSION = "1.0.102";
                         var r = e.lastStringValue;
                         if (this.regexp_eatUnicodePropertyValue(e)) {
                             var i = e.lastStringValue;
-                            return this.regexp_validateUnicodePropertyNameAndValue(e, r, i), !0;
+                            return this.regexp_validateUnicodePropertyNameAndValue(e, r, i), true;
                         }
                     }
                     if (((e.pos = t), this.regexp_eatLoneUnicodePropertyNameOrValue(e))) {
                         var a = e.lastStringValue;
-                        return this.regexp_validateUnicodePropertyNameOrValue(e, a), !0;
+                        return this.regexp_validateUnicodePropertyNameOrValue(e, a), true;
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_validateUnicodePropertyNameAndValue = function (e, t, r) {
                     (he.hasOwnProperty(t) && -1 !== he[t].indexOf(r)) || e.raise("Invalid property name");
@@ -3709,10 +3709,10 @@ const PZVERSION = "1.0.102";
                 }),
                 (ce.regexp_eatCharacterClass = function (e) {
                     if (e.eat(91)) {
-                        if ((e.eat(94), this.regexp_classRanges(e), e.eat(93))) return !0;
+                        if ((e.eat(94), this.regexp_classRanges(e), e.eat(93))) return true;
                         e.raise("Unterminated character class");
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_classRanges = function (e) {
                     for (; this.regexp_eatClassAtom(e); ) {
@@ -3726,7 +3726,7 @@ const PZVERSION = "1.0.102";
                 (ce.regexp_eatClassAtom = function (e) {
                     var t = e.pos;
                     if (e.eat(92)) {
-                        if (this.regexp_eatClassEscape(e)) return !0;
+                        if (this.regexp_eatClassEscape(e)) return true;
                         if (e.switchU) {
                             var r = e.current();
                             (99 === r || Pe(r)) && e.raise("Invalid class escape"), e.raise("Invalid escape");
@@ -3734,29 +3734,29 @@ const PZVERSION = "1.0.102";
                         e.pos = t;
                     }
                     var i = e.current();
-                    return 93 !== i && ((e.lastIntValue = i), e.advance(), !0);
+                    return 93 !== i && ((e.lastIntValue = i), e.advance(), true);
                 }),
                 (ce.regexp_eatClassEscape = function (e) {
                     var t = e.pos;
-                    if (e.eat(98)) return (e.lastIntValue = 8), !0;
-                    if (e.switchU && e.eat(45)) return (e.lastIntValue = 45), !0;
+                    if (e.eat(98)) return (e.lastIntValue = 8), true;
+                    if (e.switchU && e.eat(45)) return (e.lastIntValue = 45), true;
                     if (!e.switchU && e.eat(99)) {
-                        if (this.regexp_eatClassControlLetter(e)) return !0;
+                        if (this.regexp_eatClassControlLetter(e)) return true;
                         e.pos = t;
                     }
                     return this.regexp_eatCharacterClassEscape(e) || this.regexp_eatCharacterEscape(e);
                 }),
                 (ce.regexp_eatClassControlLetter = function (e) {
                     var t = e.current();
-                    return !(!ve(t) && 95 !== t) && ((e.lastIntValue = t % 32), e.advance(), !0);
+                    return !(!ve(t) && 95 !== t) && ((e.lastIntValue = t % 32), e.advance(), true);
                 }),
                 (ce.regexp_eatHexEscapeSequence = function (e) {
                     var t = e.pos;
                     if (e.eat(120)) {
-                        if (this.regexp_eatFixedHexDigits(e, 2)) return !0;
+                        if (this.regexp_eatFixedHexDigits(e, 2)) return true;
                         e.switchU && e.raise("Invalid escape"), (e.pos = t);
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_eatDecimalDigits = function (e) {
                     var t = e.pos,
@@ -3777,23 +3777,23 @@ const PZVERSION = "1.0.102";
                             var r = e.lastIntValue;
                             t <= 3 && this.regexp_eatOctalDigit(e) ? (e.lastIntValue = 64 * t + 8 * r + e.lastIntValue) : (e.lastIntValue = 8 * t + r);
                         } else e.lastIntValue = t;
-                        return !0;
+                        return true;
                     }
-                    return !1;
+                    return false;
                 }),
                 (ce.regexp_eatOctalDigit = function (e) {
                     var t = e.current();
-                    return Pe(t) ? ((e.lastIntValue = t - 48), e.advance(), !0) : ((e.lastIntValue = 0), !1);
+                    return Pe(t) ? ((e.lastIntValue = t - 48), e.advance(), true) : ((e.lastIntValue = 0), false);
                 }),
                 (ce.regexp_eatFixedHexDigits = function (e, t) {
                     var r = e.pos;
                     e.lastIntValue = 0;
                     for (var i = 0; i < t; ++i) {
                         var a = e.current();
-                        if (!be(a)) return (e.pos = r), !1;
+                        if (!be(a)) return (e.pos = r), false;
                         (e.lastIntValue = 16 * e.lastIntValue + xe(a)), e.advance();
                     }
-                    return !0;
+                    return true;
                 });
             var we = function (e) {
                     (this.type = e.type), (this.value = e.value), (this.start = e.start), (this.end = e.end), e.options.locations && (this.loc = new L(e, e.startLoc, e.endLoc)), e.options.ranges && (this.range = [e.start, e.end]);
@@ -3846,11 +3846,11 @@ const PZVERSION = "1.0.102";
                         i = this.input.indexOf("*/", (this.pos += 2));
                     if ((-1 === i && this.raise(this.pos - 2, "Unterminated comment"), (this.pos = i + 2), this.options.locations))
                         for (w.lastIndex = r; (e = w.exec(this.input)) && e.index < this.pos; ) ++this.curLine, (this.lineStart = e.index + e[0].length);
-                    this.options.onComment && this.options.onComment(!0, this.input.slice(r + 2, i), r, this.pos, t, this.curPosition());
+                    this.options.onComment && this.options.onComment(true, this.input.slice(r + 2, i), r, this.pos, t, this.curPosition());
                 }),
                 (Se.skipLineComment = function (e) {
                     for (var t = this.pos, r = this.options.onComment && this.curPosition(), i = this.input.charCodeAt((this.pos += e)); this.pos < this.input.length && !S(i); ) i = this.input.charCodeAt(++this.pos);
-                    this.options.onComment && this.options.onComment(!1, this.input.slice(t + e, this.pos), t, this.pos, r, this.curPosition());
+                    this.options.onComment && this.options.onComment(false, this.input.slice(t + e, this.pos), t, this.pos, r, this.curPosition());
                 }),
                 (Se.skipSpace = function () {
                     e: for (; this.pos < this.input.length; ) {
@@ -3892,7 +3892,7 @@ const PZVERSION = "1.0.102";
                 }),
                 (Se.readToken_dot = function () {
                     var e = this.input.charCodeAt(this.pos + 1);
-                    if (e >= 48 && e <= 57) return this.readNumber(!0);
+                    if (e >= 48 && e <= 57) return this.readNumber(true);
                     var t = this.input.charCodeAt(this.pos + 2);
                     return this.options.ecmaVersion >= 6 && 46 === e && 46 === t ? ((this.pos += 3), this.finishToken(x.ellipsis)) : (++this.pos, this.finishToken(x.dot));
                 }),
@@ -3984,7 +3984,7 @@ const PZVERSION = "1.0.102";
                         case 55:
                         case 56:
                         case 57:
-                            return this.readNumber(!1);
+                            return this.readNumber(false);
                         case 34:
                         case 39:
                             return this.readString(e);
@@ -4020,10 +4020,10 @@ const PZVERSION = "1.0.102";
                     for (var e, t, r = this.pos; ; ) {
                         this.pos >= this.input.length && this.raise(r, "Unterminated regular expression");
                         var i = this.input.charAt(this.pos);
-                        if ((P.test(i) && this.raise(r, "Unterminated regular expression"), e)) e = !1;
+                        if ((P.test(i) && this.raise(r, "Unterminated regular expression"), e)) e = false;
                         else {
-                            if ("[" === i) t = !0;
-                            else if ("]" === i && t) t = !1;
+                            if ("[" === i) t = true;
+                            else if ("]" === i && t) t = false;
                             else if ("/" === i && !t) break;
                             e = "\\" === i;
                         }
@@ -4045,7 +4045,7 @@ const PZVERSION = "1.0.102";
                 (Se.readInt = function (e, t) {
                     for (var r = this.pos, i = 0, a = 0, s = null == t ? 1 / 0 : t; a < s; ++a) {
                         var n = this.input.charCodeAt(this.pos),
-                            o = void 0;
+                            o = undefined;
                         if ((o = n >= 97 ? n - 97 + 10 : n >= 65 ? n - 65 + 10 : n >= 48 && n <= 57 ? n - 48 : 1 / 0) >= e) break;
                         ++this.pos, (i = i * e + o);
                     }
@@ -4060,7 +4060,7 @@ const PZVERSION = "1.0.102";
                     var t = this.pos;
                     e || null !== this.readInt(10) || this.raise(t, "Invalid number");
                     var r = this.pos - t >= 2 && 48 === this.input.charCodeAt(t);
-                    r && this.strict && this.raise(t, "Invalid number"), r && /[89]/.test(this.input.slice(t, this.pos)) && (r = !1);
+                    r && this.strict && this.raise(t, "Invalid number"), r && /[89]/.test(this.input.slice(t, this.pos)) && (r = false);
                     var i = this.input.charCodeAt(this.pos);
                     46 !== i || r || (++this.pos, this.readInt(10), (i = this.input.charCodeAt(this.pos))),
                         (69 !== i && 101 !== i) || r || ((43 !== (i = this.input.charCodeAt(++this.pos)) && 45 !== i) || ++this.pos, null === this.readInt(10) && this.raise(t, "Invalid number")),
@@ -4084,20 +4084,20 @@ const PZVERSION = "1.0.102";
                         this.pos >= this.input.length && this.raise(this.start, "Unterminated string constant");
                         var i = this.input.charCodeAt(this.pos);
                         if (i === e) break;
-                        92 === i ? ((t += this.input.slice(r, this.pos)), (t += this.readEscapedChar(!1)), (r = this.pos)) : (S(i, this.options.ecmaVersion >= 10) && this.raise(this.start, "Unterminated string constant"), ++this.pos);
+                        92 === i ? ((t += this.input.slice(r, this.pos)), (t += this.readEscapedChar(false)), (r = this.pos)) : (S(i, this.options.ecmaVersion >= 10) && this.raise(this.start, "Unterminated string constant"), ++this.pos);
                     }
                     return (t += this.input.slice(r, this.pos++)), this.finishToken(x.string, t);
                 });
             var Te = {};
             (Se.tryReadTemplateToken = function () {
-                this.inTemplateElement = !0;
+                this.inTemplateElement = true;
                 try {
                     this.readTmplToken();
                 } catch (e) {
                     if (e !== Te) throw e;
                     this.readInvalidTemplateToken();
                 }
-                this.inTemplateElement = !1;
+                this.inTemplateElement = false;
             }),
                 (Se.invalidStringToken = function (e, t) {
                     if (this.inTemplateElement && this.options.ecmaVersion >= 9) throw Te;
@@ -4113,7 +4113,7 @@ const PZVERSION = "1.0.102";
                                 : 36 === r
                                 ? ((this.pos += 2), this.finishToken(x.dollarBraceL))
                                 : (++this.pos, this.finishToken(x.backQuote));
-                        if (92 === r) (e += this.input.slice(t, this.pos)), (e += this.readEscapedChar(!0)), (t = this.pos);
+                        if (92 === r) (e += this.input.slice(t, this.pos)), (e += this.readEscapedChar(true)), (t = this.pos);
                         else if (S(r)) {
                             switch (((e += this.input.slice(t, this.pos)), ++this.pos, r)) {
                                 case 13:
@@ -4185,19 +4185,19 @@ const PZVERSION = "1.0.102";
                     return null === r && this.invalidStringToken(t, "Bad character escape sequence"), r;
                 }),
                 (Se.readWord1 = function () {
-                    this.containsEsc = !1;
-                    for (var e = "", t = !0, r = this.pos, i = this.options.ecmaVersion >= 6; this.pos < this.input.length; ) {
+                    this.containsEsc = false;
+                    for (var e = "", t = true, r = this.pos, i = this.options.ecmaVersion >= 6; this.pos < this.input.length; ) {
                         var a = this.fullCharCodeAtPos();
                         if (d(a, i)) this.pos += a <= 65535 ? 1 : 2;
                         else {
                             if (92 !== a) break;
-                            (this.containsEsc = !0), (e += this.input.slice(r, this.pos));
+                            (this.containsEsc = true), (e += this.input.slice(r, this.pos));
                             var s = this.pos;
                             117 !== this.input.charCodeAt(++this.pos) && this.invalidStringToken(this.pos, "Expecting Unicode escape sequence \\uXXXX"), ++this.pos;
                             var n = this.readCodePoint();
                             (t ? u : d)(n, i) || this.invalidStringToken(s, "Invalid Unicode escape"), (e += Ee(n)), (r = this.pos);
                         }
-                        t = !1;
+                        t = false;
                     }
                     return e + this.input.slice(r, this.pos);
                 }),
@@ -4234,13 +4234,13 @@ const PZVERSION = "1.0.102";
                 (e.lineBreak = P),
                 (e.lineBreakG = w),
                 (e.nonASCIIwhitespace = E),
-                Object.defineProperty(e, "__esModule", { value: !0 });
+                Object.defineProperty(e, "__esModule", { value: true });
         })((e.acorn = {}));
     })(this),
     (function (e, t) {
         var r = {};
         !(function (e) {
-            Object.defineProperty(e, "__esModule", { value: !0 }),
+            Object.defineProperty(e, "__esModule", { value: true }),
                 (e.generate = function (e, t) {
                     var r = new v(t);
                     return r.generator[e.type](e, r), r.output;
@@ -4316,10 +4316,10 @@ const PZVERSION = "1.0.102";
                 var o = e.generator;
                 !(function (e, t, s) {
                     var n = a[e.type];
-                    if (n === i) return !0;
+                    if (n === i) return true;
                     var o = a[t.type];
                     if (n !== o) return n < o;
-                    if (13 !== n && 14 !== n) return !1;
+                    if (13 !== n && 14 !== n) return false;
                     if ("**" === e.operator && "**" === t.operator) return !s;
                     if (s) return r[e.operator] <= r[t.operator];
                     return r[e.operator] < r[t.operator];
@@ -4352,12 +4352,12 @@ const PZVERSION = "1.0.102";
                     for (var s = 1; s < a; s++) e.write(", "), r.VariableDeclarator(i[s], e);
                 }
             }
-            var h = void 0,
-                c = void 0,
-                u = void 0,
-                d = void 0,
-                f = void 0,
-                m = void 0,
+            var h = undefined,
+                c = undefined,
+                u = undefined,
+                d = undefined,
+                f = undefined,
+                m = undefined,
                 y = (e.baseGenerator = {
                     Program: function (e, t) {
                         var r = t.indent.repeat(t.indentLevel),
@@ -4640,7 +4640,7 @@ const PZVERSION = "1.0.102";
                         this[e.left.type](e.left, t), t.write(" = "), this[e.right.type](e.right, t);
                     },
                     BinaryExpression: (d = function (e, t) {
-                        "in" === e.operator ? (t.write("("), n(t, e.left, e, !1), t.write(" " + e.operator + " "), n(t, e.right, e, !0), t.write(")")) : (n(t, e.left, e, !1), t.write(" " + e.operator + " "), n(t, e.right, e, !0));
+                        "in" === e.operator ? (t.write("("), n(t, e.left, e, false), t.write(" " + e.operator + " "), n(t, e.right, e, true), t.write(")")) : (n(t, e.left, e, false), t.write(" " + e.operator + " "), n(t, e.right, e, true));
                     }),
                     LogicalExpression: d,
                     ConditionalExpression: function (e, t) {
@@ -4658,8 +4658,8 @@ const PZVERSION = "1.0.102";
                                 for (; null != t; ) {
                                     var r = t,
                                         i = r.type;
-                                    if ("C" === i[0] && "a" === i[1]) return !0;
-                                    if ("M" !== i[0] || "e" !== i[1] || "m" !== i[2]) return !1;
+                                    if ("C" === i[0] && "a" === i[1]) return true;
+                                    if ("M" !== i[0] || "e" !== i[1] || "m" !== i[2]) return false;
                                     t = t.object;
                                 }
                             })(e.callee)
@@ -4708,7 +4708,7 @@ const PZVERSION = "1.0.102";
                                 (this.line = 1),
                                 (this.column = 0),
                                 (this.lineEndSize = this.lineEnd.split("\n").length - 1),
-                                (this.mapping = { original: null, generated: this, name: void 0, source: r.sourceMap.file || r.sourceMap._file }));
+                                (this.mapping = { original: null, generated: this, name: undefined, source: r.sourceMap.file || r.sourceMap._file }));
                     }
                     return (
                         (e.prototype.write = function (e) {
@@ -4755,7 +4755,7 @@ const PZVERSION = "1.0.102";
         }
         addressLookup(e, t) {
             let r = e[(t = t || 0)];
-            return void 0 === r ? this : this.children[r].addressLookup(e, t + 1);
+            return undefined === r ? this : this.children[r].addressLookup(e, t + 1);
         }
         forEachItemOfType(e, t) {
             if ((this instanceof e && t(this), this.children)) for (let r = 0; r < this.children.length; r++) this.children[r].forEachItemOfType(e, t);
@@ -4785,8 +4785,8 @@ const PZVERSION = "1.0.102";
         constructor(e, t) {
             super(),
                 Object.defineProperties(this, {
-                    name: { value: "", writable: !0 },
-                    visible: { value: !0, writable: !0 },
+                    name: { value: "", writable: true },
+                    visible: { value: true, writable: true },
                     parent: { value: e || null },
                     type: { value: t || PZ.object },
                     onListChanged: { value: new PZ.observable() },
@@ -4820,7 +4820,7 @@ const PZVERSION = "1.0.102";
         }
         addressLookup(e, t) {
             let r = e[(t = t || 0)];
-            return void 0 === r ? this : this[r].addressLookup(e, t + 1);
+            return undefined === r ? this : this[r].addressLookup(e, t + 1);
         }
         traverse(e) {
             for (let t = 0; t < this.length; t++) this[t].traverse(e);
@@ -4846,16 +4846,16 @@ const PZVERSION = "1.0.102";
                     [-10, 0],
                     [10, 0],
                 ]),
-                (this.continuousTangent = !0),
+                (this.continuousTangent = true),
                 (this.tween = r);
         }
         load(e) {
             (this.value = Array.isArray(e.value) ? e.value.slice() : e.value),
                 (this.frame = e.frame),
                 (this.tween = e.tween),
-                void 0 !== e.controlPoints &&
+                undefined !== e.controlPoints &&
                     ((this.controlPoints[0][0] = e.controlPoints[0][0]), (this.controlPoints[0][1] = e.controlPoints[0][1]), (this.controlPoints[1][0] = e.controlPoints[1][0]), (this.controlPoints[1][1] = e.controlPoints[1][1])),
-                void 0 !== e.continuousTangent && (this.continuousTangent = e.continuousTangent);
+                undefined !== e.continuousTangent && (this.continuousTangent = e.continuousTangent);
         }
         get absoluteFrame() {
             return this.frame + this.parentObject.frameOffset;
@@ -4885,7 +4885,7 @@ const PZVERSION = "1.0.102";
                         return this._parent;
                     },
                 },
-                visible: { value: !0, writable: !0 },
+                visible: { value: true, writable: true },
                 type: { value: PZ.property },
                 frameOffset: {
                     get() {
@@ -4916,7 +4916,7 @@ const PZVERSION = "1.0.102";
             this.onListChanged.update();
         }
         _add(e, t) {
-            t instanceof PZ.property == !1 && t instanceof PZ.propertyList == !1 && (t = PZ.property.create(t)),
+            t instanceof PZ.property == false && t instanceof PZ.propertyList == false && (t = PZ.property.create(t)),
                 (this[e] = t),
                 t.parent || (t.parent = this),
                 t instanceof PZ.propertyList && t.onListChanged.watch(this.childListChanged_bound);
@@ -4963,7 +4963,7 @@ const PZVERSION = "1.0.102";
         }
         addressLookup(e, t) {
             let r = e[t];
-            return void 0 === r ? this : this[r].addressLookup(e, t + 1);
+            return undefined === r ? this : this[r].addressLookup(e, t + 1);
         }
         get parentObject() {
             return this.parent instanceof PZ.propertyList ? this.parent.parentObject : this.parent;
@@ -4980,9 +4980,9 @@ const PZVERSION = "1.0.102";
             let t;
             if (e.custom && e.dynamic && e.type > 0 && !e.objects) {
                 let t, r, i;
-                delete e.value, (e.group = !0), (e.objects = []), e.type === PZ.property.type.COLOR ? ((t = 3), (i = 1), (r = ["R", "G", "B"])) : ((t = e.type + 1), (i = 1), (r = ["X", "Y", "Z", "W"]));
+                delete e.value, (e.group = true), (e.objects = []), e.type === PZ.property.type.COLOR ? ((t = 3), (i = 1), (r = ["R", "G", "B"])) : ((t = e.type + 1), (i = 1), (r = ["X", "Y", "Z", "W"]));
                 for (let a = 0; a < t; a++) {
-                    let t = { dynamic: !0, name: r[a], type: PZ.property.type.NUMBER, value: i };
+                    let t = { dynamic: true, name: r[a], type: PZ.property.type.NUMBER, value: i };
                     e.type === PZ.property.type.COLOR && ((t.min = 0), (t.max = 1)), e.objects.push(t);
                 }
             }
@@ -4992,7 +4992,7 @@ const PZVERSION = "1.0.102";
             super(),
                 (this.definition = e),
                 (this.type = e),
-                e.name || ((this.properties = new PZ.propertyList(null, this)), (this.properties.visible = !1), (this.children = [this.properties]), this.properties.addAll(PZ.property.propertyDefinitions));
+                e.name || ((this.properties = new PZ.propertyList(null, this)), (this.properties.visible = false), (this.children = [this.properties]), this.properties.addAll(PZ.property.propertyDefinitions));
         }
         load(e) {
             this.properties && this.properties.load(e && e.properties);
@@ -5008,16 +5008,16 @@ const PZVERSION = "1.0.102";
     }),
     (PZ.property.prototype.baseTypeString = "property"),
     (PZ.property.type = { NUMBER: 0, VECTOR2: 1, VECTOR3: 2, VECTOR4: 3, COLOR: 4, GRADIENT: 5, CURVE: 10, OPTION: 6, TEXT: 7, ASSET: 8, LIST: 9, SHADER: 11 }),
-    (PZ.property.propertyDefinitions = { name: { visible: !1, name: "Name", type: PZ.property.type.TEXT, value: "Property" } }),
+    (PZ.property.propertyDefinitions = { name: { visible: false, name: "Name", type: PZ.property.type.TEXT, value: "Property" } }),
     (PZ.property.static = class extends PZ.property {
         constructor(e) {
-            super(e), (this.onChanged = new PZ.observable()), e.changed && this.onChanged.watch(e.changed.bind(this)), (this.value = void 0);
+            super(e), (this.onChanged = new PZ.observable()), e.changed && this.onChanged.watch(e.changed.bind(this)), (this.value = undefined);
         }
         get animated() {
-            return !1;
+            return false;
         }
         get interpolated() {
-            return !1;
+            return false;
         }
         toJSON() {
             let e = super.toJSON();
@@ -5026,7 +5026,7 @@ const PZVERSION = "1.0.102";
         load(e) {
             if ((super.load(e), e instanceof PZ.property)) e = e.value;
             else if ("object" == typeof e) e = e && e.value ? e.value : JSON.parse(JSON.stringify(e));
-            else if (void 0 === e && "function" == typeof (e = this.getDefaultValue())) return void e(this);
+            else if (undefined === e && "function" == typeof (e = this.getDefaultValue())) return void e(this);
             this.set(e);
         }
         get() {
@@ -5070,7 +5070,7 @@ const PZVERSION = "1.0.102";
             return this.expression || this.objects.some((e) => e.animated);
         }
         get interpolated() {
-            return !0;
+            return true;
         }
         get frameOffset() {
             let e = this.tryGetParentOfType(PZ.clip);
@@ -5085,9 +5085,9 @@ const PZVERSION = "1.0.102";
         }
         load(e) {
             if ((super.load(e), e)) {
-                if (((e.objects = e.objects || new Array(this.objects.length).fill(null).map((e) => new Object())), void 0 !== e.keyframes))
+                if (((e.objects = e.objects || new Array(this.objects.length).fill(null).map((e) => new Object())), undefined !== e.keyframes))
                     for (let t = 0; t < e.objects.length; t++) e.objects[t].keyframes = e.keyframes.map((e) => ({ frame: e.frame, value: e.value[t], tween: e.tween }));
-                if (void 0 !== e.animated) for (let t = 0; t < e.objects.length; t++) e.objects[t].animated = e.animated;
+                if (undefined !== e.animated) for (let t = 0; t < e.objects.length; t++) e.objects[t].animated = e.animated;
                 for (let t = 0; t < this.objects.length; t++) this.objects[t].load(e.objects[t]);
             } else for (let e = 0; e < this.objects.length; e++) this.objects[e].load();
         }
@@ -5128,7 +5128,7 @@ const PZVERSION = "1.0.102";
     (PZ.property.dynamic.keyframes = class extends PZ.property.dynamic {
         constructor(e) {
             super(e),
-                (this._animated = e.animated || !1),
+                (this._animated = e.animated || false),
                 (this.interpolated = e.type < 5),
                 (this.defaultTween = this.interpolated ? 1 : 0),
                 (this.keyframes = new PZ.objectList(this, PZ.keyframe)),
@@ -5236,7 +5236,7 @@ const PZVERSION = "1.0.102";
             return t >= 0 && this.keyframes[t].frame !== e ? -1 : t;
         }
         getClosestKeyframeIndex(e, t, r) {
-            for (t |= 0, r = void 0 === r ? this.keyframes.length - 1 : 0; ; ) {
+            for (t |= 0, r = undefined === r ? this.keyframes.length - 1 : 0; ; ) {
                 if (r <= t) return r;
                 let i = t + ((r - t) >> 1),
                     a = this.keyframes[i].frame;
@@ -5322,11 +5322,11 @@ const PZVERSION = "1.0.102";
     }),
     (PZ.random.htmlColor = function (e) {
         var t = "rgba(";
-        return (t += this.number(0, 255, !0) + ", " + this.number(0, 255, !0) + ", " + this.number(0, 255, !0) + ", " + (e ? this.number(0, 1) : 1)), (t += ")");
+        return (t += this.number(0, 255, true) + ", " + this.number(0, 255, true) + ", " + this.number(0, 255, true) + ", " + (e ? this.number(0, 1) : 1)), (t += ")");
     }),
     (PZ.random.grayColor = function (e) {
         var t = "rgba(",
-            r = this.number(0, 255, !0);
+            r = this.number(0, 255, true);
         return (t += r + ", " + r + ", " + r + ", " + (e ? this.number(0, 1) : 1)), (t += ")");
     }),
     (PZ.tween = {}),
@@ -5570,10 +5570,10 @@ const PZVERSION = "1.0.102";
     }),
     (PZ.archive.prototype.tar = async function () {
         for (var e = ["-czvf", "output/out", "-C", "blob"], t = 0; t < this.files.length; t++) e.push(this.files[t].name);
-        return await this.callWorker(!1, e, this.files);
+        return await this.callWorker(false, e, this.files);
     }),
     (PZ.archive.prototype.untar = async function (e) {
-        await this.callWorker(!0, ["-xvzf", "/blob/blob.pz", "-C", "/pz", "-s", "/pz//"], [{ name: "blob.pz", data: e }]);
+        await this.callWorker(true, ["-xvzf", "/blob/blob.pz", "-C", "/pz", "-s", "/pz//"], [{ name: "blob.pz", data: e }]);
     }),
     (PZ.archive.prototype.callWorker = function (e, t, r) {
         let i = this;
@@ -5584,11 +5584,11 @@ const PZVERSION = "1.0.102";
                 }),
                 (i.worker.onmessage = function (s) {
                     var n = s.data;
-                    if ("ready" === n.type) i.worker.postMessage({ type: "command", arguments: t, wfiles: r, useDevFile: !1 === e, inputDirectory: e ? "input" : "pz", outputDirectory: e ? "/pz" : "output" });
+                    if ("ready" === n.type) i.worker.postMessage({ type: "command", arguments: t, wfiles: r, useDevFile: false === e, inputDirectory: e ? "input" : "pz", outputDirectory: e ? "/pz" : "output" });
                     else if ("stdout" === n.type) 0;
                     else if ("done" === n.type) {
                         var o;
-                        if ((i.worker.terminate(), (i.worker = null), !1 !== e)) (i.files = n.data), a();
+                        if ((i.worker.terminate(), (i.worker = null), false !== e)) (i.files = n.data), a();
                         else n.file ? (o = n.file) : n.data.length > 0 && (o = n.data[0].data) && (o = new Blob([o], { type: "application/octet-stream" })), a(o);
                     }
                 });
@@ -5606,7 +5606,7 @@ const PZVERSION = "1.0.102";
     }),
     (PZ.archive.prototype.getFileBlob = function (e, t) {
         var r = this.getFile(e);
-        if (r) return void 0 === t && (t = { type: "" }), new Blob([r.data], t);
+        if (r) return undefined === t && (t = { type: "" }), new Blob([r.data], t);
     }),
     (PZ.archive.prototype.getFileString = function (e) {
         var t = this.getFile(e);
@@ -5667,7 +5667,7 @@ const PZVERSION = "1.0.102";
             { bitrate: 1, crf: 8, speed: 1, deadline: 1, lag: 0, abr: 1 },
             { bitrate: 1, crf: 4, speed: 0, deadline: 0, lag: 0, abr: 1.5 },
         ],
-        hasThreads: !1,
+        hasThreads: false,
         sharedHeap: null,
         syncBuffer: null,
         syncArray: null,
@@ -5687,7 +5687,7 @@ const PZVERSION = "1.0.102";
             (r.onmessage = function (i) {
                 var a = i.data;
                 if ("ready" === a.type) {
-                    [].push(), this.postMessage({ type: "command", options: { decode: !0 }, files: [{ name: "input", data: e }] }, [e]);
+                    [].push(), this.postMessage({ type: "command", options: { decode: true }, files: [{ name: "input", data: e }] }, [e]);
                 } else if ("stdout" === a.type) 0;
                 else if ("done" === a.type) {
                     var s, n;
@@ -5750,16 +5750,16 @@ const PZVERSION = "1.0.102";
                     if ("video" === a.type)
                         if (((PZ.av.timerStart = performance.now()), PZ.av.hasThreads)) {
                             var s = new Uint8Array(PZ.av.sharedHeap, a.xfer_ptrs[0], o);
-                            p(!1, null, await e.getVideoFrame(s));
+                            p(false, null, await e.getVideoFrame(s));
                         } else {
                             s = new Uint8Array(a.xfer_buffer, a.xfer_ptrs[0], o);
-                            p(!1, a, await e.getVideoFrame(s));
+                            p(false, a, await e.getVideoFrame(s));
                         }
                     else if ("audio" === a.type)
                         if (((PZ.av.timerStart = performance.now()), null === PZ.av.audioBuffer || PZ.av.bufferStartSample >= PZ.av.audioBuffer.length)) {
                             var l = await e.getAudioSamples(a.num);
-                            (PZ.av.audioBuffer = l), (PZ.av.bufferStartSample = 0), p(!0, a);
-                        } else p(!0, a);
+                            (PZ.av.audioBuffer = l), (PZ.av.bufferStartSample = 0), p(true, a);
+                        } else p(true, a);
                     else if ("read" === a.type) PZ.av.readOutput(a);
                     else if ("write" === a.type) PZ.av.writeOutput(a);
                     else if ("buffer" === a.type) PZ.av.sharedHeap = a.buffer;
@@ -5820,7 +5820,7 @@ const PZVERSION = "1.0.102";
         }
         static canvasToBlob(e, t, r) {
             return new Promise((i, a) => {
-                if (((t = "image/" + t), void 0 !== e.toBlob)) e.toBlob(i, t, r);
+                if (((t = "image/" + t), undefined !== e.toBlob)) e.toBlob(i, t, r);
                 else {
                     let a = e.toDataURL(t, r),
                         s = atob(a.substring(22)),
@@ -5838,7 +5838,7 @@ const PZVERSION = "1.0.102";
     (PZ.file = {}),
     (PZ.file.getQuota = async function (e) {
         return (
-            void 0 === e && (e = 104857600),
+            undefined === e && (e = 104857600),
             new Promise(function (t, r) {
                 try {
                     navigator.webkitPersistentStorage.requestQuota(
@@ -5885,7 +5885,7 @@ const PZVERSION = "1.0.102";
             function (t) {
                 t.root.getFile(
                     "video.mp4",
-                    { create: !0 },
+                    { create: true },
                     function (t) {
                         (PZ.file.fileEntry = t), e();
                     },
@@ -5964,7 +5964,7 @@ const PZVERSION = "1.0.102";
                     return s >= 55296 && s <= 56319 && r > i + 1 && (a = t.charCodeAt(i + 1)) >= 56320 && a <= 57343 ? 1024 * (s - 55296) + a - 56320 + 65536 : s;
                 }
             }),
-            t ? t(String.prototype, "codePointAt", { value: r, configurable: !0, writable: !0 }) : (String.prototype.codePointAt = r));
+            t ? t(String.prototype, "codePointAt", { value: r, configurable: true, writable: true }) : (String.prototype.codePointAt = r));
         var i = 0,
             a = -3;
         function s() {
@@ -6232,7 +6232,7 @@ const PZVERSION = "1.0.102";
                     }
                     return r;
                 }
-                e = void 0 !== e ? e : 2;
+                e = undefined !== e ? e : 2;
                 for (var i = "", a = 0; a < this.commands.length; a += 1) {
                     var s = this.commands[a];
                     "M" === s.type
@@ -6403,7 +6403,7 @@ const PZVERSION = "1.0.102";
         };
         N.MACSTRING = function (e, t, r, i) {
             var a = I[i];
-            if (void 0 !== a) {
+            if (undefined !== a) {
                 for (var s = "", n = 0; n < r; n++) {
                     var o = e.getUint8(t + n);
                     s += o <= 127 ? String.fromCharCode(o) : a[127 & o];
@@ -6449,22 +6449,22 @@ const PZVERSION = "1.0.102";
             var r = (function (e) {
                 if (!j) for (var t in ((j = {}), I)) j[t] = new String(t);
                 var r = j[e];
-                if (void 0 !== r) {
+                if (undefined !== r) {
                     if (A) {
                         var i = A.get(r);
-                        if (void 0 !== i) return i;
+                        if (undefined !== i) return i;
                     }
                     var a = I[e];
-                    if (void 0 !== a) {
+                    if (undefined !== a) {
                         for (var s = {}, n = 0; n < a.length; n++) s[a.charCodeAt(n)] = n + 128;
                         return A && A.set(r, s), s;
                     }
                 }
             })(t);
-            if (void 0 !== r) {
+            if (undefined !== r) {
                 for (var i = [], a = 0; a < e.length; a++) {
                     var s = e.charCodeAt(a);
-                    if (s >= 128 && void 0 === (s = r[s])) return;
+                    if (s >= 128 && undefined === (s = r[s])) return;
                     i[a] = s;
                 }
                 return i;
@@ -6472,7 +6472,7 @@ const PZVERSION = "1.0.102";
         }),
             (M.MACSTRING = function (e, t) {
                 var r = L.MACSTRING(e, t);
-                return void 0 !== r ? r.length : 0;
+                return undefined !== r ? r.length : 0;
             }),
             (L.VARDELTAS = function (e) {
                 for (var t = 0, r = []; t < e.length; ) {
@@ -6487,7 +6487,7 @@ const PZVERSION = "1.0.102";
                     Array.prototype.push.apply(i, s), (t += s.length), r.push(t);
                 }
                 if (0 === i.length) return [0, 0];
-                for (var n = [], o = (1 + Math.floor(Math.log(t) / Math.log(2)) / 8) | 0, p = [void 0, L.BYTE, L.USHORT, L.UINT24, L.ULONG][o], l = 0; l < r.length; l += 1) {
+                for (var n = [], o = (1 + Math.floor(Math.log(t) / Math.log(2)) / 8) | 0, p = [undefined, L.BYTE, L.USHORT, L.UINT24, L.ULONG][o], l = 0; l < r.length; l += 1) {
                     var h = p(r[l]);
                     Array.prototype.push.apply(n, h);
                 }
@@ -6534,11 +6534,11 @@ const PZVERSION = "1.0.102";
                 for (var s = Object.keys(r), n = 0; n < s.length; n += 1) {
                     var o = s[n],
                         p = r[o];
-                    void 0 !== this[o] && (this[o] = p);
+                    undefined !== this[o] && (this[o] = p);
                 }
         }
         function H(e, t, r) {
-            void 0 === r && (r = t.length);
+            undefined === r && (r = t.length);
             var i = new Array(t.length + 1);
             i[0] = { name: e + "Count", type: "USHORT", value: r };
             for (var a = 0; a < t.length; a++) i[a + 1] = { name: e + a, type: "USHORT", value: t[a] };
@@ -6559,7 +6559,7 @@ const PZVERSION = "1.0.102";
             return a;
         }
         function W(e) {
-            1 === e.format ? V.call(this, "coverageTable", [{ name: "coverageFormat", type: "USHORT", value: 1 }].concat(H("glyph", e.glyphs))) : C.assert(!1, "Can't create coverage table format 2 yet.");
+            1 === e.format ? V.call(this, "coverageTable", [{ name: "coverageFormat", type: "USHORT", value: 1 }].concat(H("glyph", e.glyphs))) : C.assert(false, "Can't create coverage table format 2 yet.");
         }
         function X(e) {
             V.call(
@@ -6650,7 +6650,7 @@ const PZVERSION = "1.0.102";
         (L.CHARSTRING = function (e) {
             if (G) {
                 var t = G.get(e);
-                if (void 0 !== t) return t;
+                if (undefined !== t) return t;
             }
             for (var r = [], i = e.length, a = 0; a < i; a += 1) {
                 var s = e[a];
@@ -6663,19 +6663,19 @@ const PZVERSION = "1.0.102";
             }),
             (L.OBJECT = function (e) {
                 var t = L[e.type];
-                return C.argument(void 0 !== t, "No encoding function for type " + e.type), t(e.value);
+                return C.argument(undefined !== t, "No encoding function for type " + e.type), t(e.value);
             }),
             (M.OBJECT = function (e) {
                 var t = M[e.type];
-                return C.argument(void 0 !== t, "No sizeOf function for type " + e.type), t(e.value);
+                return C.argument(undefined !== t, "No sizeOf function for type " + e.type), t(e.value);
             }),
             (L.TABLE = function (e) {
                 for (var t = [], r = e.fields.length, i = [], a = [], s = 0; s < r; s += 1) {
                     var n = e.fields[s],
                         o = L[n.type];
-                    C.argument(void 0 !== o, "No encoding function for field type " + n.type + " (" + n.name + ")");
+                    C.argument(undefined !== o, "No encoding function for field type " + n.type + " (" + n.name + ")");
                     var p = e[n.name];
-                    void 0 === p && (p = n.value);
+                    undefined === p && (p = n.value);
                     var l = o(p);
                     "TABLE" === n.type ? (a.push(t.length), (t = t.concat([0, 0])), i.push(l)) : (t = t.concat(l));
                 }
@@ -6690,9 +6690,9 @@ const PZVERSION = "1.0.102";
                 for (var t = 0, r = e.fields.length, i = 0; i < r; i += 1) {
                     var a = e.fields[i],
                         s = M[a.type];
-                    C.argument(void 0 !== s, "No sizeOf function for field type " + a.type + " (" + a.name + ")");
+                    C.argument(undefined !== s, "No sizeOf function for field type " + a.type + " (" + a.name + ")");
                     var n = e[a.name];
-                    void 0 === n && (n = a.value), (t += s(n)), "TABLE" === a.type && (t += 2);
+                    undefined === n && (n = a.value), (t += s(n)), "TABLE" === a.type && (t += 2);
                 }
                 return t;
             }),
@@ -6723,13 +6723,13 @@ const PZVERSION = "1.0.102";
             return e.getUint8(t);
         }
         function $(e, t) {
-            return e.getUint16(t, !1);
+            return e.getUint16(t, false);
         }
         function ee(e, t) {
-            return e.getUint32(t, !1);
+            return e.getUint32(t, false);
         }
         function te(e, t) {
-            return e.getInt16(t, !1) + e.getUint16(t + 2, !1) / 65535;
+            return e.getInt16(t, false) + e.getUint16(t + 2, false) / 65535;
         }
         var re = { byte: 1, uShort: 2, short: 2, uLong: 4, fixed: 4, longDateTime: 8, tag: 4 };
         function ie(e, t) {
@@ -6786,18 +6786,18 @@ const PZVERSION = "1.0.102";
             (ie.prototype.parseVersion = function (e) {
                 var t = $(this.data, this.offset + this.relativeOffset),
                     r = $(this.data, this.offset + this.relativeOffset + 2);
-                return (this.relativeOffset += 4), void 0 === e && (e = 4096), t + r / e / 10;
+                return (this.relativeOffset += 4), undefined === e && (e = 4096), t + r / e / 10;
             }),
             (ie.prototype.skip = function (e, t) {
-                void 0 === t && (t = 1), (this.relativeOffset += re[e] * t);
+                undefined === t && (t = 1), (this.relativeOffset += re[e] * t);
             }),
             (ie.prototype.parseULongList = function (e) {
-                void 0 === e && (e = this.parseULong());
+                undefined === e && (e = this.parseULong());
                 for (var t = new Array(e), r = this.data, i = this.offset + this.relativeOffset, a = 0; a < e; a++) (t[a] = r.getUint32(i)), (i += 4);
                 return (this.relativeOffset += 4 * e), t;
             }),
             (ie.prototype.parseOffset16List = ie.prototype.parseUShortList = function (e) {
-                void 0 === e && (e = this.parseUShort());
+                undefined === e && (e = this.parseUShort());
                 for (var t = new Array(e), r = this.data, i = this.offset + this.relativeOffset, a = 0; a < e; a++) (t[a] = r.getUint16(i)), (i += 2);
                 return (this.relativeOffset += 2 * e), t;
             }),
@@ -6853,17 +6853,17 @@ const PZVERSION = "1.0.102";
                 return r;
             }),
             (ie.prototype.parseValueRecord = function (e) {
-                if ((void 0 === e && (e = this.parseUShort()), 0 !== e)) {
+                if ((undefined === e && (e = this.parseUShort()), 0 !== e)) {
                     var t = {};
                     return (
                         1 & e && (t.xPlacement = this.parseShort()),
                         2 & e && (t.yPlacement = this.parseShort()),
                         4 & e && (t.xAdvance = this.parseShort()),
                         8 & e && (t.yAdvance = this.parseShort()),
-                        16 & e && ((t.xPlaDevice = void 0), this.parseShort()),
-                        32 & e && ((t.yPlaDevice = void 0), this.parseShort()),
-                        64 & e && ((t.xAdvDevice = void 0), this.parseShort()),
-                        128 & e && ((t.yAdvDevice = void 0), this.parseShort()),
+                        16 & e && ((t.xPlaDevice = undefined), this.parseShort()),
+                        32 & e && ((t.yPlaDevice = undefined), this.parseShort()),
+                        64 & e && ((t.xAdvDevice = undefined), this.parseShort()),
+                        128 & e && ((t.yAdvDevice = undefined), this.parseShort()),
                         t
                     );
                 }
@@ -6888,7 +6888,7 @@ const PZVERSION = "1.0.102";
                             for (var o = this.parseOffset16List(), p = new Array(o.length), l = 0; l < o.length; l++) (this.relativeOffset = n + o[l]), (p[l] = e.call(this));
                             a[s] = p;
                         } else a[s] = this.parseUShortList();
-                    else a[s] = void 0;
+                    else a[s] = undefined;
                 }
                 return (this.relativeOffset = i), a;
             }),
@@ -6965,7 +6965,7 @@ const PZVERSION = "1.0.102";
                                 C.argument(1 <= t && t <= 9, "GPOS/GSUB lookup type " + t + " unknown.");
                                 var r = this.parseUShort(),
                                     i = 16 & r;
-                                return { lookupType: t, lookupFlag: r, subtables: this.parseList(ie.pointer(e[t])), markFilteringSet: i ? this.parseUShort() : void 0 };
+                                return { lookupType: t, lookupFlag: r, subtables: this.parseList(ie.pointer(e[t])), markFilteringSet: i ? this.parseUShort() : undefined };
                             })
                         )
                     ) || []
@@ -6986,7 +6986,7 @@ const PZVERSION = "1.0.102";
             getUShort: $,
             getCard16: $,
             getShort: function (e, t) {
-                return e.getInt16(t, !1);
+                return e.getInt16(t, false);
             },
             getULong: ee,
             getFixed: te,
@@ -7041,7 +7041,7 @@ const PZVERSION = "1.0.102";
                                 c < s - 1;
                                 c += 1
                             )
-                                for (var u = void 0, d = n.parseUShort(), f = o.parseUShort(), m = p.parseShort(), y = l.parseUShort(), g = f; g <= d; g += 1)
+                                for (var u = undefined, d = n.parseUShort(), f = o.parseUShort(), m = p.parseShort(), y = l.parseUShort(), g = f; g <= d; g += 1)
                                     0 !== y ? ((h = l.offset + l.relativeOffset - 2), (h += y), (h += 2 * (g - f)), 0 !== (u = se.getUShort(r, h)) && (u = (u + m) & 65535)) : (u = (g + m) & 65535), (e.glyphIndexMap[g] = u);
                         })(r, o, e, t, i);
                     }
@@ -7049,10 +7049,10 @@ const PZVERSION = "1.0.102";
                 },
                 make: function (e) {
                     var t,
-                        r = !0;
+                        r = true;
                     for (t = e.length - 1; t > 0; t -= 1)
                         if (e.get(t).unicode > 65535) {
-                            console.log("Adding CMAP format 12 (needed!)"), (r = !1);
+                            console.log("Adding CMAP format 12 (needed!)"), (r = false);
                             break;
                         }
                     var i = [
@@ -7102,10 +7102,10 @@ const PZVERSION = "1.0.102";
                               (h = h.concat({ name: "start_" + t, type: "USHORT", value: m.start })),
                               (c = c.concat({ name: "idDelta_" + t, type: "SHORT", value: m.delta })),
                               (u = u.concat({ name: "idRangeOffset_" + t, type: "USHORT", value: m.offset })),
-                              void 0 !== m.glyphId && (d = d.concat({ name: "glyph_" + t, type: "USHORT", value: m.glyphId })))
+                              undefined !== m.glyphId && (d = d.concat({ name: "glyph_" + t, type: "USHORT", value: m.glyphId })))
                             : (p += 1),
                             r ||
-                                void 0 === m.glyphIndex ||
+                                undefined === m.glyphIndex ||
                                 (f = (f = (f = f.concat({ name: "cmap12Start_" + t, type: "ULONG", value: m.start })).concat({ name: "cmap12End_" + t, type: "ULONG", value: m.end })).concat({
                                     name: "cmap12Glyph_" + t,
                                     type: "ULONG",
@@ -8367,8 +8367,8 @@ const PZVERSION = "1.0.102";
                 set: function (t) {
                     e[r] = t;
                 },
-                enumerable: !0,
-                configurable: !0,
+                enumerable: true,
+                configurable: true,
             });
         }
         function be(e, t) {
@@ -8379,8 +8379,8 @@ const PZVERSION = "1.0.102";
             var t, r;
             (this.index = e.index || 0),
                 (this.name = e.name || null),
-                (this.unicode = e.unicode || void 0),
-                (this.unicodes = e.unicodes || void 0 !== e.unicode ? [e.unicode] : []),
+                (this.unicode = e.unicode || undefined),
+                (this.unicodes = e.unicodes || undefined !== e.unicode ? [e.unicode] : []),
                 e.xMin && (this.xMin = e.xMin),
                 e.yMin && (this.yMin = e.yMin),
                 e.xMax && (this.xMax = e.xMax),
@@ -8392,7 +8392,7 @@ const PZVERSION = "1.0.102";
                     ((t = e.path),
                     (r = t || new O()),
                     {
-                        configurable: !0,
+                        configurable: true,
                         get: function () {
                             return "function" == typeof r && (r = r()), r;
                         },
@@ -8410,14 +8410,14 @@ const PZVERSION = "1.0.102";
             }),
             (ge.prototype.getPath = function (e, t, r, i, a) {
                 var s, n;
-                (e = void 0 !== e ? e : 0), (t = void 0 !== t ? t : 0), (r = void 0 !== r ? r : 72), i || (i = {});
+                (e = undefined !== e ? e : 0), (t = undefined !== t ? t : 0), (r = undefined !== r ? r : 72), i || (i = {});
                 var o = i.xScale,
                     p = i.yScale;
                 if ((i.hinting && a && a.hinting && (n = this.path && a.hinting.exec(this, r)), n)) (s = a.hinting.getCommands(n)), (e = Math.round(e)), (t = Math.round(t)), (o = p = 1);
                 else {
                     s = this.path.commands;
                     var l = (1 / this.path.unitsPerEm) * r;
-                    void 0 === o && (o = l), void 0 === p && (p = l);
+                    undefined === o && (o = l), undefined === p && (p = l);
                 }
                 for (var h = new O(), c = 0; c < s.length; c += 1) {
                     var u = s[c];
@@ -8434,7 +8434,7 @@ const PZVERSION = "1.0.102";
                 return h;
             }),
             (ge.prototype.getContours = function () {
-                if (void 0 === this.points) return [];
+                if (undefined === this.points) return [];
                 for (var e = [], t = [], r = 0; r < this.points.length; r += 1) {
                     var i = this.points[r];
                     t.push(i), i.lastPointOfContour && (e.push(t), (t = []));
@@ -8463,21 +8463,21 @@ const PZVERSION = "1.0.102";
                 function a(t, r, i, a) {
                     var s = 2 * Math.PI;
                     e.beginPath();
-                    for (var n = 0; n < t.length; n += 1) e.moveTo(r + t[n].x * a, i + t[n].y * a), e.arc(r + t[n].x * a, i + t[n].y * a, 2, 0, s, !1);
+                    for (var n = 0; n < t.length; n += 1) e.moveTo(r + t[n].x * a, i + t[n].y * a), e.arc(r + t[n].x * a, i + t[n].y * a, 2, 0, s, false);
                     e.closePath(), e.fill();
                 }
-                (t = void 0 !== t ? t : 0), (r = void 0 !== r ? r : 0), (i = void 0 !== i ? i : 24);
+                (t = undefined !== t ? t : 0), (r = undefined !== r ? r : 0), (i = undefined !== i ? i : 24);
                 for (var s = (1 / this.path.unitsPerEm) * i, n = [], o = [], p = this.path, l = 0; l < p.commands.length; l += 1) {
                     var h = p.commands[l];
-                    void 0 !== h.x && n.push({ x: h.x, y: -h.y }), void 0 !== h.x1 && o.push({ x: h.x1, y: -h.y1 }), void 0 !== h.x2 && o.push({ x: h.x2, y: -h.y2 });
+                    undefined !== h.x && n.push({ x: h.x, y: -h.y }), undefined !== h.x1 && o.push({ x: h.x1, y: -h.y1 }), undefined !== h.x2 && o.push({ x: h.x2, y: -h.y2 });
                 }
                 (e.fillStyle = "blue"), a(n, t, r, s), (e.fillStyle = "red"), a(o, t, r, s);
             }),
             (ge.prototype.drawMetrics = function (e, t, r, i) {
                 var a;
-                (t = void 0 !== t ? t : 0),
-                    (r = void 0 !== r ? r : 0),
-                    (i = void 0 !== i ? i : 24),
+                (t = undefined !== t ? t : 0),
+                    (r = undefined !== r ? r : 0),
+                    (i = undefined !== i ? i : 24),
                     (a = (1 / this.path.unitsPerEm) * i),
                     (e.lineWidth = 1),
                     (e.strokeStyle = "black"),
@@ -8538,13 +8538,13 @@ const PZVERSION = "1.0.102";
             },
         };
         function Pe(e, t) {
-            if (e === t) return !0;
+            if (e === t) return true;
             if (Array.isArray(e) && Array.isArray(t)) {
-                if (e.length !== t.length) return !1;
-                for (var r = 0; r < e.length; r += 1) if (!Pe(e[r], t[r])) return !1;
-                return !0;
+                if (e.length !== t.length) return false;
+                for (var r = 0; r < e.length; r += 1) if (!Pe(e[r], t[r])) return false;
+                return true;
             }
-            return !1;
+            return false;
         }
         function we(e) {
             return e.length < 1240 ? 107 : e.length < 33900 ? 1131 : 32768;
@@ -8588,11 +8588,11 @@ const PZVERSION = "1.0.102";
             throw new Error("Invalid b0 " + t);
         }
         function Te(e, t, r) {
-            t = void 0 !== t ? t : 0;
+            t = undefined !== t ? t : 0;
             var i = new se.Parser(e, t),
                 a = [],
                 s = [];
-            for (r = void 0 !== r ? r : e.length; i.relativeOffset < r; ) {
+            for (r = undefined !== r ? r : e.length; i.relativeOffset < r; ) {
                 var n = i.parseByte();
                 n <= 21 ? (12 === n && (n = 1200 + i.parseByte()), a.push([n, s]), (s = [])) : s.push(Ee(i, n));
             }
@@ -8600,7 +8600,7 @@ const PZVERSION = "1.0.102";
                 for (var t = {}, r = 0; r < e.length; r += 1) {
                     var i = e[r][0],
                         a = e[r][1],
-                        s = void 0;
+                        s = undefined;
                     if (((s = 1 === a.length ? a[0] : a), t.hasOwnProperty(i) && !isNaN(t[i]))) throw new Error("Object " + t + " already has key " + i);
                     t[i] = s;
                 }
@@ -8617,9 +8617,9 @@ const PZVERSION = "1.0.102";
                     var o = [];
                     o.length = n.type.length;
                     for (var p = 0; p < n.type.length; p++)
-                        void 0 === (i = void 0 !== e[n.op] ? e[n.op][p] : void 0) && (i = void 0 !== n.value && void 0 !== n.value[p] ? n.value[p] : null), "SID" === n.type[p] && (i = ke(r, i)), (o[p] = i);
+                        undefined === (i = undefined !== e[n.op] ? e[n.op][p] : undefined) && (i = undefined !== n.value && undefined !== n.value[p] ? n.value[p] : null), "SID" === n.type[p] && (i = ke(r, i)), (o[p] = i);
                     a[n.name] = o;
-                } else void 0 === (i = e[n.op]) && (i = void 0 !== n.value ? n.value : null), "SID" === n.type && (i = ke(r, i)), (a[n.name] = i);
+                } else undefined === (i = e[n.op]) && (i = undefined !== n.value ? n.value : null), "SID" === n.type && (i = ke(r, i)), (a[n.name] = i);
             }
             return a;
         }
@@ -8696,8 +8696,8 @@ const PZVERSION = "1.0.102";
                 c = new O(),
                 u = [],
                 d = 0,
-                f = !1,
-                m = !1,
+                f = false,
+                m = false,
                 y = 0,
                 g = 0;
             if (e.isCIDFont) {
@@ -8707,10 +8707,10 @@ const PZVERSION = "1.0.102";
             } else (o = e.tables.cff.topDict._subrs), (p = e.tables.cff.topDict._subrsBias), (l = e.tables.cff.topDict._defaultWidthX), (h = e.tables.cff.topDict._nominalWidthX);
             var x = l;
             function P(e, t) {
-                m && c.closePath(), c.moveTo(e, t), (m = !0);
+                m && c.closePath(), c.moveTo(e, t), (m = true);
             }
             function w() {
-                u.length % 2 != 0 && !f && (x = u.shift() + h), (d += u.length >> 1), (u.length = 0), (f = !0);
+                u.length % 2 != 0 && !f && (x = u.shift() + h), (d += u.length >> 1), (u.length = 0), (f = true);
             }
             return (
                 (function r(l) {
@@ -8722,7 +8722,7 @@ const PZVERSION = "1.0.102";
                                 w();
                                 break;
                             case 4:
-                                u.length > 1 && !f && ((x = u.shift() + h), (f = !0)), (g += u.pop()), P(y, g);
+                                u.length > 1 && !f && ((x = u.shift() + h), (f = true)), (g += u.pop()), P(y, g);
                                 break;
                             case 5:
                                 for (; u.length > 0; ) (y += u.shift()), (g += u.shift()), c.lineTo(y, g);
@@ -8810,7 +8810,7 @@ const PZVERSION = "1.0.102";
                                 }
                                 break;
                             case 14:
-                                u.length > 0 && !f && ((x = u.shift() + h), (f = !0)), m && (c.closePath(), (m = !1));
+                                u.length > 0 && !f && ((x = u.shift() + h), (f = true)), m && (c.closePath(), (m = false));
                                 break;
                             case 18:
                                 w();
@@ -8820,10 +8820,10 @@ const PZVERSION = "1.0.102";
                                 w(), (M += (d + 7) >> 3);
                                 break;
                             case 21:
-                                u.length > 2 && !f && ((x = u.shift() + h), (f = !0)), (g += u.pop()), P((y += u.pop()), g);
+                                u.length > 2 && !f && ((x = u.shift() + h), (f = true)), (g += u.pop()), P((y += u.pop()), g);
                                 break;
                             case 22:
-                                u.length > 1 && !f && ((x = u.shift() + h), (f = !0)), P((y += u.pop()), g);
+                                u.length > 1 && !f && ((x = u.shift() + h), (f = true)), P((y += u.pop()), g);
                                 break;
                             case 23:
                                 w();
@@ -8882,7 +8882,7 @@ const PZVERSION = "1.0.102";
             for (var i = {}, a = 0; a < e.length; a += 1) {
                 var s = e[a],
                     n = t[s.name];
-                void 0 === n || Pe(n, s.value) || ("SID" === s.type && (n = Ue(n, r)), (i[s.op] = { name: s.name, type: s.type, value: n }));
+                undefined === n || Pe(n, s.value) || ("SID" === s.type && (n = Ue(n, r)), (i[s.op] = { name: s.name, type: s.type, value: n }));
             }
             return i;
         }
@@ -8899,8 +8899,8 @@ const PZVERSION = "1.0.102";
                 r = e.path;
             t.push({ name: "width", type: "NUMBER", value: e.advanceWidth });
             for (var i = 0, a = 0, s = 0; s < r.commands.length; s += 1) {
-                var n = void 0,
-                    o = void 0,
+                var n = undefined,
+                    o = undefined,
                     p = r.commands[s];
                 if ("Q" === p.type) {
                     p = { type: "C", x: p.x, y: p.y, x1: (1 / 3) * i + (2 / 3) * p.x1, y1: (1 / 3) * a + (2 / 3) * p.y1, x2: (1 / 3) * p.x + (2 / 3) * p.x1, y2: (1 / 3) * p.y + (2 / 3) * p.y1 };
@@ -8964,7 +8964,7 @@ const PZVERSION = "1.0.102";
                 if (
                     ((r.tables.cff.topDict = o),
                     o._privateDict && ((r.defaultWidthX = o._privateDict.defaultWidthX), (r.nominalWidthX = o._privateDict.nominalWidthX)),
-                    void 0 !== o.ros[0] && void 0 !== o.ros[1] && (r.isCIDFont = !0),
+                    undefined !== o.ros[0] && undefined !== o.ros[1] && (r.isCIDFont = true),
                     r.isCIDFont)
                 ) {
                     var p = o.fdArray,
@@ -9905,11 +9905,11 @@ const PZVERSION = "1.0.102";
                             m = a.parseUShort(),
                             y = Ye(l, c, r),
                             g = $e(l, h, c);
-                        if (void 0 !== g && void 0 !== y) {
-                            var v = void 0;
+                        if (undefined !== g && undefined !== y) {
+                            var v = undefined;
                             if ((v = g === Je ? N.UTF16(e, o + m, f) : N.MACSTRING(e, o + m, f, g))) {
                                 var b = i[d];
-                                void 0 === b && (b = i[d] = {}), (b[y] = v);
+                                undefined === b && (b = i[d] = {}), (b[y] = v);
                             }
                         }
                     }
@@ -9922,7 +9922,7 @@ const PZVERSION = "1.0.102";
                         s = et(ze);
                     for (var n in e) {
                         var o = s[n];
-                        if ((void 0 === o && (o = n), (r = parseInt(o)), isNaN(r))) throw new Error('Name table entry "' + n + '" does not exist, see nameTableNames for complete list.');
+                        if ((undefined === o && (o = n), (r = parseInt(o)), isNaN(r))) throw new Error('Name table entry "' + n + '" does not exist, see nameTableNames for complete list.');
                         (a[r] = e[n]), i.push(r);
                     }
                     for (var p = et(qe), l = et(Xe), h = [], c = [], u = 0; u < i.length; u++) {
@@ -9934,11 +9934,11 @@ const PZVERSION = "1.0.102";
                                 v = We[g],
                                 b = $e(y, v, g),
                                 x = L.MACSTRING(m, b);
-                            void 0 === x && ((y = 0), (g = t.indexOf(f)) < 0 && ((g = t.length), t.push(f)), (v = 4), (x = L.UTF16(m)));
+                            undefined === x && ((y = 0), (g = t.indexOf(f)) < 0 && ((g = t.length), t.push(f)), (v = 4), (x = L.UTF16(m)));
                             var P = rt(x, c);
                             h.push(tt(y, v, g, r, x.length, P));
                             var w = l[f];
-                            if (void 0 !== w) {
+                            if (undefined !== w) {
                                 var S = L.UTF16(m),
                                     E = rt(S, c);
                                 h.push(tt(3, 1, w, r, S.length, E));
@@ -10248,7 +10248,7 @@ const PZVERSION = "1.0.102";
                 ? { substFormat: 1, coverage: this.parsePointer(ie.coverage), deltaGlyphId: this.parseUShort() }
                 : 2 === t
                 ? { substFormat: 2, coverage: this.parsePointer(ie.coverage), substitute: this.parseOffset16List() }
-                : void C.assert(!1, "0x" + e.toString(16) + ": lookup type 1 format must be 1 or 2.");
+                : void C.assert(false, "0x" + e.toString(16) + ": lookup type 1 format must be 1 or 2.");
         }),
             (ot[2] = function () {
                 var e = this.parseUShort();
@@ -10301,7 +10301,7 @@ const PZVERSION = "1.0.102";
                     i = this.parseUShort();
                 return { substFormat: t, coverages: this.parseList(r, ie.pointer(ie.coverage)), lookupRecords: this.parseRecordList(i, pt) };
             }
-            C.assert(!1, "0x" + e.toString(16) + ": lookup type 5 format must be 1, 2 or 3.");
+            C.assert(false, "0x" + e.toString(16) + ": lookup type 5 format must be 1, 2 or 3.");
         }),
             (ot[6] = function () {
                 var e = this.offset + this.relativeOffset,
@@ -10333,7 +10333,7 @@ const PZVERSION = "1.0.102";
                           lookaheadCoverage: this.parseList(ie.pointer(ie.coverage)),
                           lookupRecords: this.parseRecordList(pt),
                       }
-                    : void C.assert(!1, "0x" + e.toString(16) + ": lookup type 6 format must be 1, 2 or 3.");
+                    : void C.assert(false, "0x" + e.toString(16) + ": lookup type 6 format must be 1, 2 or 3.");
             }),
             (ot[7] = function () {
                 var e = this.parseUShort();
@@ -10463,10 +10463,10 @@ const PZVERSION = "1.0.102";
         }
         function ft(e, t, r, i) {
             return new K.Record("Table Record", [
-                { name: "tag", type: "TAG", value: void 0 !== e ? e : "" },
-                { name: "checkSum", type: "ULONG", value: void 0 !== t ? t : 0 },
-                { name: "offset", type: "ULONG", value: void 0 !== r ? r : 0 },
-                { name: "length", type: "ULONG", value: void 0 !== i ? i : 0 },
+                { name: "tag", type: "TAG", value: undefined !== e ? e : "" },
+                { name: "checkSum", type: "ULONG", value: undefined !== t ? t : 0 },
+                { name: "offset", type: "ULONG", value: undefined !== r ? r : 0 },
+                { name: "length", type: "ULONG", value: undefined !== i ? i : 0 },
             ]);
         }
         function mt(e) {
@@ -10516,7 +10516,7 @@ const PZVERSION = "1.0.102";
                     var m = e.glyphs.get(f),
                         y = 0 | m.unicode;
                     if (isNaN(m.advanceWidth)) throw new Error("Glyph " + m.name + " (" + f + "): advanceWidth is not a number.");
-                    (t > y || void 0 === t) && y > 0 && (t = y), l < y && (l = y);
+                    (t > y || undefined === t) && y > 0 && (t = y), l < y && (l = y);
                     var g = st.getUnicodeRange(y);
                     if (g < 32) h |= 1 << g;
                     else if (g < 64) c |= 1 << (g - 32);
@@ -10593,15 +10593,15 @@ const PZVERSION = "1.0.102";
                     C.preferredSubfamily || (C.preferredSubfamily = e.names.fontSubfamily);
                 var L = [],
                     M = it.make(C, L),
-                    U = L.length > 0 ? Ve.make(L) : void 0,
+                    U = L.length > 0 ? Ve.make(L) : undefined,
                     I = nt.make(),
                     j = Be.make(e.glyphs, { version: e.getEnglishName("version"), fullName: Z, familyName: k, weightName: O, postScriptName: R, unitsPerEm: e.unitsPerEm, fontBBox: [0, b.yMin, b.ascender, b.advanceWidthMax] }),
-                    A = e.metas && Object.keys(e.metas).length > 0 ? ct.make(e.metas) : void 0,
+                    A = e.metas && Object.keys(e.metas).length > 0 ? ct.make(e.metas) : undefined,
                     D = [x, P, w, S, M, T, I, j, E];
                 U && D.push(U), e.tables.gsub && D.push(ht.make(e.tables.gsub)), A && D.push(A);
-                for (var B = mt(D), _ = dt(B.encode()), F = B.fields, G = !1, V = 0; V < F.length; V += 1)
+                for (var B = mt(D), _ = dt(B.encode()), F = B.fields, G = false, V = 0; V < F.length; V += 1)
                     if ("head table" === F[V].name) {
-                        (F[V].value.checkSumAdjustment = 2981146554 - _), (G = !0);
+                        (F[V].value.checkSumAdjustment = 2981146554 - _), (G = true);
                         break;
                     }
                 if (!G) throw new Error("Could not find head table with checkSum to adjust.");
@@ -10647,9 +10647,9 @@ const PZVERSION = "1.0.102";
         }
         function Et(e, t) {
             var r = e.length;
-            if (r !== t.length) return !1;
-            for (var i = 0; i < r; i++) if (e[i] !== t[i]) return !1;
-            return !0;
+            if (r !== t.length) return false;
+            for (var i = 0; i < r; i++) if (e[i] !== t[i]) return false;
+            return true;
         }
         function Tt(e, t, r) {
             for (var i = e.subtables, a = 0; a < i.length; a++) {
@@ -10692,8 +10692,8 @@ const PZVERSION = "1.0.102";
                 } else e.points = [];
             } else if (0 === e.numberOfContours) e.points = [];
             else {
-                (e.isComposite = !0), (e.points = []), (e.components = []);
-                for (var x = !0; x; ) {
+                (e.isComposite = true), (e.points = []), (e.components = []);
+                for (var x = true; x; ) {
                     i = s.parseUShort();
                     var P = { glyphIndex: s.parseUShort(), xScale: 1, scale01: 0, scale10: 0, yScale: 1, dx: 0, dy: 0 };
                     (1 & i) > 0
@@ -10766,8 +10766,8 @@ const PZVERSION = "1.0.102";
                     var i = t.components[r],
                         a = e.get(i.glyphIndex);
                     if ((a.getPath(), a.points)) {
-                        var s = void 0;
-                        if (void 0 === i.matchedPoints) s = Ct(a.points, i);
+                        var s = undefined;
+                        if (undefined === i.matchedPoints) s = Ct(a.points, i);
                         else {
                             if (i.matchedPoints[0] > t.points.length - 1 || i.matchedPoints[1] > a.points.length - 1) throw Error("Matched points out of range in " + t.name);
                             var n = t.points[i.matchedPoints[0]],
@@ -10798,12 +10798,12 @@ const PZVERSION = "1.0.102";
             getDefaultScriptName: function () {
                 var e = this.getTable();
                 if (e) {
-                    for (var t = !1, r = 0; r < e.scripts.length; r++) {
+                    for (var t = false, r = 0; r < e.scripts.length; r++) {
                         var i = e.scripts[r].tag;
                         if ("DFLT" === i) return i;
-                        "latn" === i && (t = !0);
+                        "latn" === i && (t = true);
                     }
-                    return t ? "latn" : void 0;
+                    return t ? "latn" : undefined;
                 }
             },
             getScriptTable: function (e, t) {
@@ -10847,7 +10847,7 @@ const PZVERSION = "1.0.102";
                 if (s) {
                     for (var o, p = s.lookupListIndexes, l = this.font.tables[this.tableName].lookups, h = 0; h < p.length; h++) (o = l[p[h]]).lookupType === i && n.push(o);
                     if (0 === n.length && a) {
-                        o = { lookupType: i, lookupFlag: 0, subtables: [], markFilteringSet: void 0 };
+                        o = { lookupType: i, lookupFlag: 0, subtables: [], markFilteringSet: undefined };
                         var c = l.length;
                         return l.push(o), p.push(c), [o];
                     }
@@ -10918,7 +10918,7 @@ const PZVERSION = "1.0.102";
                     for (var n = a[s].subtables, o = 0; o < n.length; o++) {
                         var p = n[o],
                             l = this.expandCoverage(p.coverage),
-                            h = void 0;
+                            h = undefined;
                         if (1 === p.substFormat) {
                             var c = p.deltaGlyphId;
                             for (h = 0; h < l.length; h++) {
@@ -10948,21 +10948,21 @@ const PZVERSION = "1.0.102";
                 return i;
             }),
             (St.prototype.addSingle = function (e, t, r, i) {
-                var a = Tt(this.getLookupTables(r, i, e, 1, !0)[0], 2, { substFormat: 2, coverage: { format: 1, glyphs: [] }, substitute: [] });
+                var a = Tt(this.getLookupTables(r, i, e, 1, true)[0], 2, { substFormat: 2, coverage: { format: 1, glyphs: [] }, substitute: [] });
                 C.assert(1 === a.coverage.format, "Ligature: unable to modify coverage table format " + a.coverage.format);
                 var s = t.sub,
                     n = this.binSearch(a.coverage.glyphs, s);
                 n < 0 && ((n = -1 - n), a.coverage.glyphs.splice(n, 0, s), a.substitute.splice(n, 0, 0)), (a.substitute[n] = t.by);
             }),
             (St.prototype.addAlternate = function (e, t, r, i) {
-                var a = Tt(this.getLookupTables(r, i, e, 3, !0)[0], 1, { substFormat: 1, coverage: { format: 1, glyphs: [] }, alternateSets: [] });
+                var a = Tt(this.getLookupTables(r, i, e, 3, true)[0], 1, { substFormat: 1, coverage: { format: 1, glyphs: [] }, alternateSets: [] });
                 C.assert(1 === a.coverage.format, "Ligature: unable to modify coverage table format " + a.coverage.format);
                 var s = t.sub,
                     n = this.binSearch(a.coverage.glyphs, s);
                 n < 0 && ((n = -1 - n), a.coverage.glyphs.splice(n, 0, s), a.alternateSets.splice(n, 0, 0)), (a.alternateSets[n] = t.by);
             }),
             (St.prototype.addLigature = function (e, t, r, i) {
-                var a = this.getLookupTables(r, i, e, 4, !0)[0],
+                var a = this.getLookupTables(r, i, e, 4, true)[0],
                     s = a.subtables[0];
                 s || ((s = { substFormat: 1, coverage: { format: 1, glyphs: [] }, ligatureSets: [] }), (a.subtables[0] = s)), C.assert(1 === s.coverage.format, "Ligature: unable to modify coverage table format " + s.coverage.format);
                 var n = t.sub[0],
@@ -11017,7 +11017,7 @@ const PZVERSION = "1.0.102";
                 (this.getCommands = function (e) {
                     return At.getPath(e).commands;
                 }),
-                (this._fpgmState = this._prepState = void 0),
+                (this._fpgmState = this._prepState = undefined),
                 (this._errorState = 0);
         }
         function Bt(e) {
@@ -11056,11 +11056,11 @@ const PZVERSION = "1.0.102";
                     var a, s, n, o, p, l, h;
                     if (!i || i === this)
                         return (a = e.xo - t.xo), (s = e.xo - r.xo), (p = t.x - t.xo), (l = r.x - r.xo), 0 === (h = (n = Math.abs(a)) + (o = Math.abs(s))) ? void (e.x = e.xo + (p + l) / 2) : void (e.x = e.xo + (p * o + l * n) / h);
-                    (a = i.distance(e, t, !0, !0)),
-                        (s = i.distance(e, r, !0, !0)),
-                        (p = i.distance(t, t, !1, !0)),
-                        (l = i.distance(r, r, !1, !0)),
-                        0 !== (h = (n = Math.abs(a)) + (o = Math.abs(s))) ? qt.setRelative(e, e, (p * o + l * n) / h, i, !0) : qt.setRelative(e, e, (p + l) / 2, i, !0);
+                    (a = i.distance(e, t, true, true)),
+                        (s = i.distance(e, r, true, true)),
+                        (p = i.distance(t, t, false, true)),
+                        (l = i.distance(r, r, false, true)),
+                        0 !== (h = (n = Math.abs(a)) + (o = Math.abs(s))) ? qt.setRelative(e, e, (p * o + l * n) / h, i, true) : qt.setRelative(e, e, (p + l) / 2, i, true);
                 },
                 normalSlope: Number.NEGATIVE_INFINITY,
                 setRelative: function (e, t, r, i, a) {
@@ -11074,13 +11074,13 @@ const PZVERSION = "1.0.102";
                 },
                 slope: 0,
                 touch: function (e) {
-                    e.xTouched = !0;
+                    e.xTouched = true;
                 },
                 touched: function (e) {
                     return e.xTouched;
                 },
                 untouch: function (e) {
-                    e.xTouched = !1;
+                    e.xTouched = false;
                 },
             },
             Wt = {
@@ -11094,11 +11094,11 @@ const PZVERSION = "1.0.102";
                     var a, s, n, o, p, l, h;
                     if (!i || i === this)
                         return (a = e.yo - t.yo), (s = e.yo - r.yo), (p = t.y - t.yo), (l = r.y - r.yo), 0 === (h = (n = Math.abs(a)) + (o = Math.abs(s))) ? void (e.y = e.yo + (p + l) / 2) : void (e.y = e.yo + (p * o + l * n) / h);
-                    (a = i.distance(e, t, !0, !0)),
-                        (s = i.distance(e, r, !0, !0)),
-                        (p = i.distance(t, t, !1, !0)),
-                        (l = i.distance(r, r, !1, !0)),
-                        0 !== (h = (n = Math.abs(a)) + (o = Math.abs(s))) ? Wt.setRelative(e, e, (p * o + l * n) / h, i, !0) : Wt.setRelative(e, e, (p + l) / 2, i, !0);
+                    (a = i.distance(e, t, true, true)),
+                        (s = i.distance(e, r, true, true)),
+                        (p = i.distance(t, t, false, true)),
+                        (l = i.distance(r, r, false, true)),
+                        0 !== (h = (n = Math.abs(a)) + (o = Math.abs(s))) ? Wt.setRelative(e, e, (p * o + l * n) / h, i, true) : Wt.setRelative(e, e, (p + l) / 2, i, true);
                 },
                 normalSlope: 0,
                 setRelative: function (e, t, r, i, a) {
@@ -11112,17 +11112,17 @@ const PZVERSION = "1.0.102";
                 },
                 slope: Number.POSITIVE_INFINITY,
                 touch: function (e) {
-                    e.yTouched = !0;
+                    e.yTouched = true;
                 },
                 touched: function (e) {
                     return e.yTouched;
                 },
                 untouch: function (e) {
-                    e.yTouched = !1;
+                    e.yTouched = false;
                 },
             };
         function Xt(e, t) {
-            (this.x = e), (this.y = t), (this.axis = void 0), (this.slope = t / e), (this.normalSlope = -e / t), Object.freeze(this);
+            (this.x = e), (this.y = t), (this.axis = undefined), (this.slope = t / e), (this.normalSlope = -e / t), Object.freeze(this);
         }
         function Yt(e, t) {
             var r = Math.sqrt(e * e + t * t);
@@ -11133,10 +11133,10 @@ const PZVERSION = "1.0.102";
                 (this.y = this.yo = Math.round(64 * t) / 64),
                 (this.lastPointOfContour = r),
                 (this.onCurve = i),
-                (this.prevPointOnContour = void 0),
-                (this.nextPointOnContour = void 0),
-                (this.xTouched = !1),
-                (this.yTouched = !1),
+                (this.prevPointOnContour = undefined),
+                (this.nextPointOnContour = undefined),
+                (this.xTouched = false),
+                (this.yTouched = false),
                 Object.preventExtensions(this);
         }
         Object.freeze(qt),
@@ -11146,11 +11146,11 @@ const PZVERSION = "1.0.102";
             }),
             (Xt.prototype.interpolate = function (e, t, r, i) {
                 var a, s, n, o, p, l, h;
-                (n = i.distance(e, t, !0, !0)),
-                    (o = i.distance(e, r, !0, !0)),
-                    (a = i.distance(t, t, !1, !0)),
-                    (s = i.distance(r, r, !1, !0)),
-                    0 !== (h = (p = Math.abs(n)) + (l = Math.abs(o))) ? this.setRelative(e, e, (a * l + s * p) / h, i, !0) : this.setRelative(e, e, (a + s) / 2, i, !0);
+                (n = i.distance(e, t, true, true)),
+                    (o = i.distance(e, r, true, true)),
+                    (a = i.distance(t, t, false, true)),
+                    (s = i.distance(r, r, false, true)),
+                    0 !== (h = (p = Math.abs(n)) + (l = Math.abs(o))) ? this.setRelative(e, e, (a * l + s * p) / h, i, true) : this.setRelative(e, e, (a + s) / 2, i, true);
             }),
             (Xt.prototype.setRelative = function (e, t, r, i, a) {
                 i = i || this;
@@ -11165,7 +11165,7 @@ const PZVERSION = "1.0.102";
                 (e.x = (h * c - l * o + p - u) / (h - l)), (e.y = h * (e.x - c) + u);
             }),
             (Xt.prototype.touch = function (e) {
-                (e.xTouched = !0), (e.yTouched = !0);
+                (e.xTouched = true), (e.yTouched = true);
             }),
             (Jt.prototype.nextTouched = function (e) {
                 for (var t = this.nextPointOnContour; !e.touched(t) && t !== this; ) t = t.nextPointOnContour;
@@ -11176,7 +11176,7 @@ const PZVERSION = "1.0.102";
                 return t;
             });
         var Kt = Object.freeze(new Jt(0, 0)),
-            Qt = { cvCutIn: 17 / 16, deltaBase: 9, deltaShift: 0.125, loop: 1, minDis: 1, autoFlip: !0 };
+            Qt = { cvCutIn: 17 / 16, deltaBase: 9, deltaShift: 0.125, loop: 1, minDis: 1, autoFlip: true };
         function $t(e, t) {
             switch (((this.env = e), (this.stack = []), (this.prog = t), e)) {
                 case "glyf":
@@ -11252,13 +11252,13 @@ const PZVERSION = "1.0.102";
                 n = r.z2,
                 o = n.length - 2;
             e.DEBUG && console.log(r.step, "IUP[" + t.axis + "]");
-            for (var p = 0; p < o; p++) (i = n[p]), t.touched(i) || ((a = i.prevTouched(t)) !== i && (a === (s = i.nextTouched(t)) && t.setRelative(i, i, t.distance(a, a, !1, !0), t, !0), t.interpolate(i, a, s, t)));
+            for (var p = 0; p < o; p++) (i = n[p]), t.touched(i) || ((a = i.prevTouched(t)) !== i && (a === (s = i.nextTouched(t)) && t.setRelative(i, i, t.distance(a, a, false, true), t, true), t.interpolate(i, a, s, t)));
         }
         function hr(t, r) {
             for (var i = r.stack, a = t ? r.rp1 : r.rp2, s = (t ? r.z0 : r.z1)[a], n = r.fv, o = r.pv, p = r.loop, l = r.z2; p--; ) {
                 var h = i.pop(),
                     c = l[h],
-                    u = o.distance(s, s, !1, !0);
+                    u = o.distance(s, s, false, true);
                 n.setRelative(c, c, u, o), n.touch(c), e.DEBUG && console.log(r.step, (r.loop > 1 ? "loop " + (r.loop - p) + ": " : "") + "SHP[" + (t ? "rp1" : "rp2") + "]", h);
             }
             r.loop = 1;
@@ -11273,7 +11273,7 @@ const PZVERSION = "1.0.102";
                 l = r.z2[r.contours[p]],
                 h = l;
             e.DEBUG && console.log(r.step, "SHC[" + t + "]", p);
-            var c = o.distance(s, s, !1, !0);
+            var c = o.distance(s, s, false, true);
             do {
                 h !== s && n.setRelative(h, h, c, o), (h = h.nextPointOnContour);
             } while (h !== l);
@@ -11297,7 +11297,7 @@ const PZVERSION = "1.0.102";
                 default:
                     throw new Error("Invalid zone");
             }
-            for (var c = l.distance(o, o, !1, !0), u = i.length - 2, d = 0; d < u; d++) (a = i[d]), p.setRelative(a, a, c, l);
+            for (var c = l.distance(o, o, false, true), u = i.length - 2, d = 0; d < u; d++) (a = i[d]), p.setRelative(a, a, c, l);
         }
         function dr(t, r) {
             var i = r.stack,
@@ -11325,7 +11325,7 @@ const PZVERSION = "1.0.102";
             var i = r.stack,
                 a = i.pop(),
                 s = r.z2[a];
-            e.DEBUG && console.log(r.step, "GC[" + t + "]", a), i.push(64 * r.dpv.distance(s, Kt, t, !1));
+            e.DEBUG && console.log(r.step, "GC[" + t + "]", a), i.push(64 * r.dpv.distance(s, Kt, t, false));
         }
         function yr(t, r) {
             var i = r.stack,
@@ -11423,7 +11423,7 @@ const PZVERSION = "1.0.102";
                 g = n.minDis,
                 v = n.fv,
                 b = n.dpv;
-            (l = (p = o = b.distance(y, m, !0, !0)) >= 0 ? 1 : -1),
+            (l = (p = o = b.distance(y, m, true, true)) >= 0 ? 1 : -1),
                 (p = Math.abs(p)),
                 t && ((h = n.cvt[u]), a && Math.abs(p - h) < n.cvCutIn && (p = h)),
                 i && p < g && (p = g),
@@ -11541,7 +11541,7 @@ const PZVERSION = "1.0.102";
                         (s = new $t("glyf", u.instructions)), e.DEBUG && (console.log("---EXEC COMP " + h + "---"), (s.step = -1)), jt(u, s, n, o);
                         for (var d = Math.round(c.dx * n), f = Math.round(c.dy * o), m = s.gZone, y = s.contours, g = 0; g < m.length; g++) {
                             var v = m[g];
-                            (v.xTouched = v.yTouched = !1), (v.xo = v.x = v.x + d), (v.yo = v.y = v.y + f);
+                            (v.xTouched = v.yTouched = false), (v.xo = v.x = v.x + d), (v.yo = v.y = v.y + f);
                         }
                         var b = a.length;
                         a.push.apply(a, m);
@@ -11561,7 +11561,7 @@ const PZVERSION = "1.0.102";
             (jt = function (t, r, i, a) {
                 for (var s, n, o, p = t.points || [], l = p.length, h = (r.gZone = r.z0 = r.z1 = r.z2 = []), c = (r.contours = []), u = 0; u < l; u++) (s = p[u]), (h[u] = new Jt(s.x * i, s.y * a, s.lastPointOfContour, s.onCurve));
                 for (var d = 0; d < l; d++)
-                    (s = h[d]), n || ((n = s), c.push(d)), s.lastPointOfContour ? ((s.nextPointOnContour = n), (n.prevPointOnContour = s), (n = void 0)) : ((o = h[d + 1]), (s.nextPointOnContour = o), (o.prevPointOnContour = s));
+                    (s = h[d]), n || ((n = s), c.push(d)), s.lastPointOfContour ? ((s.nextPointOnContour = n), (n.prevPointOnContour = s), (n = undefined)) : ((o = h[d + 1]), (s.nextPointOnContour = o), (o.prevPointOnContour = s));
                 if (!r.inhibitGridFit) {
                     if (e.DEBUG) {
                         console.log("PROCESSING GLYPH", r.stack);
@@ -11585,16 +11585,16 @@ const PZVERSION = "1.0.102";
                 }
             }),
             (Mt = [
-                rr.bind(void 0, Wt),
-                rr.bind(void 0, qt),
-                ir.bind(void 0, Wt),
-                ir.bind(void 0, qt),
-                ar.bind(void 0, Wt),
-                ar.bind(void 0, qt),
-                sr.bind(void 0, 0),
-                sr.bind(void 0, 1),
-                nr.bind(void 0, 0),
-                nr.bind(void 0, 1),
+                rr.bind(undefined, Wt),
+                rr.bind(undefined, qt),
+                ir.bind(undefined, Wt),
+                ir.bind(undefined, qt),
+                ar.bind(undefined, Wt),
+                ar.bind(undefined, qt),
+                sr.bind(undefined, 0),
+                sr.bind(undefined, 1),
+                nr.bind(undefined, 0),
+                nr.bind(undefined, 1),
                 function (t) {
                     var r = t.stack,
                         i = r.pop(),
@@ -11723,7 +11723,7 @@ const PZVERSION = "1.0.102";
                     e.DEBUG && console.log(t.step, "SMD[]", r), (t.minDis = r / 64);
                 },
                 function (t) {
-                    e.DEBUG && console.log(t.step, "ELSE[]"), tr(t, !1);
+                    e.DEBUG && console.log(t.step, "ELSE[]"), tr(t, false);
                 },
                 function (t) {
                     var r = t.stack.pop();
@@ -11733,8 +11733,8 @@ const PZVERSION = "1.0.102";
                     var r = t.stack.pop();
                     e.DEBUG && console.log(t.step, "SCVTCI[]", r), (t.cvCutIn = r / 64);
                 },
-                void 0,
-                void 0,
+                undefined,
+                undefined,
                 function (t) {
                     var r = t.stack;
                     e.DEBUG && console.log(t.step, "DUP[]"), r.push(r[r.length - 1]);
@@ -11763,9 +11763,9 @@ const PZVERSION = "1.0.102";
                         i = r.pop();
                     e.DEBUG && console.log(t.step, "MINDEX[]", i), r.push(r.splice(r.length - i, 1)[0]);
                 },
-                void 0,
-                void 0,
-                void 0,
+                undefined,
+                undefined,
+                undefined,
                 function (t) {
                     var r = t.stack,
                         i = r.pop(),
@@ -11794,17 +11794,17 @@ const PZVERSION = "1.0.102";
                     for (e.DEBUG && console.log(t.step, "FDEF[]", s); 45 !== i[++a]; );
                     (t.ip = a), (t.funcs[s] = i.slice(n + 1, a));
                 },
-                void 0,
-                pr.bind(void 0, 0),
-                pr.bind(void 0, 1),
-                lr.bind(void 0, Wt),
-                lr.bind(void 0, qt),
-                hr.bind(void 0, 0),
-                hr.bind(void 0, 1),
-                cr.bind(void 0, 0),
-                cr.bind(void 0, 1),
-                ur.bind(void 0, 0),
-                ur.bind(void 0, 1),
+                undefined,
+                pr.bind(undefined, 0),
+                pr.bind(undefined, 1),
+                lr.bind(undefined, Wt),
+                lr.bind(undefined, qt),
+                hr.bind(undefined, 0),
+                hr.bind(undefined, 1),
+                cr.bind(undefined, 0),
+                cr.bind(undefined, 1),
+                ur.bind(undefined, 0),
+                ur.bind(undefined, 1),
                 function (t) {
                     for (var r = t.stack, i = t.loop, a = t.fv, s = r.pop() / 64, n = t.z2; i--; ) {
                         var o = r.pop(),
@@ -11821,8 +11821,8 @@ const PZVERSION = "1.0.102";
                     }
                     t.loop = 1;
                 },
-                dr.bind(void 0, 0),
-                dr.bind(void 0, 1),
+                dr.bind(undefined, 0),
+                dr.bind(undefined, 1),
                 function (t) {
                     for (var r = t.stack, i = t.rp0, a = t.z0[i], s = t.loop, n = t.fv, o = t.pv, p = t.z1; s--; ) {
                         var l = r.pop(),
@@ -11834,8 +11834,8 @@ const PZVERSION = "1.0.102";
                 function (t) {
                     e.DEBUG && console.log(t.step, "RTDG[]"), (t.round = Ft);
                 },
-                fr.bind(void 0, 0),
-                fr.bind(void 0, 1),
+                fr.bind(undefined, 0),
+                fr.bind(undefined, 1),
                 function (t) {
                     var r = t.prog,
                         i = t.ip,
@@ -11884,20 +11884,20 @@ const PZVERSION = "1.0.102";
                         i = r.pop();
                     e.DEBUG && console.log(t.step, "RCVT", i), r.push(64 * t.cvt[i]);
                 },
-                mr.bind(void 0, 0),
-                mr.bind(void 0, 1),
-                void 0,
-                yr.bind(void 0, 0),
-                yr.bind(void 0, 1),
+                mr.bind(undefined, 0),
+                mr.bind(undefined, 1),
+                undefined,
+                yr.bind(undefined, 0),
+                yr.bind(undefined, 1),
                 function (t) {
                     e.DEBUG && console.log(t.step, "MPPEM[]"), t.stack.push(t.ppem);
                 },
-                void 0,
+                undefined,
                 function (t) {
-                    e.DEBUG && console.log(t.step, "FLIPON[]"), (t.autoFlip = !0);
+                    e.DEBUG && console.log(t.step, "FLIPON[]"), (t.autoFlip = true);
                 },
-                void 0,
-                void 0,
+                undefined,
+                undefined,
                 function (t) {
                     var r = t.stack,
                         i = r.pop(),
@@ -11946,7 +11946,7 @@ const PZVERSION = "1.0.102";
                 },
                 function (t) {
                     var r = t.stack.pop();
-                    e.DEBUG && console.log(t.step, "IF[]", r), r || (tr(t, !0), e.DEBUG && console.log(t.step, "EIF[]"));
+                    e.DEBUG && console.log(t.step, "IF[]", r), r || (tr(t, true), e.DEBUG && console.log(t.step, "EIF[]"));
                 },
                 function (t) {
                     e.DEBUG && console.log(t.step, "EIF[]");
@@ -11968,7 +11968,7 @@ const PZVERSION = "1.0.102";
                         i = r.pop();
                     e.DEBUG && console.log(t.step, "NOT[]", i), r.push(i ? 0 : 1);
                 },
-                gr.bind(void 0, 1),
+                gr.bind(undefined, 1),
                 function (t) {
                     var r = t.stack.pop();
                     e.DEBUG && console.log(t.step, "SDB[]", r), (t.deltaBase = r);
@@ -12021,25 +12021,25 @@ const PZVERSION = "1.0.102";
                         i = r.pop();
                     e.DEBUG && console.log(t.step, "CEILING[]", i), r.push(64 * Math.ceil(i / 64));
                 },
-                vr.bind(void 0, 0),
-                vr.bind(void 0, 1),
-                vr.bind(void 0, 2),
-                vr.bind(void 0, 3),
-                void 0,
-                void 0,
-                void 0,
-                void 0,
+                vr.bind(undefined, 0),
+                vr.bind(undefined, 1),
+                vr.bind(undefined, 2),
+                vr.bind(undefined, 3),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
                 function (t) {
                     var r = t.stack,
                         i = r.pop(),
                         a = r.pop();
                     e.DEBUG && console.log(t.step, "WCVTF[]", i, a), (t.cvt[a] = (i * t.ppem) / t.font.unitsPerEm);
                 },
-                gr.bind(void 0, 2),
-                gr.bind(void 0, 3),
-                br.bind(void 0, 1),
-                br.bind(void 0, 2),
-                br.bind(void 0, 3),
+                gr.bind(undefined, 2),
+                gr.bind(undefined, 3),
+                br.bind(undefined, 1),
+                br.bind(undefined, 2),
+                br.bind(undefined, 3),
                 function (t) {
                     var r,
                         i = t.stack.pop();
@@ -12108,12 +12108,12 @@ const PZVERSION = "1.0.102";
                     }
                     (i &= 15), (t.srThreshold = 0 === i ? 0 : (i / 8 - 0.5) * r);
                 },
-                void 0,
-                void 0,
+                undefined,
+                undefined,
                 function (t) {
                     e.DEBUG && console.log(t.step, "ROFF[]"), (t.round = Bt);
                 },
-                void 0,
+                undefined,
                 function (t) {
                     e.DEBUG && console.log(t.step, "RUTG[]"), (t.round = Vt);
                 },
@@ -12122,24 +12122,24 @@ const PZVERSION = "1.0.102";
                 },
                 or,
                 or,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
                 function (t) {
                     var r = t.stack.pop();
                     e.DEBUG && console.log(t.step, "SCANCTRL[]", r);
                 },
-                xr.bind(void 0, 0),
-                xr.bind(void 0, 1),
+                xr.bind(undefined, 0),
+                xr.bind(undefined, 1),
                 function (t) {
                     var r = t.stack,
                         i = r.pop(),
                         a = 0;
                     e.DEBUG && console.log(t.step, "GETINFO[]", i), 1 & i && (a = 35), 32 & i && (a |= 4096), r.push(a);
                 },
-                void 0,
+                undefined,
                 function (t) {
                     var r = t.stack,
                         i = r.pop(),
@@ -12175,119 +12175,119 @@ const PZVERSION = "1.0.102";
                             throw new Error("invalid INSTCTRL[] selector");
                     }
                 },
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                void 0,
-                Pr.bind(void 0, 1),
-                Pr.bind(void 0, 2),
-                Pr.bind(void 0, 3),
-                Pr.bind(void 0, 4),
-                Pr.bind(void 0, 5),
-                Pr.bind(void 0, 6),
-                Pr.bind(void 0, 7),
-                Pr.bind(void 0, 8),
-                wr.bind(void 0, 1),
-                wr.bind(void 0, 2),
-                wr.bind(void 0, 3),
-                wr.bind(void 0, 4),
-                wr.bind(void 0, 5),
-                wr.bind(void 0, 6),
-                wr.bind(void 0, 7),
-                wr.bind(void 0, 8),
-                Sr.bind(void 0, 0, 0, 0, 0, 0),
-                Sr.bind(void 0, 0, 0, 0, 0, 1),
-                Sr.bind(void 0, 0, 0, 0, 0, 2),
-                Sr.bind(void 0, 0, 0, 0, 0, 3),
-                Sr.bind(void 0, 0, 0, 0, 1, 0),
-                Sr.bind(void 0, 0, 0, 0, 1, 1),
-                Sr.bind(void 0, 0, 0, 0, 1, 2),
-                Sr.bind(void 0, 0, 0, 0, 1, 3),
-                Sr.bind(void 0, 0, 0, 1, 0, 0),
-                Sr.bind(void 0, 0, 0, 1, 0, 1),
-                Sr.bind(void 0, 0, 0, 1, 0, 2),
-                Sr.bind(void 0, 0, 0, 1, 0, 3),
-                Sr.bind(void 0, 0, 0, 1, 1, 0),
-                Sr.bind(void 0, 0, 0, 1, 1, 1),
-                Sr.bind(void 0, 0, 0, 1, 1, 2),
-                Sr.bind(void 0, 0, 0, 1, 1, 3),
-                Sr.bind(void 0, 0, 1, 0, 0, 0),
-                Sr.bind(void 0, 0, 1, 0, 0, 1),
-                Sr.bind(void 0, 0, 1, 0, 0, 2),
-                Sr.bind(void 0, 0, 1, 0, 0, 3),
-                Sr.bind(void 0, 0, 1, 0, 1, 0),
-                Sr.bind(void 0, 0, 1, 0, 1, 1),
-                Sr.bind(void 0, 0, 1, 0, 1, 2),
-                Sr.bind(void 0, 0, 1, 0, 1, 3),
-                Sr.bind(void 0, 0, 1, 1, 0, 0),
-                Sr.bind(void 0, 0, 1, 1, 0, 1),
-                Sr.bind(void 0, 0, 1, 1, 0, 2),
-                Sr.bind(void 0, 0, 1, 1, 0, 3),
-                Sr.bind(void 0, 0, 1, 1, 1, 0),
-                Sr.bind(void 0, 0, 1, 1, 1, 1),
-                Sr.bind(void 0, 0, 1, 1, 1, 2),
-                Sr.bind(void 0, 0, 1, 1, 1, 3),
-                Sr.bind(void 0, 1, 0, 0, 0, 0),
-                Sr.bind(void 0, 1, 0, 0, 0, 1),
-                Sr.bind(void 0, 1, 0, 0, 0, 2),
-                Sr.bind(void 0, 1, 0, 0, 0, 3),
-                Sr.bind(void 0, 1, 0, 0, 1, 0),
-                Sr.bind(void 0, 1, 0, 0, 1, 1),
-                Sr.bind(void 0, 1, 0, 0, 1, 2),
-                Sr.bind(void 0, 1, 0, 0, 1, 3),
-                Sr.bind(void 0, 1, 0, 1, 0, 0),
-                Sr.bind(void 0, 1, 0, 1, 0, 1),
-                Sr.bind(void 0, 1, 0, 1, 0, 2),
-                Sr.bind(void 0, 1, 0, 1, 0, 3),
-                Sr.bind(void 0, 1, 0, 1, 1, 0),
-                Sr.bind(void 0, 1, 0, 1, 1, 1),
-                Sr.bind(void 0, 1, 0, 1, 1, 2),
-                Sr.bind(void 0, 1, 0, 1, 1, 3),
-                Sr.bind(void 0, 1, 1, 0, 0, 0),
-                Sr.bind(void 0, 1, 1, 0, 0, 1),
-                Sr.bind(void 0, 1, 1, 0, 0, 2),
-                Sr.bind(void 0, 1, 1, 0, 0, 3),
-                Sr.bind(void 0, 1, 1, 0, 1, 0),
-                Sr.bind(void 0, 1, 1, 0, 1, 1),
-                Sr.bind(void 0, 1, 1, 0, 1, 2),
-                Sr.bind(void 0, 1, 1, 0, 1, 3),
-                Sr.bind(void 0, 1, 1, 1, 0, 0),
-                Sr.bind(void 0, 1, 1, 1, 0, 1),
-                Sr.bind(void 0, 1, 1, 1, 0, 2),
-                Sr.bind(void 0, 1, 1, 1, 0, 3),
-                Sr.bind(void 0, 1, 1, 1, 1, 0),
-                Sr.bind(void 0, 1, 1, 1, 1, 1),
-                Sr.bind(void 0, 1, 1, 1, 1, 2),
-                Sr.bind(void 0, 1, 1, 1, 1, 3),
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                undefined,
+                Pr.bind(undefined, 1),
+                Pr.bind(undefined, 2),
+                Pr.bind(undefined, 3),
+                Pr.bind(undefined, 4),
+                Pr.bind(undefined, 5),
+                Pr.bind(undefined, 6),
+                Pr.bind(undefined, 7),
+                Pr.bind(undefined, 8),
+                wr.bind(undefined, 1),
+                wr.bind(undefined, 2),
+                wr.bind(undefined, 3),
+                wr.bind(undefined, 4),
+                wr.bind(undefined, 5),
+                wr.bind(undefined, 6),
+                wr.bind(undefined, 7),
+                wr.bind(undefined, 8),
+                Sr.bind(undefined, 0, 0, 0, 0, 0),
+                Sr.bind(undefined, 0, 0, 0, 0, 1),
+                Sr.bind(undefined, 0, 0, 0, 0, 2),
+                Sr.bind(undefined, 0, 0, 0, 0, 3),
+                Sr.bind(undefined, 0, 0, 0, 1, 0),
+                Sr.bind(undefined, 0, 0, 0, 1, 1),
+                Sr.bind(undefined, 0, 0, 0, 1, 2),
+                Sr.bind(undefined, 0, 0, 0, 1, 3),
+                Sr.bind(undefined, 0, 0, 1, 0, 0),
+                Sr.bind(undefined, 0, 0, 1, 0, 1),
+                Sr.bind(undefined, 0, 0, 1, 0, 2),
+                Sr.bind(undefined, 0, 0, 1, 0, 3),
+                Sr.bind(undefined, 0, 0, 1, 1, 0),
+                Sr.bind(undefined, 0, 0, 1, 1, 1),
+                Sr.bind(undefined, 0, 0, 1, 1, 2),
+                Sr.bind(undefined, 0, 0, 1, 1, 3),
+                Sr.bind(undefined, 0, 1, 0, 0, 0),
+                Sr.bind(undefined, 0, 1, 0, 0, 1),
+                Sr.bind(undefined, 0, 1, 0, 0, 2),
+                Sr.bind(undefined, 0, 1, 0, 0, 3),
+                Sr.bind(undefined, 0, 1, 0, 1, 0),
+                Sr.bind(undefined, 0, 1, 0, 1, 1),
+                Sr.bind(undefined, 0, 1, 0, 1, 2),
+                Sr.bind(undefined, 0, 1, 0, 1, 3),
+                Sr.bind(undefined, 0, 1, 1, 0, 0),
+                Sr.bind(undefined, 0, 1, 1, 0, 1),
+                Sr.bind(undefined, 0, 1, 1, 0, 2),
+                Sr.bind(undefined, 0, 1, 1, 0, 3),
+                Sr.bind(undefined, 0, 1, 1, 1, 0),
+                Sr.bind(undefined, 0, 1, 1, 1, 1),
+                Sr.bind(undefined, 0, 1, 1, 1, 2),
+                Sr.bind(undefined, 0, 1, 1, 1, 3),
+                Sr.bind(undefined, 1, 0, 0, 0, 0),
+                Sr.bind(undefined, 1, 0, 0, 0, 1),
+                Sr.bind(undefined, 1, 0, 0, 0, 2),
+                Sr.bind(undefined, 1, 0, 0, 0, 3),
+                Sr.bind(undefined, 1, 0, 0, 1, 0),
+                Sr.bind(undefined, 1, 0, 0, 1, 1),
+                Sr.bind(undefined, 1, 0, 0, 1, 2),
+                Sr.bind(undefined, 1, 0, 0, 1, 3),
+                Sr.bind(undefined, 1, 0, 1, 0, 0),
+                Sr.bind(undefined, 1, 0, 1, 0, 1),
+                Sr.bind(undefined, 1, 0, 1, 0, 2),
+                Sr.bind(undefined, 1, 0, 1, 0, 3),
+                Sr.bind(undefined, 1, 0, 1, 1, 0),
+                Sr.bind(undefined, 1, 0, 1, 1, 1),
+                Sr.bind(undefined, 1, 0, 1, 1, 2),
+                Sr.bind(undefined, 1, 0, 1, 1, 3),
+                Sr.bind(undefined, 1, 1, 0, 0, 0),
+                Sr.bind(undefined, 1, 1, 0, 0, 1),
+                Sr.bind(undefined, 1, 1, 0, 0, 2),
+                Sr.bind(undefined, 1, 1, 0, 0, 3),
+                Sr.bind(undefined, 1, 1, 0, 1, 0),
+                Sr.bind(undefined, 1, 1, 0, 1, 1),
+                Sr.bind(undefined, 1, 1, 0, 1, 2),
+                Sr.bind(undefined, 1, 1, 0, 1, 3),
+                Sr.bind(undefined, 1, 1, 1, 0, 0),
+                Sr.bind(undefined, 1, 1, 1, 0, 1),
+                Sr.bind(undefined, 1, 1, 1, 0, 2),
+                Sr.bind(undefined, 1, 1, 1, 0, 3),
+                Sr.bind(undefined, 1, 1, 1, 1, 0),
+                Sr.bind(undefined, 1, 1, 1, 1, 1),
+                Sr.bind(undefined, 1, 1, 1, 1, 2),
+                Sr.bind(undefined, 1, 1, 1, 1, 3),
             ]),
             (Er.prototype.setState = function (e, t) {
                 return (this.state[e] = t), (this.activeState = { key: e, value: this.state[e] }), this.activeState;
@@ -12301,7 +12301,7 @@ const PZVERSION = "1.0.102";
             (Zr.prototype.composeRUD = function (e) {
                 var t = this,
                     r = e.map(function (e) {
-                        return t[e[0]].apply(t, e.slice(1).concat(!0));
+                        return t[e[0]].apply(t, e.slice(1).concat(true));
                     }),
                     i = function (e) {
                         return "object" == typeof e && e.hasOwnProperty("FAIL");
@@ -12354,7 +12354,7 @@ const PZVERSION = "1.0.102";
                 this.events.newToken.subscribe(function (i, a) {
                     var s = [i, a],
                         n = [i, a];
-                    if (null === t || !0 === t.apply(this, s)) {
+                    if (null === t || true === t.apply(this, s)) {
                         var o = r.apply(this, n);
                         i.setState(e, o);
                     }
@@ -12371,7 +12371,7 @@ const PZVERSION = "1.0.102";
                 (this.index = e), (this.current = this.context[e]), (this.backtrack = this.context.slice(0, e)), (this.lookahead = this.context.slice(e + 1));
             }),
             (kr.prototype.get = function (e) {
-                switch (!0) {
+                switch (true) {
                     case 0 === e:
                         return this.current;
                     case e < 0 && Math.abs(e) <= this.backtrack.length:
@@ -12501,22 +12501,22 @@ const PZVERSION = "1.0.102";
             },
             arabicSentenceEndCheck: function (e) {
                 var t = e.get(1);
-                switch (!0) {
+                switch (true) {
                     case null === t:
-                        return !0;
+                        return true;
                     case !Rr(t) && !Nr(t):
                         var r = /\s/.test(t);
-                        if (!r) return !0;
+                        if (!r) return true;
                         if (
                             r &&
                             !e.lookahead.some(function (e) {
                                 return Rr(e) || Nr(e);
                             })
                         )
-                            return !0;
+                            return true;
                         break;
                     default:
-                        return !1;
+                        return false;
                 }
             },
         };
@@ -12529,7 +12529,7 @@ const PZVERSION = "1.0.102";
                             var a = (function (e) {
                                 return 1 === e.length && 12 === e[0].id && e[0].substitution;
                             })(t[e].lookup(i) || null)[0];
-                            return a >= 0 ? r.setState(e, a) : void 0;
+                            return a >= 0 ? r.setState(e, a) : undefined;
                         }
                     },
                     a = new kr(r, 0),
@@ -12549,15 +12549,15 @@ const PZVERSION = "1.0.102";
                                     var i = t[r],
                                         a = Cr(i),
                                         s = Nr(i);
-                                    if (!a && !s) return !0;
-                                    if (a) return !1;
+                                    if (!a && !s) return true;
+                                    if (a) return false;
                                 }
-                                return !1;
+                                return false;
                             })(s) && (r |= 1),
                             (function (e) {
-                                if (Cr(e.current)) return !1;
-                                for (var t = 0; t < e.lookahead.length; t++) if (!Nr(e.lookahead[t])) return !0;
-                                return !1;
+                                if (Cr(e.current)) return false;
+                                for (var t = 0; t < e.lookahead.length; t++) if (!Nr(e.lookahead[t])) return true;
+                                return false;
                             })(s) && (r |= 2),
                             r)
                         ) {
@@ -12602,7 +12602,7 @@ const PZVERSION = "1.0.102";
                                     for (var l = 0; l < o.components.length; l++) {
                                         var h = o.components[l],
                                             c = a.get(l + 1);
-                                        c.activeState.value === h && (c.state.deleted = !0);
+                                        c.activeState.value === h && (c.state.deleted = true);
                                     }
                                 } else if (n) {
                                     var u = n && 1 === n.length && 12 === n[0].id && n[0].substitution;
@@ -12763,7 +12763,7 @@ const PZVERSION = "1.0.102";
                 (this.descender = e.descender),
                 (this.createdTimestamp = e.createdTimestamp),
                 (this.tables = { os2: { usWeightClass: e.weightClass || this.usWeightClasses.MEDIUM, usWidthClass: e.widthClass || this.usWidthClasses.MEDIUM, fsSelection: e.fsSelection || this.fsSelectionValues.REGULAR } })),
-                (this.supported = !0),
+                (this.supported = true),
                 (this.glyphs = new xe.GlyphSet(this, e.glyphs || [])),
                 (this.encoding = new ue(this)),
                 (this.position = new wt(this)),
@@ -12771,7 +12771,7 @@ const PZVERSION = "1.0.102";
                 (this.tables = this.tables || {}),
                 Object.defineProperty(this, "hinting", {
                     get: function () {
-                        return this._hinting ? this._hinting : "truetype" === this.outlinesFormat ? (this._hinting = new Dt(this)) : void 0;
+                        return this._hinting ? this._hinting : "truetype" === this.outlinesFormat ? (this._hinting = new Dt(this)) : undefined;
                     },
                 });
         }
@@ -12831,9 +12831,9 @@ const PZVERSION = "1.0.102";
                     i = function (e, t) {
                         if (e.length > t.length) return null;
                         for (var r = 0; r < e.length; r++) {
-                            if (e[r] !== t[r]) return !1;
+                            if (e[r] !== t[r]) return false;
                         }
-                        return !0;
+                        return true;
                     },
                     a = 0;
                 a < r.length;
@@ -13032,9 +13032,9 @@ const PZVERSION = "1.0.102";
                 var r = this.position.defaultKerningTables;
                 return r ? this.position.getKerningValue(r, e, t) : this.kerningPairs[e + "," + t] || 0;
             }),
-            (Wr.prototype.defaultRenderOptions = { kerning: !0, features: { liga: !0, rlig: !0 } }),
+            (Wr.prototype.defaultRenderOptions = { kerning: true, features: { liga: true, rlig: true } }),
             (Wr.prototype.forEachGlyph = function (e, t, r, i, a, s) {
-                (t = void 0 !== t ? t : 0), (r = void 0 !== r ? r : 0), (i = void 0 !== i ? i : 72), (a = a || this.defaultRenderOptions);
+                (t = undefined !== t ? t : 0), (r = undefined !== r ? r : 0), (i = undefined !== i ? i : 72), (a = a || this.defaultRenderOptions);
                 var n,
                     o = (1 / this.unitsPerEm) * i,
                     p = this.stringToGlyphs(e, a);
@@ -13119,7 +13119,7 @@ const PZVERSION = "1.0.102";
                             n = document.createElement("a");
                         (n.href = window.URL.createObjectURL(s)), (n.download = e);
                         var o = document.createEvent("MouseEvents");
-                        o.initEvent("click", !0, !1), n.dispatchEvent(o);
+                        o.initEvent("click", true, false), n.dispatchEvent(o);
                     } else console.warn("Font file could not be downloaded. Try using a different browser.");
                 else {
                     var p = require("fs"),
@@ -13168,7 +13168,7 @@ const PZVERSION = "1.0.102";
                 ? { posFormat: 1, coverage: this.parsePointer(ie.coverage), value: this.parseValueRecord() }
                 : 2 === t
                 ? { posFormat: 2, coverage: this.parsePointer(ie.coverage), values: this.parseValueRecordList() }
-                : void C.assert(!1, "0x" + e.toString(16) + ": GPOS lookup type 1 format must be 1 or 2.");
+                : void C.assert(false, "0x" + e.toString(16) + ": GPOS lookup type 1 format must be 1 or 2.");
         }),
             (ei[2] = function () {
                 var e = this.offset + this.relativeOffset,
@@ -13313,7 +13313,7 @@ const PZVERSION = "1.0.102";
         }
         function ni(e, t) {
             var r = new XMLHttpRequest();
-            r.open("get", e, !0),
+            r.open("get", e, true),
                 (r.responseType = "arraybuffer"),
                 (r.onload = function () {
                     return r.response ? t(null, r.response) : t("Font could not be loaded: " + r.statusText);
@@ -13329,7 +13329,7 @@ const PZVERSION = "1.0.102";
                     n = se.getULong(e, i + 4),
                     o = se.getULong(e, i + 8),
                     p = se.getULong(e, i + 12);
-                r.push({ tag: s, checksum: n, offset: o, length: p, compression: !1 }), (i += 16);
+                r.push({ tag: s, checksum: n, offset: o, length: p, compression: false }), (i += 16);
             }
             return r;
         }
@@ -13357,7 +13357,7 @@ const PZVERSION = "1.0.102";
                 u,
                 d,
                 f,
-                m = new Wr({ empty: !0 }),
+                m = new Wr({ empty: true }),
                 y = new DataView(e, 0),
                 g = [],
                 v = se.getTag(y, 0);
@@ -13377,7 +13377,7 @@ const PZVERSION = "1.0.102";
                             n = se.getULong(e, i + 4),
                             o = se.getULong(e, i + 8),
                             p = se.getULong(e, i + 12),
-                            l = void 0;
+                            l = undefined;
                         (l = o < p && "WOFF"), r.push({ tag: s, offset: n, compression: l, compressedLength: o, length: p }), (i += 20);
                     }
                     return r;
@@ -13385,7 +13385,7 @@ const PZVERSION = "1.0.102";
             }
             for (var x = 0; x < i; x += 1) {
                 var P = g[x],
-                    w = void 0;
+                    w = undefined;
                 switch (P.tag) {
                     case "cmap":
                         (w = pi(y, P)), (m.tables.cmap = oe.parse(w.data, w.offset)), (m.encoding = new de(m.tables.cmap));
@@ -13516,7 +13516,7 @@ const PZVERSION = "1.0.102";
             (e.loadSync = function (e) {
                 return li(kt(require("fs").readFileSync(e)));
             }),
-            Object.defineProperty(e, "__esModule", { value: !0 });
+            Object.defineProperty(e, "__esModule", { value: true });
     }),
     (function (e) {
         function t() {
@@ -13524,9 +13524,9 @@ const PZVERSION = "1.0.102";
         }
         var r = {
             id: null,
-            caseSensitive: !1,
+            caseSensitive: false,
             include: [],
-            shouldSort: !0,
+            shouldSort: true,
             searchFn: s,
             sortFn: function (e, t) {
                 return e.score - t.score;
@@ -13539,7 +13539,7 @@ const PZVERSION = "1.0.102";
                 var l;
                 var h;
                 if (r) {
-                    if ((-1 !== (o = r.indexOf(".")) ? ((s = r.slice(0, o)), (n = r.slice(o + 1))) : (s = r), null !== (p = t[s]) && void 0 !== p))
+                    if ((-1 !== (o = r.indexOf(".")) ? ((s = r.slice(0, o)), (n = r.slice(o + 1))) : (s = r), null !== (p = t[s]) && undefined !== p))
                         if (n || ("string" != typeof p && "number" != typeof p))
                             if (a(p)) for (l = 0, h = p.length; l < h; l++) e(p[l], n, i);
                             else n && e(p, n, i);
@@ -13548,12 +13548,12 @@ const PZVERSION = "1.0.102";
                 return i;
             },
             keys: [],
-            verbose: !1,
-            tokenize: !1,
-            matchAllTokens: !1,
+            verbose: false,
+            tokenize: false,
+            matchAllTokens: false,
             tokenSeparator: / +/g,
             minMatchCharLength: 1,
-            findAllMatches: !1,
+            findAllMatches: false,
         };
         function i(e, t) {
             var i;
@@ -13640,17 +13640,17 @@ const PZVERSION = "1.0.102";
                     b,
                     x,
                     P = this.options,
-                    w = !1;
-                if (void 0 !== r && null !== r) {
+                    w = false;
+                if (undefined !== r && null !== r) {
                     o = [];
                     var S = 0;
                     if ("string" == typeof r) {
                         if (((n = r.split(P.tokenSeparator)), P.verbose && t("---------\nKey:", e), this.options.tokenize)) {
                             for (b = 0; b < this.tokenSearchers.length; b++) {
-                                for (d = this.tokenSearchers[b], P.verbose && t("Pattern:", d.pattern), f = [], g = !1, x = 0; x < n.length; x++) {
+                                for (d = this.tokenSearchers[b], P.verbose && t("Pattern:", d.pattern), f = [], g = false, x = 0; x < n.length; x++) {
                                     m = n[x];
                                     var E = {};
-                                    (y = d.search(m)).isMatch ? ((E[m] = y.score), (w = !0), (g = !0), o.push(y.score)) : ((E[m] = 1), this.options.matchAllTokens || o.push(1)), f.push(E);
+                                    (y = d.search(m)).isMatch ? ((E[m] = y.score), (w = true), (g = true), o.push(y.score)) : ((E[m] = 1), this.options.matchAllTokens || o.push(1)), f.push(E);
                                 }
                                 g && S++, P.verbose && t("Token scores:", f);
                             }
@@ -13660,7 +13660,7 @@ const PZVERSION = "1.0.102";
                         (u = this.fullSeacher.search(r)),
                             P.verbose && t("Full text score:", u.score),
                             (h = u.score),
-                            void 0 !== l && (h = (h + l) / 2),
+                            undefined !== l && (h = (h + l) / 2),
                             P.verbose && t("Score average:", h),
                             (v = !this.options.tokenize || !this.options.matchAllTokens || S >= this.tokenSearchers.length),
                             P.verbose && t("Check Matches", v),
@@ -13770,7 +13770,7 @@ const PZVERSION = "1.0.102";
                     w,
                     S,
                     E = this.options;
-                if (((e = E.caseSensitive ? e : e.toLowerCase()), this.pattern === e)) return { isMatch: !0, score: 0, matchedIndices: [[0, e.length - 1]] };
+                if (((e = E.caseSensitive ? e : e.toLowerCase()), this.pattern === e)) return { isMatch: true, score: 0, matchedIndices: [[0, e.length - 1]] };
                 if (this.patternLen > E.maxPatternLength) {
                     if ((b = !!(v = e.match(new RegExp(this.pattern.replace(E.tokenSeparator, "|")))))) for (P = [], t = 0, w = v.length; t < w; t++) (S = v[t]), P.push([e.indexOf(S), S.length - 1]);
                     return { isMatch: b, score: b ? 0.5 : 1, matchedIndices: P };
@@ -13811,7 +13811,7 @@ const PZVERSION = "1.0.102";
     (PZ.compositor = function (e, t, r) {
         (this.renderer = e),
             (this.bufferParams = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBAFormat }),
-            (this.accumParams = { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat, type: THREE.FloatType, depthBuffer: !1, stencilBuffer: !1 }),
+            (this.accumParams = { minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter, format: THREE.RGBAFormat, type: THREE.FloatType, depthBuffer: false, stencilBuffer: false }),
             (this.readBuffer = null),
             (this.writeBuffer = null),
             (this.screenBuffers = [null]),
@@ -13823,11 +13823,11 @@ const PZVERSION = "1.0.102";
                     i._sequence.properties.resolution.onChanged.watch(function () {
                         let e = i._sequence.properties.resolution.get();
                         i.camera = new THREE.OrthographicCamera(0.5 * -e[0], 0.5 * e[0], 0.5 * e[1], 0.5 * -e[1], 0, 1);
-                    }, !0);
+                    }, true);
             },
         }),
             (this.copyPass = new THREE.ShaderPass(new THREE.ShaderMaterial({ uniforms: THREE.UniformsUtils.clone(THREE.CopyShader.uniforms), fragmentShader: THREE.CopyShader.fragmentShader, vertexShader: THREE.CopyShader.vertexShader }))),
-            (this.copyPass.material.transparent = !0),
+            (this.copyPass.material.transparent = true),
             (this.mixPass = new THREE.MixPass()),
             (this.scene = new THREE.Scene()),
             (this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1)),
@@ -13853,14 +13853,14 @@ const PZVERSION = "1.0.102";
             (this.accumBuffers[0] = this.accumBuffers[1]), (this.accumBuffers[1] = e);
         },
         clear: function (e) {
-            this.renderer.clearTarget(this.screenBuffers[e], !0, !0, !0);
+            this.renderer.clearTarget(this.screenBuffers[e], true, true, true);
         },
         renderSequence: function (e) {
-            (this.ratio = this.readBuffer.width / this._sequence.properties.resolution.get()[0]), this.renderer.clearTarget(this.accumBuffers[0], !0, !0, !0);
+            (this.ratio = this.readBuffer.width / this._sequence.properties.resolution.get()[0]), this.renderer.clearTarget(this.accumBuffers[0], true, true, true);
             for (var t = this._sequence.videoTracks, r = 0; r < t.length; r++) {
-                t[r].skip = !0;
+                t[r].skip = true;
                 let e = t[r].layer;
-                e && ((e instanceof PZ.layer.scene && !e.pass.camera) || (e instanceof PZ.layer.composite && !e.objects.length) || ((t[r].skip = !1), 0));
+                e && ((e instanceof PZ.layer.scene && !e.pass.camera) || (e instanceof PZ.layer.composite && !e.objects.length) || ((t[r].skip = false), 0));
             }
             let i = Math.floor(this._sequence.properties.motionBlurSamples.get(e));
             0 === this._sequence.properties.motionBlur.get() && (i = 1);
@@ -13870,11 +13870,11 @@ const PZVERSION = "1.0.102";
                 for (r = 0; r < t.length; r++) {
                     if (t[r].skip) continue;
                     let n = t[r].layer;
-                    n.update(e - n.parent.start + (s / i) * a), this.renderLayer(n, 0, !1);
+                    n.update(e - n.parent.start + (s / i) * a), this.renderLayer(n, 0, false);
                 }
-                this.mixPass.render(this.renderer, this.accumBuffers[1], this.accumBuffers[0], this.screenBuffers[0], !0), this.swapAccumBuffers();
+                this.mixPass.render(this.renderer, this.accumBuffers[1], this.accumBuffers[0], this.screenBuffers[0], true), this.swapAccumBuffers();
             }
-            (this.copyPass.uniforms.tDiffuse.value = this.accumBuffers[0].texture), (this.copyPass.uniforms.opacity.value = 1 / i), this.copyPass.render(this.renderer, null, null, !0), (this.copyPass.uniforms.opacity.value = 1);
+            (this.copyPass.uniforms.tDiffuse.value = this.accumBuffers[0].texture), (this.copyPass.uniforms.opacity.value = 1 / i), this.copyPass.render(this.renderer, null, null, true), (this.copyPass.uniforms.opacity.value = 1);
         },
         renderEffects: function (e, t, r) {
             console.assert(!!e);
@@ -13885,7 +13885,7 @@ const PZVERSION = "1.0.102";
             for (s = 0; s < n; s++)
                 (i = e[s]) instanceof PZ.effect.group
                     ? i.enabled && this.renderEffects(i.objects, t, r)
-                    : (a = i.pass) && a.enabled && (a.uniforms.uvScale && a.uniforms.uvScale.value.set(t, r), a.render(this.renderer, this.writeBuffer, this.readBuffer, !0), a.needsSwap && this.swapBuffers());
+                    : (a = i.pass) && a.enabled && (a.uniforms.uvScale && a.uniforms.uvScale.value.set(t, r), a.render(this.renderer, this.writeBuffer, this.readBuffer, true), a.needsSwap && this.swapBuffers());
         },
         renderLayer: function (e, t, r) {
             let i = this.screenBuffers[t],
@@ -13894,17 +13894,17 @@ const PZVERSION = "1.0.102";
                 n = Math.min(Math.ceil(a[1] * this.ratio), i.height);
             var o = s / i.width,
                 p = n / i.height;
-            if ((this.readBuffer.viewport.set(0, 0, s, n), e.texture instanceof THREE.Texture)) (this.copyPass.uniforms.tDiffuse.value = e.texture), this.copyPass.render(this.renderer, this.readBuffer, null, !0);
-            else if (e instanceof PZ.layer.adjustment) this.copyPass.render(this.renderer, this.readBuffer, i, !0);
+            if ((this.readBuffer.viewport.set(0, 0, s, n), e.texture instanceof THREE.Texture)) (this.copyPass.uniforms.tDiffuse.value = e.texture), this.copyPass.render(this.renderer, this.readBuffer, null, true);
+            else if (e instanceof PZ.layer.adjustment) this.copyPass.render(this.renderer, this.readBuffer, i, true);
             else if (e instanceof PZ.layer.shape) {
                 let t = this.canvas.getContext("2d");
                 if ((e.draw(t), ISNODE)) {
                     let e = t.getImageData(0, 0, this.canvas.width, this.canvas.height);
                     this.canvasTexture.image.data.set(e.data), this.copyPass.uniforms.uvScale.value.set(1, -1), this.copyPass.uniforms.uvOffset.value.set(0, 1);
                 }
-                (this.canvasTexture.needsUpdate = !0),
+                (this.canvasTexture.needsUpdate = true),
                     (this.copyPass.uniforms.tDiffuse.value = this.canvasTexture),
-                    this.copyPass.render(this.renderer, this.readBuffer, null, !0),
+                    this.copyPass.render(this.renderer, this.readBuffer, null, true),
                     ISNODE && (this.copyPass.uniforms.uvOffset.value.set(0, 0), this.copyPass.uniforms.uvScale.value.set(1, 1));
             } else if (e instanceof PZ.layer.composite) {
                 this.screenBuffers[t + 1] || (this.screenBuffers[t + 1] = this.readBuffer.clone()), this.clear(t + 1);
@@ -13913,7 +13913,7 @@ const PZVERSION = "1.0.102";
                     (r instanceof PZ.layer.scene && !r.pass.camera) || (r instanceof PZ.layer.composite && !r.objects.length) || this.renderLayer(r, t + 1);
                 }
                 this.swapReadBuffer(t + 1);
-            } else e.pass && (e.pass.uniforms, e.pass.render(this.renderer, this.readBuffer, null, !0));
+            } else e.pass && (e.pass.uniforms, e.pass.render(this.renderer, this.readBuffer, null, true));
             this.writeBuffer.viewport.set(0, 0, s, n),
                 this.renderEffects(e.effects, o, p),
                 e.composite.quad.material.uniforms &&
@@ -13924,7 +13924,7 @@ const PZVERSION = "1.0.102";
                 this.swapScreenBuffer(t);
         },
         compositeScene: function (e, t) {
-            for (this.scene.background = t.texture, this.writeBuffer.viewport.set(0, 0, t.width, t.height), this.renderer.render(this.scene, this.camera, e ? null : this.writeBuffer, !0); this.scene.children[0]; )
+            for (this.scene.background = t.texture, this.writeBuffer.viewport.set(0, 0, t.width, t.height), this.renderer.render(this.scene, this.camera, e ? null : this.writeBuffer, true); this.scene.children[0]; )
                 this.scene.remove(this.scene.children[0]);
         },
         reset: function (e, t) {
@@ -13939,17 +13939,17 @@ const PZVERSION = "1.0.102";
                       (this.canvasTexture = new THREE.DataTexture()),
                       (this.canvasTexture.image = { data: new Uint8Array(e * t * 4), width: e, height: t }),
                       (this.canvasTexture.minFilter = this.canvasTexture.magFilter = THREE.LinearFilter),
-                      (this.canvasTexture.premultiplyAlpha = !0),
+                      (this.canvasTexture.premultiplyAlpha = true),
                       (this.canvasTexture.format = THREE.RGBAFormat),
-                      (this.canvasTexture.generateMipmaps = !1))
+                      (this.canvasTexture.generateMipmaps = false))
                     : ((this.canvas = document.createElement("canvas")),
                       (this.canvas.width = e),
                       (this.canvas.height = t),
                       (this.canvasTexture = new THREE.Texture(this.canvas)),
                       (this.canvasTexture.minFilter = this.canvasTexture.magFilter = THREE.LinearFilter),
-                      (this.canvasTexture.premultiplyAlpha = !0),
+                      (this.canvasTexture.premultiplyAlpha = true),
                       (this.canvasTexture.format = THREE.RGBAFormat),
-                      (this.canvasTexture.generateMipmaps = !1));
+                      (this.canvasTexture.generateMipmaps = false));
         },
         setSize: function (e, t) {
             this.reset(e, t);
@@ -13961,7 +13961,7 @@ const PZVERSION = "1.0.102";
         },
     }),
     (THREE.Pass = function () {
-        (this.enabled = !0), (this.needsSwap = !0), (this.clear = !1), (this.renderToScreen = !1);
+        (this.enabled = true), (this.needsSwap = true), (this.clear = false), (this.renderToScreen = false);
     }),
     Object.assign(THREE.Pass.prototype, {
         setSize: function (e, t) {},
@@ -13971,16 +13971,16 @@ const PZVERSION = "1.0.102";
     }),
     (PZ.schedule = function (e) {
         0 === e
-            ? (ISNODE ? (this.texture = new THREE.DataTexture()) : ((this.el = document.createElement("video")), (this.el.preload = "auto"), (this.el.muted = !0), (this.texture = new THREE.Texture(this.el))),
+            ? (ISNODE ? (this.texture = new THREE.DataTexture()) : ((this.el = document.createElement("video")), (this.el.preload = "auto"), (this.el.muted = true), (this.texture = new THREE.Texture(this.el))),
               (this.texture.minFilter = THREE.LinearFilter),
               (this.texture.magFilter = THREE.LinearFilter),
               (this.texture.format = THREE.RGBFormat),
-              (this.texture.generateMipmaps = !1),
-              (this.playing = !1),
+              (this.texture.generateMipmaps = false),
+              (this.playing = false),
               (this.padding = 60),
               (this.type = 0))
             : 1 === e
-            ? (ISNODE || ((this.el = document.createElement("audio")), (this.el.preload = "auto")), (this.playing = !1), (this.padding = 60), (this.type = 1))
+            ? (ISNODE || ((this.el = document.createElement("audio")), (this.el.preload = "auto")), (this.playing = false), (this.padding = 60), (this.type = 1))
             : ((this.el = null), (this.padding = 0), (this.type = 2)),
             this.reset();
     }),
@@ -13995,7 +13995,7 @@ const PZVERSION = "1.0.102";
         return e === PZ.schedule.type.AUDIO || e === PZ.schedule.type.VIDEO ? e === this.type : this.type === PZ.schedule.type.NONE;
     }),
     (PZ.schedule.prototype.reset = function () {
-        this.el && this.playing && (this.el.pause(), (this.playing = !1)), (this.currentItem = null), (this.index = 0), (this.items = []);
+        this.el && this.playing && (this.el.pause(), (this.playing = false)), (this.currentItem = null), (this.index = 0), (this.items = []);
     }),
     (PZ.schedule.prototype.update = function (e, t) {
         var r = this.currentItem;
@@ -14021,7 +14021,7 @@ const PZVERSION = "1.0.102";
         var t = this;
         return new Promise(function (r, i) {
             (t.el.oncanplaythrough = function () {
-                (this.oncanplaythrough = null), (t.texture.needsUpdate = !0), r();
+                (this.oncanplaythrough = null), (t.texture.needsUpdate = true), r();
             }),
                 (t.el.currentTime = e);
         });
@@ -14067,7 +14067,7 @@ const PZVERSION = "1.0.102";
                     i.image.data.set(l, s.decoder.frameByteOffset),
                         p < t.length && (s.decoder.nextFrameData = new Uint8Array(t.buffer, p)),
                         (s.decoder.frameByteOffset += l.length),
-                        s.decoder.frameByteOffset >= o && (s.decoder.process.stdout.pause(), s.decoder.process.stdout.removeListener("data", n), s.decoder.process.removeListener("exit", a), (i.needsUpdate = !0), clearTimeout(r), e());
+                        s.decoder.frameByteOffset >= o && (s.decoder.process.stdout.pause(), s.decoder.process.stdout.removeListener("data", n), s.decoder.process.removeListener("exit", a), (i.needsUpdate = true), clearTimeout(r), e());
                 };
             s.decoder.process.on("exit", a), s.decoder.process.stdout.on("data", n), s.decoder.process.stdout.resume();
         });
@@ -14175,27 +14175,27 @@ const PZVERSION = "1.0.102";
         this.updateSchedules(e, e.videoSchedules, this.combineTracks(e.videoTracks), PZ.schedule.type.VIDEO), this.updateSchedules(e, e.audioSchedules, this.combineTracks(e.audioTracks), PZ.schedule.type.AUDIO);
     }),
     (PZ.export = function (e, t, r) {
-        if (((this.sequence = e), (this.params = t), (this.renderer = null), (this.compositor = null), (this.readPixelsWorkaround = !1), ISNODE)) {
+        if (((this.sequence = e), (this.params = t), (this.renderer = null), (this.compositor = null), (this.readPixelsWorkaround = false), ISNODE)) {
             if (r) {
                 var i;
                 try {
-                    (i = require("node-gles").createWebGLRenderingContext({ width: t.width, height: t.height, majorVersion: 2, minorVersion: 0, webGLCompability: !0 })),
+                    (i = require("node-gles").createWebGLRenderingContext({ width: t.width, height: t.height, majorVersion: 2, minorVersion: 0, webGLCompability: true })),
                         console.log("VERSION: " + i.getParameter(i.VERSION)),
                         console.log("RENDERER: " + i.getParameter(i.RENDERER));
                 } catch (e) {
-                    (i = require("gl")(t.width, t.height, { preserveDrawingBuffer: !0, alpha: !1, stencil: !0 })), (moduleName = "gl"), console.log("headless-gl renderer");
+                    (i = require("gl")(t.width, t.height, { preserveDrawingBuffer: true, alpha: false, stencil: true })), (moduleName = "gl"), console.log("headless-gl renderer");
                 }
                 this.renderer = new THREE.WebGLRenderer({ canvas: { addEventListener: function () {}, removeEventListener: function () {} }, context: i });
             }
         } else {
-            this.renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer: !0 });
+            this.renderer = new THREE.WebGLRenderer({ preserveDrawingBuffer: true });
             let e = this.renderer.context,
                 r = e.getExtension("WEBGL_debug_renderer_info"),
                 i = e.getParameter(r.UNMASKED_RENDERER_WEBGL);
             console.log("GPU: " + i),
                 "Mesa DRI Intel(R) HD Graphics 500 (Broxton 2x6)" === i.trim() &&
                     (console.warn("Broken config detected: using readPixels workaround"),
-                    (this.readPixelsWorkaround = !0),
+                    (this.readPixelsWorkaround = true),
                     (this.readPixelsCanvas = document.createElement("canvas")),
                     (this.readPixelsCanvas.width = t.width),
                     (this.readPixelsCanvas.height = t.height),
@@ -14203,9 +14203,9 @@ const PZVERSION = "1.0.102";
                     this.readPixelsCtx.scale(1, -1));
         }
         this.renderer &&
-            (this.renderer.setSize(t.width, t.height, !1),
+            (this.renderer.setSize(t.width, t.height, false),
             this.renderer.setClearColor(0, 1),
-            (this.renderer.shadowMap.enabled = !0),
+            (this.renderer.shadowMap.enabled = true),
             (this.renderer.shadowMap.type = THREE.PCFSoftShadowMap),
             (this.compositor = new PZ.compositor(this.renderer, t.width, t.height)),
             (this.compositor.sequence = e)),
@@ -14419,7 +14419,7 @@ const PZVERSION = "1.0.102";
     (PZ.upload.prototype.fetchWithRetry = async function (e, t, r) {
         let i,
             a = 0;
-        for (void 0 === r && (r = 5); ; ) {
+        for (undefined === r && (r = 5); ; ) {
             try {
                 i = await fetch(e, t);
             } catch (e) {}
@@ -14493,7 +14493,7 @@ const PZVERSION = "1.0.102";
         "}",
     ].join("\n")),
     (PZ.motionBlur.prototype.load = function () {
-        var e = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBuffer: !1, type: THREE.HalfFloatType };
+        var e = { minFilter: THREE.LinearFilter, magFilter: THREE.LinearFilter, format: THREE.RGBFormat, stencilBuffer: false, type: THREE.HalfFloatType };
         (this.velocityBuffer = new THREE.WebGLRenderTarget(944, 531, e)),
             (this.velocityShader = new THREE.ShaderMaterial({ vertexShader: this.vertexShader, fragmentShader: this.fragmentShader, uniforms: { prevModelViewMatrix: { type: "m4", value: new THREE.Matrix4() } } }));
     }),
@@ -14526,10 +14526,10 @@ const PZVERSION = "1.0.102";
         }
     }),
     (PZ.motionBlur.prototype.render = function (e) {
-        this.velocityBuffer && ((this.scene.overrideMaterial = this.velocityShader), e.clearTarget(this.velocityBuffer, !0, !0, !0), e.render(this.scene, this.layer.pass.camera, this.velocityBuffer), (this.scene.overrideMaterial = null));
+        this.velocityBuffer && ((this.scene.overrideMaterial = this.velocityShader), e.clearTarget(this.velocityBuffer, true, true, true), e.render(this.scene, this.layer.pass.camera, this.velocityBuffer), (this.scene.overrideMaterial = null));
     }),
     (PZ.envMap = function (e) {
-        (this.scene = e.threeObj), (this.references = 0), (this.needsUpdate = !1);
+        (this.scene = e.threeObj), (this.references = 0), (this.needsUpdate = false);
     }),
     (PZ.envMap.prototype.load = function () {
         (this.mirrorCubeCamera = new THREE.CubeCamera(0.1, 5e3, 256)),
@@ -14548,7 +14548,7 @@ const PZVERSION = "1.0.102";
         (this.references -= 1), this.references <= 0 && (this.unload(), (this.references = 0));
     }),
     (PZ.envMap.prototype.render = function (e) {
-        this.mirrorCubeCamera && ((e.autoClear = !0), this.mirrorCubeCamera.update(e, this.scene), (e.autoClear = !1));
+        this.mirrorCubeCamera && ((e.autoClear = true), this.mirrorCubeCamera.update(e, this.scene), (e.autoClear = false));
     }),
     (PZ.shake = function () {
         this.properties = new PZ.propertyList(this.shakePropertyDefinitions);
@@ -14594,7 +14594,7 @@ const PZVERSION = "1.0.102";
         smooth: { name: "Smooth", type: PZ.property.type.VECTOR4, value: [1, 1, 1, 1], min: 0, max: 1, decimals: 0 },
     }),
     (PZ.asset = function () {
-        (this.sha256 = ""), (this.source = 0), (this.external = !1), (this.mediaReferences = 0), (this.references = 0), (this.file = null), (this.size = 0), (this.filename = ""), (this.data = new Map());
+        (this.sha256 = ""), (this.source = 0), (this.external = false), (this.mediaReferences = 0), (this.references = 0), (this.file = null), (this.size = 0), (this.filename = ""), (this.data = new Map());
     }),
     (PZ.asset.hash = async function (e) {
         return await new Promise(function (t, r) {
@@ -14622,10 +14622,10 @@ const PZVERSION = "1.0.102";
                 this.file && (this.url = URL.createObjectURL(this.file));
         },
         toJSON: function (e) {
-            return e === this.key ? { sha256: this.sha256, url: this.source !== PZ.asset.source.FILE ? this.url : void 0, source: this.source, external: this.external, size: this.size, filename: this.filename } : this.key;
+            return e === this.key ? { sha256: this.sha256, url: this.source !== PZ.asset.source.FILE ? this.url : undefined, source: this.source, external: this.external, size: this.size, filename: this.filename } : this.key;
         },
         save: function (e) {
-            this.size > 16777216 || !0 === this.external || e.addFile(this.sha256, this.file);
+            this.size > 16777216 || true === this.external || e.addFile(this.sha256, this.file);
         },
     }),
     (PZ.asset.image = class {
@@ -14692,7 +14692,7 @@ const PZVERSION = "1.0.102";
             return (
                 ISNODE ? (((t = new THREE.DataTexture()).image = r), (t.magFilter = THREE.LinearFilter)) : (t = new THREE.Texture(r)),
                 this.data.loading.then(function () {
-                    r.width > 0 && r.height > 0 && (t.needsUpdate = !0);
+                    r.width > 0 && r.height > 0 && (t.needsUpdate = true);
                 }),
                 t
             );
@@ -14723,7 +14723,7 @@ const PZVERSION = "1.0.102";
                       (this.data.font2dLoading = new Promise(async (e, t) => {
                           var r = await this.readFile();
                           (this.data.font2d = opentype.parse(r)),
-                              !0 === this.data.font2d.supported ? ((this.data.font2d.familyName = this.data.font2d.getEnglishName("fontFamily").toLowerCase()), e(this.data.font2d)) : console.log("unsupported font");
+                              true === this.data.font2d.supported ? ((this.data.font2d.familyName = this.data.font2d.getEnglishName("fontFamily").toLowerCase()), e(this.data.font2d)) : console.log("unsupported font");
                       })),
                   await this.data.font2dLoading);
         }
@@ -15051,8 +15051,8 @@ const PZVERSION = "1.0.102";
                 (this.media.name = "Media"),
                 (this.ui = {}),
                 (this.ui.onChanged = new PZ.observable()),
-                (this.ui.dirty = !1),
-                this.ui.onChanged.watch(() => (this.ui.dirty = !0)),
+                (this.ui.dirty = false),
+                this.ui.onChanged.watch(() => (this.ui.dirty = true)),
                 (this.children = [this.sequence, this.media]);
         }
         toJSON() {
@@ -15082,7 +15082,7 @@ const PZVERSION = "1.0.102";
     }),
     (PZ.assetList.prototype.createFromPreset = function (e, t) {
         var r = this.list[t];
-        return r || (((r = new PZ.asset()).url = t), (r.source = PZ.asset.source.PRESET), (r.external = !0), (this.list[t] = r), r);
+        return r || (((r = new PZ.asset()).url = t), (r.source = PZ.asset.source.PRESET), (r.external = true), (this.list[t] = r), r);
     }),
     (PZ.assetList.prototype.load = function (e, t) {
         let r;
@@ -15092,7 +15092,7 @@ const PZVERSION = "1.0.102";
                 : "string" == typeof e &&
                   ((r = this.list[e]) ||
                       ((r = new PZ.asset()),
-                      e.startsWith("/") ? ((r.url = e), (r.source = PZ.asset.source.PRESET), (r.external = !0)) : ((r.sha256 = e), (r.source = PZ.asset.source.FILE)),
+                      e.startsWith("/") ? ((r.url = e), (r.source = PZ.asset.source.PRESET), (r.external = true)) : ((r.sha256 = e), (r.source = PZ.asset.source.FILE)),
                       (this.list[e] = r),
                       this.onAssetCreated.update(r))),
             r ? (t ? r.mediaReferences++ : r.references++, r) : null
@@ -15171,22 +15171,22 @@ const PZVERSION = "1.0.102";
     }),
     (PZ.sequence.defaultName = "Sequence"),
     (PZ.sequence.propertyDefinitions = {
-        name: { visible: !1, name: "Name", type: PZ.property.type.TEXT, value: "Sequence" },
+        name: { visible: false, name: "Name", type: PZ.property.type.TEXT, value: "Sequence" },
         resolution: { name: "Resolution", type: PZ.property.type.VECTOR2, spaceChar: "x", value: [1920, 1080], decimals: 0, max: 4e3, min: 1 },
         rate: { name: "Frame rate", type: PZ.property.type.NUMBER, value: 30, decimals: 0, max: 120, min: 1 },
         markers: {
-            dynamic: !0,
+            dynamic: true,
             name: "Markers",
             type: PZ.property.type.TEXT,
             value: (e) => {
-                (e.animated = !0), (e.hideAnimateToggle = !0);
+                (e.animated = true), (e.hideAnimateToggle = true);
             },
-            allowEmpty: !0,
+            allowEmpty: true,
             defaultValue: (e) => e.keyframes.length + 1,
         },
         motionBlur: { name: "Multisample motion blur", type: PZ.property.type.OPTION, value: 0, items: "off;on" },
-        motionBlurSamples: { dynamic: !0, name: "Samples", type: PZ.property.type.NUMBER, decimals: 0, value: 16, min: 1, max: 128 },
-        motionBlurShutter: { dynamic: !0, name: "Shutter", type: PZ.property.type.NUMBER, value: 0.5 },
+        motionBlurSamples: { dynamic: true, name: "Samples", type: PZ.property.type.NUMBER, decimals: 0, value: 16, min: 1, max: 128 },
+        motionBlurShutter: { dynamic: true, name: "Shutter", type: PZ.property.type.NUMBER, value: 0.5 },
     }),
     (PZ.clipLinks = function (e, t) {
         if (((this.links = {}), (this.seed = 0), t)) {
@@ -15254,7 +15254,7 @@ const PZVERSION = "1.0.102";
     (PZ.track.audio.prototype.type = 1),
     (PZ.track.video = class extends PZ.track {
         constructor() {
-            super(), (this.skip = !1), (this.enabled = !0), (this.layer = null), (this.clips = new PZ.objectList(this, PZ.clip.video)), (this.children = [this.clips]);
+            super(), (this.skip = false), (this.enabled = true), (this.layer = null), (this.clips = new PZ.objectList(this, PZ.clip.video)), (this.children = [this.clips]);
         }
     }),
     (PZ.track.video.prototype.type = 0),
@@ -15290,9 +15290,9 @@ const PZVERSION = "1.0.102";
         }
     }),
     (PZ.clip.propertyDefinitions = {
-        name: { visible: !1, name: "Name", type: PZ.property.type.TEXT, value: "Clip" },
+        name: { visible: false, name: "Name", type: PZ.property.type.TEXT, value: "Clip" },
         media: {
-            readOnly: !0,
+            readOnly: true,
             name: "Media",
             type: PZ.property.type.ASSET,
             assetType: PZ.asset.type.AV,
@@ -15303,7 +15303,7 @@ const PZVERSION = "1.0.102";
             },
         },
         time: {
-            dynamic: !0,
+            dynamic: true,
             name: "Time",
             type: PZ.property.type.NUMBER,
             decimals: 3,
@@ -15318,7 +15318,7 @@ const PZVERSION = "1.0.102";
     }),
     (PZ.clip.audio = class extends PZ.clip {
         constructor(e) {
-            super(), (this.properties.time.hideAnimateToggle = !0), (this.object = new PZ.audio()), (this.object.parent = this), this.children.push(this.object);
+            super(), (this.properties.time.hideAnimateToggle = true), (this.object = new PZ.audio()), (this.object.parent = this), this.children.push(this.object);
         }
         load(e) {
             e && (PZ.clip.prototype.load.call(this, e), this.object.load(e.object));
@@ -15372,10 +15372,10 @@ const PZVERSION = "1.0.102";
             if (
                 ((this.loadShaders = Promise.all([this.vertShader.getShader(), this.fragShader.getShader()])),
                 this.loadShaders.then(function (e) {
-                    (t.vertexShader = e[0]), (t.fragmentShader = e[1]), (t.needsUpdate = !0);
+                    (t.vertexShader = e[0]), (t.fragmentShader = e[1]), (t.needsUpdate = true);
                 }),
                 (this.composite.quad.material = t),
-                (this.composite.quad.material.premultipliedAlpha = !0),
+                (this.composite.quad.material.premultipliedAlpha = true),
                 (this.composite.quad.material.defines[this.properties.blending.get()] = 1),
                 "object" == typeof e)
             )
@@ -15456,7 +15456,7 @@ const PZVERSION = "1.0.102";
     (PZ.layer.getName = (e) => (e ? e.defaultName : PZ.layer.prototype.defaultName)),
     (PZ.layer.propertyDefinitions = {
         name: {
-            visible: !1,
+            visible: false,
             name: "Name",
             type: PZ.property.type.TEXT,
             value: (e) => {
@@ -15465,29 +15465,29 @@ const PZVERSION = "1.0.102";
             },
         },
         position: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Position.X", type: PZ.property.type.NUMBER, value: 0, step: 10 },
-                { dynamic: !0, name: "Position.Y", type: PZ.property.type.NUMBER, value: 0, step: 10 },
+                { dynamic: true, name: "Position.X", type: PZ.property.type.NUMBER, value: 0, step: 10 },
+                { dynamic: true, name: "Position.Y", type: PZ.property.type.NUMBER, value: 0, step: 10 },
             ],
             name: "Position",
             type: PZ.property.type.VECTOR2,
         },
         scale: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Scale.X", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
-                { dynamic: !0, name: "Scale.Y", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
+                { dynamic: true, name: "Scale.X", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
+                { dynamic: true, name: "Scale.Y", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
             ],
             name: "Scale",
             type: PZ.property.type.VECTOR2,
-            linkRatio: !0,
+            linkRatio: true,
         },
-        resolution: { name: "Resolution", type: PZ.property.type.VECTOR2, spaceChar: "x", value: [0, 0], readOnly: !0, min: 1, step: 1, decimals: 0 },
-        rotation: { dynamic: !0, name: "Rotation", type: PZ.property.type.NUMBER, scaleFactor: Math.PI / 180, value: 0, step: 3, decimals: 1 },
-        opacity: { dynamic: !0, name: "Opacity", type: PZ.property.type.NUMBER, value: 1, max: 1, min: 0, step: 0.1, decimals: 2 },
+        resolution: { name: "Resolution", type: PZ.property.type.VECTOR2, spaceChar: "x", value: [0, 0], readOnly: true, min: 1, step: 1, decimals: 0 },
+        rotation: { dynamic: true, name: "Rotation", type: PZ.property.type.NUMBER, scaleFactor: Math.PI / 180, value: 0, step: 3, decimals: 1 },
+        opacity: { dynamic: true, name: "Opacity", type: PZ.property.type.NUMBER, value: 1, max: 1, min: 0, step: 0.1, decimals: 2 },
         blending: {
             name: "Blending mode",
             type: PZ.property.type.LIST,
@@ -15495,7 +15495,7 @@ const PZVERSION = "1.0.102";
             items: PZ.layer.blendModes,
             changed: function () {
                 let e = this.parentObject;
-                (e.composite.quad.material.defines = {}), (e.composite.quad.material.defines[this.value] = 1), (e.composite.quad.material.needsUpdate = !0);
+                (e.composite.quad.material.defines = {}), (e.composite.quad.material.defines[this.value] = 1), (e.composite.quad.material.needsUpdate = true);
             },
         },
     }),
@@ -15605,7 +15605,7 @@ const PZVERSION = "1.0.102";
         load(e) {
             if ((super.load(e), (this.imageProperties = this.properties.childProperties), this.imageProperties.addAll(PZ.layer.image.propertyDefinitions), this.properties.load(e && e.properties), e)) {
                 let e = this.parentProject.assets.load(this.imageProperties.image.get());
-                e && ((this.image = new PZ.asset.image(e)), (this.texture = this.image.getTexture()), (this.texture.premultiplyAlpha = !0));
+                e && ((this.image = new PZ.asset.image(e)), (this.texture = this.image.getTexture()), (this.texture.premultiplyAlpha = true));
                 let t = this.properties.resolution.get();
                 this.composite.quad.scale.set(t[0], t[1], 1);
             }
@@ -15617,7 +15617,7 @@ const PZVERSION = "1.0.102";
             this.image && (this.parentProject.assets.unload(this.image), this.texture.dispose()), super.unload();
         }
     }),
-    (PZ.layer.image.propertyDefinitions = { image: { visible: !1, name: "Image", type: PZ.property.type.ASSET, assetType: PZ.asset.type.IMAGE, value: null } }),
+    (PZ.layer.image.propertyDefinitions = { image: { visible: false, name: "Image", type: PZ.property.type.ASSET, assetType: PZ.asset.type.IMAGE, value: null } }),
     (PZ.layer.image.prototype.defaultName = "Image"),
     (PZ.layer.shape = class extends PZ.layer {
         constructor() {
@@ -15632,7 +15632,7 @@ const PZVERSION = "1.0.102";
             let t = this.parentProject.sequence.properties.resolution.get();
             this.properties.resolution.set([t[0], t[1]]);
             let r = this.properties.resolution.get();
-            this.composite.quad.scale.set(r[0], r[1], 1), (this.properties.position.visible = !1), (this.properties.scale.visible = !1), (this.properties.rotation.visible = !1);
+            this.composite.quad.scale.set(r[0], r[1], 1), (this.properties.position.visible = false), (this.properties.scale.visible = false), (this.properties.rotation.visible = false);
         }
         unload() {
             for (var e = 0; e < this.objects.length; e++) this.objects[e].unload();
@@ -15660,7 +15660,7 @@ const PZVERSION = "1.0.102";
     (PZ.layer.shape.prototype.defaultName = "Shape"),
     (PZ.layer.shape.preset = class extends PZ.layer.shape {
         constructor() {
-            super(), (this.shapesNeedUpdate = !0), (this.objects.visible = !1);
+            super(), (this.shapesNeedUpdate = true), (this.objects.visible = false);
         }
         load(e) {
             if ((super.load(e), !this.objects.length)) {
@@ -15674,10 +15674,10 @@ const PZVERSION = "1.0.102";
             let t = this.parentProject.sequence.properties.resolution.get();
             this.properties.resolution.set([t[0], t[1]]);
             let r = this.properties.resolution.get();
-            this.composite.quad.scale.set(r[0], r[1], 1), (this.properties.position.visible = !1), (this.properties.scale.visible = !1), (this.properties.rotation.visible = !1);
+            this.composite.quad.scale.set(r[0], r[1], 1), (this.properties.position.visible = false), (this.properties.scale.visible = false), (this.properties.rotation.visible = false);
         }
         update(e) {
-            this.shapesNeedUpdate && (this.updateShapes(), (this.shapesNeedUpdate = !1)), super.update(e);
+            this.shapesNeedUpdate && (this.updateShapes(), (this.shapesNeedUpdate = false)), super.update(e);
         }
         toJSON() {
             let e = super.toJSON();
@@ -15707,14 +15707,14 @@ const PZVERSION = "1.0.102";
             value: 0,
             items: ["ellipse", "rectangle"],
             changed: function () {
-                this.parentObject.shapesNeedUpdate = !0;
+                this.parentObject.shapesNeedUpdate = true;
             },
         },
     }),
     (PZ.layer.shape.preset.prototype.defaultName = "Preset shape"),
     (PZ.layer.shape.text = class extends PZ.layer.shape {
         constructor() {
-            super(), (this.font = null), (this.fontNeedsUpdate = !0), (this.shapesNeedUpdate = !1), (this.objects.visible = !1);
+            super(), (this.font = null), (this.fontNeedsUpdate = true), (this.shapesNeedUpdate = false), (this.objects.visible = false);
         }
         load(e) {
             if ((super.load(e), !this.objects.length)) {
@@ -15732,7 +15732,7 @@ const PZVERSION = "1.0.102";
             let t = this.parentProject.sequence.properties.resolution.get();
             this.properties.resolution.set([t[0], t[1]]);
             let r = this.properties.resolution.get();
-            this.composite.quad.scale.set(r[0], r[1], 1), (this.properties.position.visible = !1), (this.properties.scale.visible = !1), (this.properties.rotation.visible = !1);
+            this.composite.quad.scale.set(r[0], r[1], 1), (this.properties.position.visible = false), (this.properties.scale.visible = false), (this.properties.rotation.visible = false);
         }
         toJSON() {
             let e = super.toJSON();
@@ -15742,13 +15742,13 @@ const PZVERSION = "1.0.102";
             this.font && this.parentProject.assets.unload(this.font), super.unload();
         }
         update(e) {
-            this.fontNeedsUpdate && (this.updateFont(), (this.fontNeedsUpdate = !1)), this.shapesNeedUpdate && (this.updateShapes(), (this.shapesNeedUpdate = !1)), super.update(e);
+            this.fontNeedsUpdate && (this.updateFont(), (this.fontNeedsUpdate = false)), this.shapesNeedUpdate && (this.updateShapes(), (this.shapesNeedUpdate = false)), super.update(e);
         }
         updateFont() {
             let e = this.font;
             e &&
                 e.getFont().then((t) => {
-                    this.font === e && (this.shapesNeedUpdate = !0);
+                    this.font === e && (this.shapesNeedUpdate = true);
                 });
         }
         updateShapes() {
@@ -15777,7 +15777,7 @@ const PZVERSION = "1.0.102";
                 let o = r[n],
                     p = i[n],
                     l = PZ.shape.create(1),
-                    h = { properties: { position: { animated: !1, keyframes: [{ frame: 0, value: [a, s] }] }, scale: { animated: !1, keyframes: [{ frame: 0, value: [t, t] }] } }, operations: [] };
+                    h = { properties: { position: { animated: false, keyframes: [{ frame: 0, value: [a, s] }] }, scale: { animated: false, keyframes: [{ frame: 0, value: [t, t] }] } }, operations: [] };
                 (l.path = e.getPath(o, 0, 0, e.unitsPerEm)), (a += p.advanceWidth * t), this.objects[0].objects.push(l), l.load(h);
             }
         }
@@ -15791,7 +15791,7 @@ const PZVERSION = "1.0.102";
             type: PZ.property.type.TEXT,
             value: "text",
             changed: function () {
-                this.parentObject.shapesNeedUpdate = !0;
+                this.parentObject.shapesNeedUpdate = true;
             },
         },
         font: {
@@ -15802,7 +15802,7 @@ const PZVERSION = "1.0.102";
             accept: ".ttf,.otf,.woff,.woff2",
             changed: function () {
                 let e = this.parentObject;
-                e.font && (e.parentProject.assets.unload(e.font), (e.font = null)), this.value && ((e.font = new PZ.asset.font(e.parentProject.assets.load(this.value))), (e.fontNeedsUpdate = !0));
+                e.font && (e.parentProject.assets.unload(e.font), (e.font = null)), this.value && ((e.font = new PZ.asset.font(e.parentProject.assets.load(this.value))), (e.fontNeedsUpdate = true));
             },
         },
         size: {
@@ -15813,7 +15813,7 @@ const PZVERSION = "1.0.102";
             min: 1,
             step: 1,
             changed: function () {
-                this.parentObject.shapesNeedUpdate = !0;
+                this.parentObject.shapesNeedUpdate = true;
             },
         },
     }),
@@ -15829,7 +15829,7 @@ const PZVERSION = "1.0.102";
                 (this.objects = new PZ.objectList(this, PZ.media)),
                 (this.children = [this.properties, this.objects]),
                 PZ.observable.defineObservableProp(this, "loaded", "onLoaded"),
-                (this.loaded = !1);
+                (this.loaded = false);
         }
         async load(e) {
             (e = await e),
@@ -15840,17 +15840,17 @@ const PZVERSION = "1.0.102";
                 (this.baseType = e.baseType),
                 (this.thumbnail = e.thumbnail),
                 (this.preset = e.preset);
-            for (let t = 0; t < e.assets.length; t++) this.assets[t] = this.parentProject.assets.load(e.assets[t], !0);
-            this.loaded = !0;
+            for (let t = 0; t < e.assets.length; t++) this.assets[t] = this.parentProject.assets.load(e.assets[t], true);
+            this.loaded = true;
         }
         unload() {
-            for (let e = 0; e < this.assets.length; e++) this.parentProject.assets.unload(this.assets[e], !0);
+            for (let e = 0; e < this.assets.length; e++) this.parentProject.assets.unload(this.assets[e], true);
         }
         toJSON() {
             return { properties: this.properties, title: this.title, icon: this.icon, creationId: this.creationId, data: this.data, baseType: this.baseType, assets: this.assets };
         }
     }),
-    (PZ.media.propertyDefinitions = { name: { visible: !1, name: "Name", type: PZ.property.type.TEXT, value: "Media" }, icon: { visible: !1, items: [], name: "Icon", type: PZ.property.type.LIST, value: "fragment" } }),
+    (PZ.media.propertyDefinitions = { name: { visible: false, name: "Name", type: PZ.property.type.TEXT, value: "Media" }, icon: { visible: false, items: [], name: "Icon", type: PZ.property.type.LIST, value: "fragment" } }),
     (PZ.audio = class extends PZ.object {
         constructor() {
             super(), (this.properties = new PZ.propertyList(PZ.audio.propertyDefinitions, this)), (this.children = [this.properties]);
@@ -15866,9 +15866,9 @@ const PZVERSION = "1.0.102";
         unload() {}
     }),
     (PZ.audio.propertyDefinitions = {
-        name: { visible: !1, name: "Name", type: PZ.property.type.TEXT, value: "Audio" },
-        volume: { dynamic: !0, name: "Volume", type: PZ.property.type.NUMBER, value: 1, min: 0, step: 0.1 },
-        pan: { dynamic: !0, name: "Pan", type: PZ.property.type.NUMBER, value: 0, max: 1, min: -1, step: 0.1 },
+        name: { visible: false, name: "Name", type: PZ.property.type.TEXT, value: "Audio" },
+        volume: { dynamic: true, name: "Volume", type: PZ.property.type.NUMBER, value: 1, min: 0, step: 0.1 },
+        pan: { dynamic: true, name: "Pan", type: PZ.property.type.NUMBER, value: 0, max: 1, min: -1, step: 0.1 },
     }),
     (PZ.effect = class extends PZ.object {
         static create(e) {
@@ -15887,7 +15887,7 @@ const PZVERSION = "1.0.102";
                 let t = e.parentObject;
                 t instanceof PZ.layer || (t = t.parentLayer), t.properties.resolution.onChanged.unwatch(this.resize_bound);
             }
-            this.parent && this.parentLayer.properties.resolution.onChanged.watch(this.resize_bound, !0);
+            this.parent && this.parentLayer.properties.resolution.onChanged.watch(this.resize_bound, true);
         }
         async load(e) {
             if (!PZ.effect.fnList[this.type]) {
@@ -15899,7 +15899,7 @@ const PZVERSION = "1.0.102";
                         t(new Function(a));
                     }));
             }
-            (await PZ.effect.fnList[this.type]).call(this), await this.load(e), (this.resize_bound = this.resize.bind(this)), this.onParentChanged.watch(this.parentChanged.bind(this), !0);
+            (await PZ.effect.fnList[this.type]).call(this), await this.load(e), (this.resize_bound = this.resize.bind(this)), this.onParentChanged.watch(this.parentChanged.bind(this), true);
         }
         update() {}
         resize() {}
@@ -15915,8 +15915,8 @@ const PZVERSION = "1.0.102";
     (PZ.effect.getName = (e) => (e ? e.defaultName : PZ.effect.prototype.defaultName)),
     (PZ.effect.propertyDefinitions = {
         name: {
-            visible: !1,
-            readOnly: !0,
+            visible: false,
+            readOnly: true,
             name: "Name",
             type: PZ.property.type.TEXT,
             value: (e) => {
@@ -15929,7 +15929,7 @@ const PZVERSION = "1.0.102";
         constructor() {
             super(),
                 (this.threeObj = null),
-                (this.enabled = !1),
+                (this.enabled = false),
                 this.properties.addAll(PZ.effect.group.propertyDefinitions),
                 (this.customProperties = new PZ.objectList(this, PZ.property.dynamic)),
                 (this.customProperties.name = "Custom properties"),
@@ -15964,18 +15964,18 @@ const PZVERSION = "1.0.102";
             for (var t = 0; t < this.objects.length; t++) await this.objects[t].loading, await this.objects[t].prepare(e);
         }
     }),
-    (PZ.effect.group.propertyDefinitions = { name: { visible: !1, name: "Name", type: PZ.property.type.TEXT, value: "Group" }, enabled: { dynamic: !0, name: "Enabled", type: PZ.property.type.OPTION, value: 1, items: "off;on" } }),
+    (PZ.effect.group.propertyDefinitions = { name: { visible: false, name: "Name", type: PZ.property.type.TEXT, value: "Group" }, enabled: { dynamic: true, name: "Enabled", type: PZ.property.type.OPTION, value: 1, items: "off;on" } }),
     (PZ.effect.shader = class extends PZ.effect {
         constructor() {
             super(),
                 (this.textures = new Map()),
                 (this.onShaderError = new PZ.observable()),
-                (this.fragmentShaderHasError = !1),
-                (this.fragmentShaderNeedsUpdate = !0),
+                (this.fragmentShaderHasError = false),
+                (this.fragmentShaderNeedsUpdate = true),
                 this.properties.addAll(PZ.effect.shader.propertyDefinitions),
                 (this.customProperties = new PZ.objectList(this, PZ.property)),
                 (this.customProperties.name = "Shader properties"),
-                (this.updateFn = () => (this.fragmentShaderNeedsUpdate = !0)),
+                (this.updateFn = () => (this.fragmentShaderNeedsUpdate = true)),
                 this.customProperties.onObjectAdded.watch(this.propertyAdded.bind(this)),
                 this.customProperties.onObjectRemoved.watch(this.propertyRemoved.bind(this)),
                 this.children.push(this.customProperties);
@@ -15983,7 +15983,7 @@ const PZVERSION = "1.0.102";
         propertyAdded(e) {
             e.properties.name.onChanged.watch(this.updateFn),
                 e instanceof PZ.property.static && (e.definition.type === PZ.property.type.ASSET ? e.onChanged.watch(PZ.effect.shader.assetChanged.bind(e)) : e.onChanged.watch(this.updateFn)),
-                (this.fragmentShaderNeedsUpdate = !0);
+                (this.fragmentShaderNeedsUpdate = true);
         }
         propertyRemoved(e) {
             if ((e.properties.name.onChanged.unwatch(this.updateFn), e instanceof PZ.property.static))
@@ -15991,7 +15991,7 @@ const PZVERSION = "1.0.102";
                     const t = this.textures.get(e.get());
                     t && (this.parentProject.assets.unload(t.asset), t.texture.dispose());
                 } else e.onChanged.unwatch(this.updateFn);
-            this.fragmentShaderNeedsUpdate = !0;
+            this.fragmentShaderNeedsUpdate = true;
         }
         static assetChanged(e) {
             let t = this.parentObject;
@@ -16001,12 +16001,12 @@ const PZVERSION = "1.0.102";
             }
             if (this.value) {
                 const e = {};
-                (e.asset = new PZ.asset.image(t.parentProject.assets.load(this.value))), (e.texture = e.asset.getTexture(!0)), t.textures.set(this.value, e);
+                (e.asset = new PZ.asset.image(t.parentProject.assets.load(this.value))), (e.texture = e.asset.getTexture(true)), t.textures.set(this.value, e);
             }
-            this.parentObject.fragmentShaderNeedsUpdate = !0;
+            this.parentObject.fragmentShaderNeedsUpdate = true;
         }
         static changeFn() {
-            this.parentObject.fragmentShaderNeedsUpdate = !0;
+            this.parentObject.fragmentShaderNeedsUpdate = true;
         }
         async load(e) {
             if ((this.properties.load(e && e.properties), "object" == typeof e && e.customProperties))
@@ -16019,7 +16019,7 @@ const PZVERSION = "1.0.102";
                     "precision highp float;\nprecision highp int;\nuniform mat4 modelMatrix;\nuniform mat4 modelViewMatrix;\nuniform mat4 projectionMatrix;\nuniform mat4 viewMatrix;\nuniform mat3 normalMatrix;\nuniform vec3 cameraPosition;\nattribute vec3 position;\nattribute vec3 normal;\nattribute vec2 uv;\n\nuniform vec2 uvScale;\n\nvarying vec2 vUv;\nvarying vec2 vUvScaled;\nvarying vec2 bgCoord;\n\nvoid main()\n{\n\tvUv = uv;\n\tvUvScaled = uv * uvScale;\n\tgl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );\n\tbgCoord = gl_Position.xy * 0.5 + 0.5;\n}",
                 defines: {},
             });
-            (this.pass = new THREE.ShaderPass(t)), (this.pass.material.premultipliedAlpha = !0);
+            (this.pass = new THREE.ShaderPass(t)), (this.pass.material.premultipliedAlpha = true);
         }
         fixPropertyName(e) {
             return e.replace(/\s/g, "_");
@@ -16046,7 +16046,7 @@ const PZVERSION = "1.0.102";
             }
             (e.tDiffuse = { type: "t", value: null }), (e.uvScale = { type: "v2", value: new THREE.Vector2(1, 1) });
             let a = this.parentLayer.properties.resolution.get();
-            (e.resolution = { type: "v2", value: new THREE.Vector2(a[0], a[1]) }), (this.pass.material.fragmentShader = this.properties.fragShader.get()), (this.pass.material.needsUpdate = !0);
+            (e.resolution = { type: "v2", value: new THREE.Vector2(a[0], a[1]) }), (this.pass.material.fragmentShader = this.properties.fragShader.get()), (this.pass.material.needsUpdate = true);
         }
         toJSON() {
             return { type: this.type, properties: this.properties, customProperties: this.customProperties };
@@ -16062,18 +16062,18 @@ const PZVERSION = "1.0.102";
             this.pass.uniforms.resolution.value.set(e[0], e[1]);
         }
         update(e) {
-            if (this.fragmentShaderNeedsUpdate) this.updateFragmentShader(), (this.fragmentShaderNeedsUpdate = !1), (this.fragmentShaderHasError = !1);
+            if (this.fragmentShaderNeedsUpdate) this.updateFragmentShader(), (this.fragmentShaderNeedsUpdate = false), (this.fragmentShaderHasError = false);
             else if (this.pass.material.program && this.pass.material.program.diagnostics && !this.pass.material.program.diagnostics.runnable) {
                 if (!this.fragmentShaderHasError) {
                     let e = this.pass.material.program.diagnostics.fragmentShader.log;
                     const t = Object.keys(this.pass.material.defines).length;
-                    (e = e.replace(/ERROR: 0:(\d+):/, (e, r) => `ERROR: 0:${parseInt(r) - t}:`)), this.onShaderError.update(e), (this.fragmentShaderHasError = !0), (this.pass.enabled = !1);
+                    (e = e.replace(/ERROR: 0:(\d+):/, (e, r) => `ERROR: 0:${parseInt(r) - t}:`)), this.onShaderError.update(e), (this.fragmentShaderHasError = true), (this.pass.enabled = false);
                 }
                 return;
             }
             this.pass.enabled = !!this.properties.enabled.get(e);
             for (var t = 0; t < this.customProperties.length; t++) {
-                if (this.customProperties[t] instanceof PZ.property.dynamic == !1) continue;
+                if (this.customProperties[t] instanceof PZ.property.dynamic == false) continue;
                 const r = this.fixPropertyName(this.customProperties[t].properties.name.get()),
                     i = this.customProperties[t].get(e),
                     a = this.pass.uniforms[r];
@@ -16082,8 +16082,8 @@ const PZVERSION = "1.0.102";
         }
     }),
     (PZ.effect.shader.propertyDefinitions = {
-        name: { visible: !1, name: "Name", type: PZ.property.type.TEXT, value: "Shader" },
-        enabled: { dynamic: !0, name: "Enabled", type: PZ.property.type.OPTION, value: 1, items: "off;on" },
+        name: { visible: false, name: "Name", type: PZ.property.type.TEXT, value: "Shader" },
+        enabled: { dynamic: true, name: "Enabled", type: PZ.property.type.OPTION, value: 1, items: "off;on" },
         fragShader: {
             name: "Fragment shader",
             type: PZ.property.type.SHADER,
@@ -16124,7 +16124,7 @@ const PZVERSION = "1.0.102";
     (PZ.material.getName = (e) => (e ? e.defaultName : PZ.material.prototype.defaultName)),
     (PZ.material.propertyDefinitions = {
         name: {
-            visible: !1,
+            visible: false,
             name: "Name",
             type: PZ.property.type.TEXT,
             value: (e) => {
@@ -16183,7 +16183,7 @@ const PZVERSION = "1.0.102";
     (PZ.object3d.getName = (e) => (e ? e.defaultName : PZ.object3d.prototype.defaultName)),
     (PZ.object3d.propertyDefinitions = {
         name: {
-            visible: !1,
+            visible: false,
             name: "Name",
             type: PZ.property.type.TEXT,
             value: (e) => {
@@ -16257,7 +16257,7 @@ const PZVERSION = "1.0.102";
             }
             this.properties.name.set(t),
                 this.objectType < 4 &&
-                    ((this.threeObj.castShadow = !0),
+                    ((this.threeObj.castShadow = true),
                     (this.threeObj.shadow.mapSize.height = 1024),
                     (this.threeObj.shadow.mapSize.width = 1024),
                     (this.threeObj.shadow.camera.near = 5),
@@ -16268,64 +16268,64 @@ const PZVERSION = "1.0.102";
         }
     }),
     (PZ.object3d.light.propertyDefinitions = {
-        name: { visible: !1, name: "Name", type: PZ.property.type.TEXT, value: "Light" },
+        name: { visible: false, name: "Name", type: PZ.property.type.TEXT, value: "Light" },
         position: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Position.X", type: PZ.property.type.NUMBER, value: 0, step: 1 },
-                { dynamic: !0, name: "Position.Y", type: PZ.property.type.NUMBER, value: 10, step: 1 },
-                { dynamic: !0, name: "Position.Z", type: PZ.property.type.NUMBER, value: 0, step: 1 },
+                { dynamic: true, name: "Position.X", type: PZ.property.type.NUMBER, value: 0, step: 1 },
+                { dynamic: true, name: "Position.Y", type: PZ.property.type.NUMBER, value: 10, step: 1 },
+                { dynamic: true, name: "Position.Z", type: PZ.property.type.NUMBER, value: 0, step: 1 },
             ],
             name: "Position",
             type: PZ.property.type.VECTOR3,
         },
         target: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Target.X", type: PZ.property.type.NUMBER, value: 0, step: 1 },
-                { dynamic: !0, name: "Target.Y", type: PZ.property.type.NUMBER, value: 0, step: 1 },
-                { dynamic: !0, name: "Target.Z", type: PZ.property.type.NUMBER, value: 0, step: 1 },
+                { dynamic: true, name: "Target.X", type: PZ.property.type.NUMBER, value: 0, step: 1 },
+                { dynamic: true, name: "Target.Y", type: PZ.property.type.NUMBER, value: 0, step: 1 },
+                { dynamic: true, name: "Target.Z", type: PZ.property.type.NUMBER, value: 0, step: 1 },
             ],
             name: "Target",
             type: PZ.property.type.VECTOR3,
         },
         color: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Color.R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                { dynamic: !0, name: "Color.G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                { dynamic: !0, name: "Color.B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                { dynamic: true, name: "Color.R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                { dynamic: true, name: "Color.G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                { dynamic: true, name: "Color.B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
             ],
             name: "Color",
             type: PZ.property.type.COLOR,
         },
         skyColor: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Sky color.R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                { dynamic: !0, name: "Sky color.G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                { dynamic: !0, name: "Sky color.B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                { dynamic: true, name: "Sky color.R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                { dynamic: true, name: "Sky color.G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                { dynamic: true, name: "Sky color.B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
             ],
             name: "Sky color",
             type: PZ.property.type.COLOR,
         },
         groundColor: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Ground color.R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                { dynamic: !0, name: "Ground color.G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                { dynamic: !0, name: "Ground color.B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                { dynamic: true, name: "Ground color.R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                { dynamic: true, name: "Ground color.G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                { dynamic: true, name: "Ground color.B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
             ],
             name: "Ground color",
             type: PZ.property.type.COLOR,
         },
-        intensity: { dynamic: !0, name: "Intensity", type: PZ.property.type.NUMBER, value: 1, max: 100, min: 0, step: 1, decimals: 1 },
-        angle: { dynamic: !0, name: "Angle", type: PZ.property.type.NUMBER, value: 60, max: 90, min: 0, step: 1 },
+        intensity: { dynamic: true, name: "Intensity", type: PZ.property.type.NUMBER, value: 1, max: 100, min: 0, step: 1, decimals: 1 },
+        angle: { dynamic: true, name: "Angle", type: PZ.property.type.NUMBER, value: 60, max: 90, min: 0, step: 1 },
     }),
     (PZ.object3d.light.prototype.defaultName = "Light"),
     (PZ.object3d.model = class extends PZ.object3d {
@@ -16413,42 +16413,42 @@ const PZVERSION = "1.0.102";
         }
     }),
     (PZ.object3d.model.propertyDefinitions = {
-        name: { visible: !1, name: "Name", type: PZ.property.type.TEXT, value: "Model" },
-        lidrotation: { dynamic: !0, name: "Lid open", type: PZ.property.type.NUMBER, value: 0, max: 100, min: 0, vstep: 5, decimals: 1, dragstep: 0.1 },
+        name: { visible: false, name: "Name", type: PZ.property.type.TEXT, value: "Model" },
+        lidrotation: { dynamic: true, name: "Lid open", type: PZ.property.type.NUMBER, value: 0, max: 100, min: 0, vstep: 5, decimals: 1, dragstep: 0.1 },
         position: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Position.X", type: PZ.property.type.NUMBER, value: 0 },
-                { dynamic: !0, name: "Position.Y", type: PZ.property.type.NUMBER, value: 0 },
-                { dynamic: !0, name: "Position.Z", type: PZ.property.type.NUMBER, value: 0 },
+                { dynamic: true, name: "Position.X", type: PZ.property.type.NUMBER, value: 0 },
+                { dynamic: true, name: "Position.Y", type: PZ.property.type.NUMBER, value: 0 },
+                { dynamic: true, name: "Position.Z", type: PZ.property.type.NUMBER, value: 0 },
             ],
             name: "Position",
             type: PZ.property.type.VECTOR3,
         },
         rotation: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Rotation.X", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
-                { dynamic: !0, name: "Rotation.Y", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
-                { dynamic: !0, name: "Rotation.Z", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
+                { dynamic: true, name: "Rotation.X", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
+                { dynamic: true, name: "Rotation.Y", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
+                { dynamic: true, name: "Rotation.Z", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
             ],
             name: "Rotation",
             type: PZ.property.type.VECTOR3,
             scaleFactor: Math.PI / 180,
         },
         scale: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Scale.X", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
-                { dynamic: !0, name: "Scale.Y", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
-                { dynamic: !0, name: "Scale.Z", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
+                { dynamic: true, name: "Scale.X", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
+                { dynamic: true, name: "Scale.Y", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
+                { dynamic: true, name: "Scale.Z", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
             ],
             name: "Scale",
             type: PZ.property.type.VECTOR3,
-            linkRatio: !0,
+            linkRatio: true,
         },
         eulerOrder: {
             name: "Rotation order",
@@ -16595,7 +16595,7 @@ const PZVERSION = "1.0.102";
             function a(e) {
                 var t = e.split("(")[1].split(")")[0].split(","),
                     r = { r: 0, g: 0, b: 0, a: 0 };
-                return (r.r = parseInt(t[0])), (r.g = parseInt(t[1])), (r.b = parseInt(t[2])), (r.a = void 0 !== t[3] ? parseFloat(t[3]) : 1), r;
+                return (r.r = parseInt(t[0])), (r.g = parseInt(t[1])), (r.b = parseInt(t[2])), (r.a = undefined !== t[3] ? parseFloat(t[3]) : 1), r;
             }
             function s(e, i) {
                 for (var s, n, o, p = t[0], l = 0; l < t.length; l++) {
@@ -16653,12 +16653,12 @@ const PZVERSION = "1.0.102";
                     },
                     vertexShader: this.vertexShader,
                     fragmentShader: this.fragmentShader,
-                    transparent: !0,
-                    depthTest: !0,
-                    depthWrite: !1,
+                    transparent: true,
+                    depthTest: true,
+                    depthWrite: false,
                 })),
                 (this.threeObj = new THREE.Points(new THREE.BufferGeometry(), this.material)),
-                (this.threeObj.frustumCulled = !1),
+                (this.threeObj.frustumCulled = false),
                 (this.threeObj.onBeforeRender = function (e) {
                     let t = e.getSize();
                     this.material.uniforms.resolution.value.set(t.width, t.height);
@@ -16671,30 +16671,30 @@ const PZVERSION = "1.0.102";
             var e = this.properties,
                 t = this.getParentOfType(PZ.clip).length,
                 r = t / this.getParentOfType(PZ.sequence).properties.rate.get(),
-                i = PZ.random.number(1, 4, !0);
+                i = PZ.random.number(1, 4, true);
             let a = [];
             for (var s = 0; s < i; s++) a.push({ position: PZ.random.number(0, 1), color: PZ.random.htmlColor((0 === s && i > 1) || s === i - 1) });
             e.color.set(a);
-            var n = PZ.random.number(1, 4, !0);
+            var n = PZ.random.number(1, 4, true);
             let o = [];
             for (s = 0; s < n; s++) o.push({ position: PZ.random.number(0, 1), color: PZ.random.grayColor() });
             e.size.set(o),
-                e.number.set(PZ.random.number(1, 1e3, !0)),
+                e.number.set(PZ.random.number(1, 1e3, true)),
                 e.rate.set(Math.round(PZ.random.number(0.1, 3) * e.number.get())),
                 PZ.random.number(0, 1) > 0.5 ? e.lifetime.set(e.number.get() / e.rate.get()) : e.lifetime.set(PZ.random.normal(r, 0.5 * r));
             let p = 0;
             PZ.random.number(0, 1) > 0.3 && (p = e.number.get() / e.rate.get());
             let l = {
-                animated: !0,
+                animated: true,
                 keyframes: [
                     { frame: 0, value: p, tween: 1 },
-                    { frame: t - 1, value: p + r * PZ.random.number(0.1, 3), tween: PZ.random.number(0, 1) > 0.9 ? PZ.random.number(2, 31, !0) : 1 },
+                    { frame: t - 1, value: p + r * PZ.random.number(0.1, 3), tween: PZ.random.number(0, 1) > 0.9 ? PZ.random.number(2, 31, true) : 1 },
                 ],
             };
-            e.time.load(l), e.pdist.set(PZ.random.number(0, 2, !0));
-            var h = 500 * PZ.random.number(0, 2, !0);
+            e.time.load(l), e.pdist.set(PZ.random.number(0, 2, true));
+            var h = 500 * PZ.random.number(0, 2, true);
             0 === e.pdist.get() ? e.pspread.set([PZ.random.normal(h, 300), PZ.random.normal(h, 300), PZ.random.normal(h, 300)]) : (e.iradius.set(PZ.random.normal(h, 300)), e.rspread.set(PZ.random.number(1, 2 * e.iradius.get()))),
-                e.vdist.set(PZ.random.number(0, 1, !0)),
+                e.vdist.set(PZ.random.number(0, 1, true)),
                 0 === e.vdist.get()
                     ? (e.ivel.set([PZ.random.normal(0, 100), PZ.random.normal(0, 100), PZ.random.normal(0, 100)]), e.vspread.set([Math.abs(PZ.random.normal(0, 100)), Math.abs(PZ.random.normal(0, 100)), Math.abs(PZ.random.normal(0, 100))]))
                     : (e.irvel.set(PZ.random.normal(100, 200)), e.rvspread.set(Math.abs(PZ.random.normal(0, 100)))),
@@ -16702,8 +16702,8 @@ const PZVERSION = "1.0.102";
                 e.iang.set(PZ.random.number(0, 359)),
                 PZ.random.number(0, 1) > 0.2 ? e.aspread.set(PZ.random.number(0, 359)) : e.aspread.set(0),
                 PZ.random.number(0, 1) > 0.4 ? (e.angvel.set(PZ.random.normal(0, 20)), e.avspread.set(Math.abs(PZ.random.normal(0, 200)))) : (e.angvel.set(0), e.avspread.set(0)),
-                e.blending.set(PZ.random.number(0, 1, !0));
-            var c = "/assets/textures/particles/" + this.presetTextures[PZ.random.number(0, this.presetTextures.length - 1, !0)] + ".png";
+                e.blending.set(PZ.random.number(0, 1, true));
+            var c = "/assets/textures/particles/" + this.presetTextures[PZ.random.number(0, this.presetTextures.length - 1, true)] + ".png";
             this.parentProject.assets.createFromPreset(PZ.asset.type.IMAGE, c);
             e.texture.set(c);
             var u = this.texture.getTexture();
@@ -16715,8 +16715,8 @@ const PZVERSION = "1.0.102";
                 r = this.properties;
             this.redrawGradient(this.colorTex.image.data, r.color.get()),
                 this.redrawGradient(this.sizeTex.image.data, r.size.get()),
-                (t.color.value.needsUpdate = !0),
-                (t.size.value.needsUpdate = !0),
+                (t.color.value.needsUpdate = true),
+                (t.size.value.needsUpdate = true),
                 this.updateNumber(),
                 (t.rate.value = r.rate.get()),
                 (t.lifetime.value = r.lifetime.get()),
@@ -16737,7 +16737,7 @@ const PZVERSION = "1.0.102";
                 (t.angvel.value = (r.angvel.get() / 180) * Math.PI),
                 (t.avspread.value = (r.avspread.get() / 180) * Math.PI),
                 (this.material.blending = r.blending.get() + 1),
-                (this.material.needsUpdate = !0);
+                (this.material.needsUpdate = true);
         }
         updateNumber() {
             null !== this.threeObj.geometry && this.threeObj.geometry.dispose();
@@ -16746,7 +16746,7 @@ const PZVERSION = "1.0.102";
             (this.threeObj.geometry = new THREE.BufferGeometry()),
                 this.threeObj.geometry.addAttribute("position", new THREE.BufferAttribute(t, 3)),
                 this.threeObj.geometry.addAttribute("pid", new THREE.BufferAttribute(r, 1)),
-                (this.threeObj.geometry.buffersNeedUpdate = !0);
+                (this.threeObj.geometry.buffersNeedUpdate = true);
         }
         toJSON() {
             return { type: this.type, properties: this.properties };
@@ -16762,15 +16762,15 @@ const PZVERSION = "1.0.102";
         }
     }),
     (PZ.object3d.particles.propertyDefinitions = {
-        name: { visible: !1, name: "Name", type: PZ.property.type.TEXT, value: "Particles" },
-        time: { dynamic: !0, name: "Time", type: PZ.property.type.NUMBER, value: 0, step: 0.01, decimals: 2 },
+        name: { visible: false, name: "Name", type: PZ.property.type.TEXT, value: "Particles" },
+        time: { dynamic: true, name: "Time", type: PZ.property.type.NUMBER, value: 0, step: 0.01, decimals: 2 },
         color: {
             name: "Color",
             type: PZ.property.type.GRADIENT,
             value: [{ position: 0, color: "rgba(255,255,255,1.0)" }],
             changed: function () {
                 let e = this.parentObject;
-                e.redrawGradient(e.colorTex.image.data, this.value), (e.material.uniforms.color.value.needsUpdate = !0);
+                e.redrawGradient(e.colorTex.image.data, this.value), (e.material.uniforms.color.value.needsUpdate = true);
             },
         },
         size: {
@@ -16779,7 +16779,7 @@ const PZVERSION = "1.0.102";
             value: [{ position: 0, color: "rgba(255,255,255,1.0)" }],
             changed: function (e) {
                 let t = this.parentObject;
-                t.redrawGradient(t.sizeTex.image.data, this.value), (t.material.uniforms.size.value.needsUpdate = !0);
+                t.redrawGradient(t.sizeTex.image.data, this.value), (t.material.uniforms.size.value.needsUpdate = true);
             },
         },
         number: {
@@ -16821,7 +16821,7 @@ const PZVERSION = "1.0.102";
             items: "box;sphere;disk",
             changed: function () {
                 let e = this.parentObject;
-                (e.material.defines.PDIST = 0 === this.value ? 0 : 1), (e.material.uniforms.pspread_sphere.value.z = 1 === this.value ? 1 : 0), (e.material.needsUpdate = !0);
+                (e.material.defines.PDIST = 0 === this.value ? 0 : 1), (e.material.uniforms.pspread_sphere.value.z = 1 === this.value ? 1 : 0), (e.material.needsUpdate = true);
             },
         },
         ipos: {
@@ -16872,7 +16872,7 @@ const PZVERSION = "1.0.102";
             items: "box;sphere",
             changed: function () {
                 let e = this.parentObject;
-                (e.material.defines.VDIST = this.value), (e.material.needsUpdate = !0);
+                (e.material.defines.VDIST = this.value), (e.material.needsUpdate = true);
             },
         },
         ivel: {
@@ -16990,10 +16990,10 @@ const PZVERSION = "1.0.102";
                 let e = this.parentObject;
                 if ((e.texture && (e.parentProject.assets.unload(e.texture), (e.texture = null), e.material.uniforms.image.value.dispose(), (e.material.uniforms.image.value = null)), this.value)) {
                     e.texture = new PZ.asset.image(e.parentProject.assets.load(this.value));
-                    let t = e.texture.getTexture(!0);
+                    let t = e.texture.getTexture(true);
                     e.material.uniforms.image.value = t;
                 }
-                e.material.needsUpdate = !0;
+                e.material.needsUpdate = true;
             },
         },
     }),
@@ -17004,7 +17004,7 @@ const PZVERSION = "1.0.102";
                 (this.threeObj = null),
                 (this.objectType = 0),
                 (this.customGeometry = null),
-                (this.geometryNeedsUpdate = !0),
+                (this.geometryNeedsUpdate = true),
                 (this.materials = new PZ.objectSingleton(this, PZ.material)),
                 this.properties.addAll({
                     name: PZ.property.create(PZ.object3d.shape.propertyDefinitions.name),
@@ -17017,7 +17017,7 @@ const PZVERSION = "1.0.102";
                 this.children.push(this.materials);
         }
         static changeFn() {
-            this.parentObject.geometryNeedsUpdate = !0;
+            this.parentObject.geometryNeedsUpdate = true;
         }
         get material() {
             return this.materials[0];
@@ -17040,7 +17040,7 @@ const PZVERSION = "1.0.102";
         }
         update(e) {
             let t;
-            this.geometryNeedsUpdate && (this.generatePresetGeometry(), (this.geometryNeedsUpdate = !1)),
+            this.geometryNeedsUpdate && (this.generatePresetGeometry(), (this.geometryNeedsUpdate = false)),
                 (t = this.properties.position.get(e)),
                 this.threeObj.position.set(t[0], t[1], t[2]),
                 (t = this.properties.rotation.get(e)),
@@ -17053,7 +17053,7 @@ const PZVERSION = "1.0.102";
             this.customGeometry && (await this.customGeometry.loading), this.material && (await this.material.loading, await this.material.prepare(e));
         }
         updateGeometry(e) {
-            this.threeObj && (this.threeObj.geometry && (this.threeObj.geometry.dispose(), (this.threeObj.geometry = null)), e && ((this.threeObj.geometry = e), (this.threeObj.geometry.buffersNeedUpdate = !0)));
+            this.threeObj && (this.threeObj.geometry && (this.threeObj.geometry.dispose(), (this.threeObj.geometry = null)), e && ((this.threeObj.geometry = e), (this.threeObj.geometry.buffersNeedUpdate = true)));
         }
         generatePresetGeometry() {
             if (99 === this.objectType)
@@ -17092,7 +17092,7 @@ const PZVERSION = "1.0.102";
                             )
                         );
                     let a = new THREE.CatmullRomCurve3(i),
-                        s = { steps: 10 * t.path_detail.get()[1], bevelEnabled: !1, extrudePath: a },
+                        s = { steps: 10 * t.path_detail.get()[1], bevelEnabled: false, extrudePath: a },
                         n = [],
                         o = t.path_thickness.get();
                     for (let e = 0; e < t.path_detail.get()[0]; e++) {
@@ -17153,23 +17153,23 @@ const PZVERSION = "1.0.102";
             }
             this.properties.name.set(e),
                 (this.threeObj = new THREE.Mesh(new THREE.Geometry(), new THREE.Material())),
-                (this.threeObj.material.visible = !1),
-                (this.threeObj.castShadow = !0),
-                (this.threeObj.receiveShadow = !0),
+                (this.threeObj.material.visible = false),
+                (this.threeObj.castShadow = true),
+                (this.threeObj.receiveShadow = true),
                 this.parentChanged();
         }
     }),
     (PZ.object3d.shape.propertyDefinitions = {
-        name: { visible: !1, name: "Name", type: PZ.property.type.TEXT, value: "Shape" },
+        name: { visible: false, name: "Name", type: PZ.property.type.TEXT, value: "Shape" },
         customGeometry: {
-            visible: !1,
+            visible: false,
             name: "Geometry",
             type: PZ.property.type.ASSET,
             assetType: PZ.property.type.GEOMETRY,
             value: null,
             changed: function () {
                 let e = this.parentObject;
-                e.customGeometry && e.parentProject.assets.unload(e.customGeometry), this.value && ((e.customGeometry = new PZ.asset.geometry(e.parentProject.assets.load(this.value))), (e.geometryNeedsUpdate = !0));
+                e.customGeometry && e.parentProject.assets.unload(e.customGeometry), this.value && ((e.customGeometry = new PZ.asset.geometry(e.parentProject.assets.load(this.value))), (e.geometryNeedsUpdate = true));
             },
         },
         box_size: { name: "Box size", type: PZ.property.type.VECTOR3, subtitle1: "width", subtitle2: "height", subtitle3: "depth", value: [10, 10, 10], min: 0, step: 1, decimals: 0, changed: PZ.object3d.shape.changeFn },
@@ -17199,39 +17199,39 @@ const PZVERSION = "1.0.102";
         path_loops: { name: "Loops", type: PZ.property.type.NUMBER, value: 5, vmin: 1, vstep: 1, decimals: 0, changed: PZ.object3d.shape.changeFn },
         path_detail: { name: "Detail", type: PZ.property.type.VECTOR2, value: [10, 10], subtitle1: "inner", subtitle2: "outer", min: 1, step: 1, decimals: 0, changed: PZ.object3d.shape.changeFn },
         position: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Position.X", type: PZ.property.type.NUMBER, value: 0 },
-                { dynamic: !0, name: "Position.Y", type: PZ.property.type.NUMBER, value: 0 },
-                { dynamic: !0, name: "Position.Z", type: PZ.property.type.NUMBER, value: 0 },
+                { dynamic: true, name: "Position.X", type: PZ.property.type.NUMBER, value: 0 },
+                { dynamic: true, name: "Position.Y", type: PZ.property.type.NUMBER, value: 0 },
+                { dynamic: true, name: "Position.Z", type: PZ.property.type.NUMBER, value: 0 },
             ],
             name: "Position",
             type: PZ.property.type.VECTOR3,
         },
         rotation: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Rotation.X", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
-                { dynamic: !0, name: "Rotation.Y", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
-                { dynamic: !0, name: "Rotation.Z", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
+                { dynamic: true, name: "Rotation.X", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
+                { dynamic: true, name: "Rotation.Y", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
+                { dynamic: true, name: "Rotation.Z", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
             ],
             name: "Rotation",
             type: PZ.property.type.VECTOR3,
             scaleFactor: Math.PI / 180,
         },
         scale: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Scale.X", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
-                { dynamic: !0, name: "Scale.Y", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
-                { dynamic: !0, name: "Scale.Z", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
+                { dynamic: true, name: "Scale.X", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
+                { dynamic: true, name: "Scale.Y", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
+                { dynamic: true, name: "Scale.Z", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
             ],
             name: "Scale",
             type: PZ.property.type.VECTOR3,
-            linkRatio: !0,
+            linkRatio: true,
         },
         eulerOrder: {
             name: "Rotation order",
@@ -17249,14 +17249,14 @@ const PZVERSION = "1.0.102";
             super(),
                 (this.threeObj = null),
                 (this.font = null),
-                (this.fontNeedsUpdate = !0),
-                (this.geometryNeedsUpdate = !0),
+                (this.fontNeedsUpdate = true),
+                (this.geometryNeedsUpdate = true),
                 (this.materials = new PZ.objectSingleton(this, PZ.material)),
                 this.properties.addAll(PZ.object3d.text.propertyDefinitions),
                 this.children.push(this.materials);
         }
         static changeFn() {
-            this.parentObject.geometryNeedsUpdate = !0;
+            this.parentObject.geometryNeedsUpdate = true;
         }
         get material() {
             return this.materials[0];
@@ -17277,18 +17277,18 @@ const PZVERSION = "1.0.102";
                     material: 0,
                     extrudeMaterial: 1,
                 })),
-                (this.threeObj.geometry.buffersNeedUpdate = !0),
+                (this.threeObj.geometry.buffersNeedUpdate = true),
                 this.center());
         }
         updateFont() {
             let e = this.font;
             e &&
                 e.get3DFont().then((t) => {
-                    this.font === e && (this.geometryNeedsUpdate = !0);
+                    this.font === e && (this.geometryNeedsUpdate = true);
                 });
         }
         load(e) {
-            if (((this.threeObj = new THREE.Mesh(new THREE.Geometry(), new THREE.Material())), (this.threeObj.material.visible = !1), this.properties.load(e && e.properties), "object" == typeof e && e.material)) {
+            if (((this.threeObj = new THREE.Mesh(new THREE.Geometry(), new THREE.Material())), (this.threeObj.material.visible = false), this.properties.load(e && e.properties), "object" == typeof e && e.material)) {
                 let t = PZ.material.create(e.material.type);
                 this.materials.push(t), (t.loading = t.load(e.material));
             }
@@ -17296,7 +17296,7 @@ const PZVERSION = "1.0.102";
                 let e = PZ.material.create("singlecolor");
                 this.materials.push(e), (e.loading = e.load());
             }
-            this.center(), (this.threeObj.castShadow = !0), (this.threeObj.receiveShadow = !0), this.parentChanged();
+            this.center(), (this.threeObj.castShadow = true), (this.threeObj.receiveShadow = true), this.parentChanged();
         }
         toJSON() {
             return { type: this.type, properties: this.properties, material: this.material };
@@ -17306,8 +17306,8 @@ const PZVERSION = "1.0.102";
         }
         update(e) {
             let t;
-            this.fontNeedsUpdate && (this.updateFont(), (this.fontNeedsUpdate = !1)),
-                this.geometryNeedsUpdate && (this.updateGeometry(), (this.geometryNeedsUpdate = !1)),
+            this.fontNeedsUpdate && (this.updateFont(), (this.fontNeedsUpdate = false)),
+                this.geometryNeedsUpdate && (this.updateGeometry(), (this.geometryNeedsUpdate = false)),
                 (t = this.properties.position.get(e)),
                 this.threeObj.position.set(t[0], t[1], t[2]),
                 (t = this.properties.rotation.get(e)),
@@ -17346,7 +17346,7 @@ const PZVERSION = "1.0.102";
         }
     }),
     (PZ.object3d.text.propertyDefinitions = {
-        name: { visible: !1, name: "Name", type: PZ.property.type.TEXT, value: "Text" },
+        name: { visible: false, name: "Name", type: PZ.property.type.TEXT, value: "Text" },
         text: { name: "Text", type: PZ.property.type.TEXT, value: "text", changed: PZ.object3d.text.changeFn },
         font: {
             name: "Font",
@@ -17356,7 +17356,7 @@ const PZVERSION = "1.0.102";
             accept: ".ttf,.otf,.woff,.woff2",
             changed: function () {
                 let e = this.parentObject;
-                e.font && (e.parentProject.assets.unload(e.font), (e.font = null)), this.value && ((e.font = new PZ.asset.font(e.parentProject.assets.load(this.value))), (e.fontNeedsUpdate = !0));
+                e.font && (e.parentProject.assets.unload(e.font), (e.font = null)), this.value && ((e.font = new PZ.asset.font(e.parentProject.assets.load(this.value))), (e.fontNeedsUpdate = true));
             },
         },
         size: { name: "Size", type: PZ.property.type.VECTOR2, value: [20, 3], subtitle1: "height", subtitle2: "thickness", changed: PZ.object3d.text.changeFn, max: 200, min: 1, step: 1, decimals: 0 },
@@ -17365,39 +17365,39 @@ const PZVERSION = "1.0.102";
         bevelSize: { name: "Bevel size", type: PZ.property.type.VECTOR2, value: [0.1, 0.5], subtitle1: "size", subtitle2: "thickness", changed: PZ.object3d.text.changeFn, min: 0.01, step: 0.1, decimals: 2 },
         positionMode: { name: "Center point", type: PZ.property.type.OPTION, value: 0, items: "center;left;right;top;bottom;front;back", changed: PZ.object3d.text.changeFn },
         position: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Position.X", type: PZ.property.type.NUMBER, value: 0 },
-                { dynamic: !0, name: "Position.Y", type: PZ.property.type.NUMBER, value: 0 },
-                { dynamic: !0, name: "Position.Z", type: PZ.property.type.NUMBER, value: 0 },
+                { dynamic: true, name: "Position.X", type: PZ.property.type.NUMBER, value: 0 },
+                { dynamic: true, name: "Position.Y", type: PZ.property.type.NUMBER, value: 0 },
+                { dynamic: true, name: "Position.Z", type: PZ.property.type.NUMBER, value: 0 },
             ],
             name: "Position",
             type: PZ.property.type.VECTOR3,
         },
         rotation: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Rotation.X", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
-                { dynamic: !0, name: "Rotation.Y", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
-                { dynamic: !0, name: "Rotation.Z", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
+                { dynamic: true, name: "Rotation.X", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
+                { dynamic: true, name: "Rotation.Y", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
+                { dynamic: true, name: "Rotation.Z", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
             ],
             name: "Rotation",
             type: PZ.property.type.VECTOR3,
             scaleFactor: Math.PI / 180,
         },
         scale: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Scale.X", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
-                { dynamic: !0, name: "Scale.Y", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
-                { dynamic: !0, name: "Scale.Z", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
+                { dynamic: true, name: "Scale.X", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
+                { dynamic: true, name: "Scale.Y", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
+                { dynamic: true, name: "Scale.Z", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
             ],
             name: "Scale",
             type: PZ.property.type.VECTOR3,
-            linkRatio: !0,
+            linkRatio: true,
         },
         eulerOrder: {
             name: "Rotation order",
@@ -17457,8 +17457,8 @@ const PZVERSION = "1.0.102";
         }
     }),
     (PZ.object3d.group.propertyDefinitions = {
-        name: { visible: !1, name: "Name", type: PZ.property.type.TEXT, value: "Group" },
-        enabled: { dynamic: !0, name: "Enabled", type: PZ.property.type.OPTION, value: 1, items: "off;on" },
+        name: { visible: false, name: "Name", type: PZ.property.type.TEXT, value: "Group" },
+        enabled: { dynamic: true, name: "Enabled", type: PZ.property.type.OPTION, value: 1, items: "off;on" },
         reflectionVisibility: {
             name: "Visibility",
             type: PZ.property.type.OPTION,
@@ -17466,44 +17466,44 @@ const PZVERSION = "1.0.102";
             changed: function () {
                 let e = this.parentObject;
                 (e.threeObj.layers.mask = 0), (0 !== this.value && 2 !== this.value) || e.threeObj.layers.enable(0), (1 !== this.value && 2 !== this.value) || e.threeObj.layers.enable(10);
-                for (var t = 0; t < e.objects.length; t++) e.objects[t] instanceof PZ.object3d.group == !1 && (e.objects[t].threeObj.layers.mask = e.threeObj.layers.mask);
+                for (var t = 0; t < e.objects.length; t++) e.objects[t] instanceof PZ.object3d.group == false && (e.objects[t].threeObj.layers.mask = e.threeObj.layers.mask);
             },
             items: "normal;reflections only;scene + reflections",
         },
         position: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Position.X", type: PZ.property.type.NUMBER, value: 0 },
-                { dynamic: !0, name: "Position.Y", type: PZ.property.type.NUMBER, value: 0 },
-                { dynamic: !0, name: "Position.Z", type: PZ.property.type.NUMBER, value: 0 },
+                { dynamic: true, name: "Position.X", type: PZ.property.type.NUMBER, value: 0 },
+                { dynamic: true, name: "Position.Y", type: PZ.property.type.NUMBER, value: 0 },
+                { dynamic: true, name: "Position.Z", type: PZ.property.type.NUMBER, value: 0 },
             ],
             name: "Position",
             type: PZ.property.type.VECTOR3,
         },
         rotation: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Rotation.X", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
-                { dynamic: !0, name: "Rotation.Y", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
-                { dynamic: !0, name: "Rotation.Z", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
+                { dynamic: true, name: "Rotation.X", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
+                { dynamic: true, name: "Rotation.Y", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
+                { dynamic: true, name: "Rotation.Z", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180 },
             ],
             name: "Rotation",
             type: PZ.property.type.VECTOR3,
             scaleFactor: Math.PI / 180,
         },
         scale: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Scale.X", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
-                { dynamic: !0, name: "Scale.Y", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
-                { dynamic: !0, name: "Scale.Z", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
+                { dynamic: true, name: "Scale.X", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
+                { dynamic: true, name: "Scale.Y", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
+                { dynamic: true, name: "Scale.Z", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, decimals: 3 },
             ],
             name: "Scale",
             type: PZ.property.type.VECTOR3,
-            linkRatio: !0,
+            linkRatio: true,
         },
         eulerOrder: {
             name: "Rotation order",
@@ -17535,7 +17535,7 @@ const PZVERSION = "1.0.102";
                 case 2:
                     (t = "Orthographic Camera"), (this.threeObj = new THREE.OrthographicCamera(-0.05, 0.05, 0.05, -0.05, 0.1, 5e3));
             }
-            this.properties.name.set(t), this.parentChanged(), (this.parentLayer.pass.camera = this.threeObj), this.parentLayer.properties.resolution.onChanged.watch(this.resolutionChanged.bind(this), !0);
+            this.properties.name.set(t), this.parentChanged(), (this.parentLayer.pass.camera = this.threeObj), this.parentLayer.properties.resolution.onChanged.watch(this.resolutionChanged.bind(this), true);
         }
         resolutionChanged() {
             let e = this.parentProject.sequence.properties.resolution.get(),
@@ -17556,25 +17556,25 @@ const PZVERSION = "1.0.102";
         }
     }),
     (PZ.object3d.camera.propertyDefinitions = {
-        name: { visible: !1, name: "Name", type: PZ.property.type.TEXT, value: "Camera" },
+        name: { visible: false, name: "Name", type: PZ.property.type.TEXT, value: "Camera" },
         position: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Position.X", type: PZ.property.type.NUMBER, value: 0, step: 1, decimals: 2 },
-                { dynamic: !0, name: "Position.Y", type: PZ.property.type.NUMBER, value: 0, step: 1, decimals: 2 },
-                { dynamic: !0, name: "Position.Z", type: PZ.property.type.NUMBER, value: 80, step: 1, decimals: 2 },
+                { dynamic: true, name: "Position.X", type: PZ.property.type.NUMBER, value: 0, step: 1, decimals: 2 },
+                { dynamic: true, name: "Position.Y", type: PZ.property.type.NUMBER, value: 0, step: 1, decimals: 2 },
+                { dynamic: true, name: "Position.Z", type: PZ.property.type.NUMBER, value: 80, step: 1, decimals: 2 },
             ],
             name: "Position",
             type: PZ.property.type.VECTOR3,
         },
         rotation: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Rotation.X", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180, step: 1 },
-                { dynamic: !0, name: "Rotation.Y", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180, step: 1 },
-                { dynamic: !0, name: "Rotation.Z", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180, step: 1 },
+                { dynamic: true, name: "Rotation.X", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180, step: 1 },
+                { dynamic: true, name: "Rotation.Y", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180, step: 1 },
+                { dynamic: true, name: "Rotation.Z", type: PZ.property.type.NUMBER, value: 0, scaleFactor: Math.PI / 180, step: 1 },
             ],
             name: "Rotation",
             type: PZ.property.type.VECTOR3,
@@ -17589,19 +17589,19 @@ const PZVERSION = "1.0.102";
                 this.parentObject.threeObj.rotation.order = this.value;
             },
         },
-        shakeAmplitude: { dynamic: !0, name: "Shake amount", type: PZ.property.type.NUMBER, value: 0, max: 1, min: 0, step: 0.01, decimals: 3 },
-        shakeSpeed: { dynamic: !0, name: "Shake speed", type: PZ.property.type.NUMBER, value: 30, min: 0, step: 0.01 },
+        shakeAmplitude: { dynamic: true, name: "Shake amount", type: PZ.property.type.NUMBER, value: 0, max: 1, min: 0, step: 0.01, decimals: 3 },
+        shakeSpeed: { dynamic: true, name: "Shake speed", type: PZ.property.type.NUMBER, value: 30, min: 0, step: 0.01 },
     }),
     (PZ.object3d.camera.prototype.defaultName = "Camera"),
     (PZ.ui = PZ.ui || {}),
     (PZ.ui.edit = PZ.ui.edit || {}),
     (PZ.ui.objectTypes = new Map()),
     PZ.ui.objectTypes.set(PZ.effect, [
-        { name: "LAYER", category: !0 },
+        { name: "LAYER", category: true },
         { name: "Color Overlay", desc: "Blends a solid color over opaque areas.", type: "coloroverlay" },
         { name: "Gradient Overlay", desc: "Blends a gradient over opaque areas.", type: "gradientoverlay" },
         { name: "Image Overlay", desc: "Blends an image over opaque areas.", type: "overlay" },
-        { name: "COLOR", category: !0 },
+        { name: "COLOR", category: true },
         { name: "Negative", desc: "Inverts colors.", type: "negative" },
         { name: "Saturation", desc: "Adjust color saturation and create grayscale effects.", type: "grayscale" },
         { name: "Brightness + Contrast", desc: "Adjust image brightness and contrast.", type: "brightnesscontrast" },
@@ -17615,12 +17615,12 @@ const PZVERSION = "1.0.102";
         { name: "Color Shift", desc: "Shift all of the hue values of the image.", type: "hueshift" },
         { name: "Exposure", desc: "Simulates adjusting image exposure.", type: "exposure" },
         { name: "Cube LUT", desc: "Applies a preset Cube LUT file to remap colors.", type: "cubelut" },
-        { name: "ENHANCE", category: !0 },
+        { name: "ENHANCE", category: true },
         { name: "Antialiasing", desc: "Softens jagged, sharp edges.", type: "fxaa" },
         { name: "Bloom", desc: "Adds a glowing effect to bright areas.", type: "bloom" },
         { name: "Anamorphic Lens Flare", desc: "Creates horizontal flares from bright areas.", type: "anamorphicflare" },
         { name: "Edge Detection", desc: "Applies a Sobel filter to emphasize edges.", type: "edgedetection" },
-        { name: "DISTORT", category: !0 },
+        { name: "DISTORT", category: true },
         { name: "RGB Shift", desc: "Shifts color channels apart.", type: "rgbshift" },
         { name: "Fisheye", desc: "Simulates a fisheye lens.", type: "fisheye" },
         { name: "Pulse", desc: "Distorts radially outward in a ripple pattern.", type: "pulse" },
@@ -17636,66 +17636,66 @@ const PZVERSION = "1.0.102";
             type: 0,
             data: {
                 type: 0,
-                properties: { name: "Twitch (beta v1)", enabled: { animated: !1, keyframes: [{ value: 1, frame: 0, tween: 1 }] } },
+                properties: { name: "Twitch (beta v1)", enabled: { animated: false, keyframes: [{ value: 1, frame: 0, tween: 1 }] } },
                 customProperties: [
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "Amount" }, animated: !1, keyframes: [{ value: 0.3, frame: 0, tween: 1 }] },
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "Speed" }, animated: !1, keyframes: [{ value: 2, frame: 0, tween: 1 }] },
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "RGB Shift amount" }, animated: !1, keyframes: [{ value: 24, frame: 0, tween: 1 }] },
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "RGB Shift tendency" }, animated: !1, keyframes: [{ value: 10, frame: 0, tween: 1 }] },
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "Slide amount" }, animated: !1, keyframes: [{ value: 0.5, frame: 0, tween: 1 }] },
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "Slide tendency" }, animated: !1, keyframes: [{ value: 10, frame: 0, tween: 1 }] },
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "Blur amount" }, animated: !1, keyframes: [{ value: 2, frame: 0, tween: 1 }] },
-                    { type: { custom: !0, dynamic: !0, type: 0, value: 0 }, properties: { name: "Blur tendency" }, animated: !1, keyframes: [{ value: 10, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "Amount" }, animated: false, keyframes: [{ value: 0.3, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "Speed" }, animated: false, keyframes: [{ value: 2, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "RGB Shift amount" }, animated: false, keyframes: [{ value: 24, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "RGB Shift tendency" }, animated: false, keyframes: [{ value: 10, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "Slide amount" }, animated: false, keyframes: [{ value: 0.5, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "Slide tendency" }, animated: false, keyframes: [{ value: 10, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "Blur amount" }, animated: false, keyframes: [{ value: 2, frame: 0, tween: 1 }] },
+                    { type: { custom: true, dynamic: true, type: 0, value: 0 }, properties: { name: "Blur tendency" }, animated: false, keyframes: [{ value: 10, frame: 0, tween: 1 }] },
                 ],
                 objects: [
                     {
                         type: "rgbshift",
                         properties: {
                             name: "RGB Shift",
-                            enabled: { animated: !1, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
+                            enabled: { animated: false, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
                             amount: {
-                                animated: !0,
+                                animated: true,
                                 expression: 'var amt = properties["Amount"];\namt *= properties["RGB Shift amount"];\nvar spd = properties["Speed"];\nspd *= properties["RGB Shift tendency"];\namt * shake(time, spd, 1, 0, 2)',
                             },
-                            angle: { animated: !1, keyframes: [{ value: 1.55, frame: 0, tween: 1 }] },
+                            angle: { animated: false, keyframes: [{ value: 1.55, frame: 0, tween: 1 }] },
                         },
                     },
                     {
                         type: "directionalblur",
                         properties: {
                             name: "Directional Blur",
-                            enabled: { animated: !1, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
+                            enabled: { animated: false, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
                             delta: {
-                                animated: !0,
+                                animated: true,
                                 expression: 'var amt = properties["Amount"];\namt *= properties["Blur amount"];\nvar spd = properties["Speed"];\nspd *= properties["Blur tendency"];\namt * shake(time, spd * 10, 1, 0, 2)',
                             },
-                            direction: { animated: !1, keyframes: [{ value: 1.55, frame: 0, tween: 1 }] },
+                            direction: { animated: false, keyframes: [{ value: 1.55, frame: 0, tween: 1 }] },
                         },
                     },
                     {
                         type: "brightnesscontrast",
                         properties: {
                             name: "Brightness + Contrast",
-                            enabled: { animated: !1, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
-                            brightness: { animated: !0, expression: 'var amt = properties["Amount"];\nvar spd = properties["Speed"];\namt * shake(time, spd * 5, 0.1, 1, 1)' },
-                            contrast: { animated: !1, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
+                            enabled: { animated: false, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
+                            brightness: { animated: true, expression: 'var amt = properties["Amount"];\nvar spd = properties["Speed"];\namt * shake(time, spd * 5, 0.1, 1, 1)' },
+                            contrast: { animated: false, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
                         },
                     },
                     {
                         type: "transform",
                         properties: {
                             name: "Transform",
-                            enabled: { animated: !1, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
+                            enabled: { animated: false, keyframes: [{ value: 1, frame: 0, tween: 1 }] },
                             cameraType: 0,
                             cameraPosition: {
-                                animated: !0,
+                                animated: true,
                                 expression:
                                     'var amt = properties["Amount"];\namt *= properties["Slide amount"];\nvar spd = properties["Speed"];\nspd *= properties["Slide tendency"];\nvar slide = amt * shake(time, spd, 50, 0, 2);\n[0,slide,0]',
                             },
-                            cameraRotation: { animated: !1, keyframes: [{ value: [0, 0, 0], frame: 0, tween: 1 }] },
-                            imagePosition: { animated: !1, keyframes: [{ value: [0, 0, 0], frame: 0, tween: 1 }] },
-                            imageRotation: { animated: !1, keyframes: [{ value: [0, 0, 0], frame: 0, tween: 1 }] },
-                            imageScale: { animated: !1, keyframes: [{ value: [1, 1], frame: 0, tween: 1 }] },
+                            cameraRotation: { animated: false, keyframes: [{ value: [0, 0, 0], frame: 0, tween: 1 }] },
+                            imagePosition: { animated: false, keyframes: [{ value: [0, 0, 0], frame: 0, tween: 1 }] },
+                            imageRotation: { animated: false, keyframes: [{ value: [0, 0, 0], frame: 0, tween: 1 }] },
+                            imageScale: { animated: false, keyframes: [{ value: [1, 1], frame: 0, tween: 1 }] },
                         },
                     },
                 ],
@@ -17703,13 +17703,13 @@ const PZVERSION = "1.0.102";
         },
         { name: "Pixel Sort", desc: "Rearranges pixels based on relative brightness.", type: "pixelsort" },
         { name: "Scan Lines", desc: "Simulates scan lines.", type: "scanlines" },
-        { name: "BLUR + SHARPEN", category: !0 },
+        { name: "BLUR + SHARPEN", category: true },
         { name: "Box Blur", desc: "Blurs the image using a fast blur technique.", type: "boxblur" },
         { name: "Gaussian Blur", desc: "Blurs the image using a higher quality blur technique.", type: "gaussianblur" },
         { name: "Radial Blur", desc: "Blurs radially from a specified point.", type: "radialblur" },
         { name: "Directional Blur", desc: "Blurs the image in a single direction.", type: "directionalblur" },
         { name: "Sharpen", desc: "Sharpens the image.", type: "sharpen" },
-        { name: "FRAMING", category: !0 },
+        { name: "FRAMING", category: true },
         { name: "Crop", desc: "Trims the edges of the image.", type: "crop" },
         { name: "Transform", desc: "Applies 3d transformation to the image.", type: "transform" },
         { name: "Mask", desc: "Mask a part of the image to be transparent.", type: "mask" },
@@ -17718,12 +17718,12 @@ const PZVERSION = "1.0.102";
         { name: "Mirror", desc: "Uses reflection to create a symmetrical image.", type: "mirror" },
         { name: "Flip", desc: "Flips the image in the specified directions.", type: "flip" },
         { name: "Shake", desc: "Simulates a shaking camera by transforming the image.", type: "shake" },
-        { name: "MISC", category: !0 },
+        { name: "MISC", category: true },
         { name: "Group", desc: "Meta-effect for object management.", type: 0 },
         { name: "Shader", desc: "Custom shader effect.", type: 1 },
     ]),
     PZ.ui.objectTypes.set(PZ.object3d, [
-        { name: "OBJECTS", category: !0 },
+        { name: "OBJECTS", category: true },
         {
             name: "Shape",
             desc: "Primitive object such as a box or sphere.",
@@ -17743,7 +17743,7 @@ const PZVERSION = "1.0.102";
             name: "Light",
             desc: "Creates light and shadows in a scene.",
             type: 3,
-            hidelist: !0,
+            hidelist: true,
             list: [
                 { name: "Spot light", type: 3, data: { objectType: 1 } },
                 { name: "Point light", type: 3, data: { objectType: 2 } },
@@ -17765,16 +17765,16 @@ const PZVERSION = "1.0.102";
         { name: "Model", desc: "Import an OBJ object file.", type: 5, data: PZ.ui.edit.importOBJ },
     ]),
     PZ.ui.objectTypes.set(PZ.property.dynamic, [
-        { name: "Number", type: { custom: !0, dynamic: !0, type: PZ.property.type.NUMBER } },
+        { name: "Number", type: { custom: true, dynamic: true, type: PZ.property.type.NUMBER } },
         {
             name: "2D Vector",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "X", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "X", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
                 ],
                 type: PZ.property.type.VECTOR2,
             },
@@ -17782,13 +17782,13 @@ const PZVERSION = "1.0.102";
         {
             name: "3D Vector",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "X", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "X", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
                 ],
                 type: PZ.property.type.VECTOR3,
             },
@@ -17796,14 +17796,14 @@ const PZVERSION = "1.0.102";
         {
             name: "4D Vector",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "X", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "W", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "X", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "W", type: PZ.property.type.NUMBER, value: 0 },
                 ],
                 type: PZ.property.type.VECTOR4,
             },
@@ -17811,33 +17811,33 @@ const PZVERSION = "1.0.102";
         {
             name: "Color",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                    { dynamic: !0, name: "G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                    { dynamic: !0, name: "B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                    { dynamic: true, name: "R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                    { dynamic: true, name: "G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                    { dynamic: true, name: "B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
                 ],
                 type: PZ.property.type.COLOR,
             },
         },
     ]),
     PZ.ui.objectTypes.set(PZ.property, [
-        { name: "STATIC", category: !0 },
-        { name: "Number", type: { custom: !0, type: PZ.property.type.NUMBER, value: 0 } },
-        { name: "Image", type: { custom: !0, type: PZ.property.type.ASSET, assetType: PZ.asset.type.IMAGE, accept: "image/*", value: null } },
-        { name: "DYNAMIC", category: !0 },
-        { name: "Number", type: { custom: !0, dynamic: !0, type: PZ.property.type.NUMBER } },
+        { name: "STATIC", category: true },
+        { name: "Number", type: { custom: true, type: PZ.property.type.NUMBER, value: 0 } },
+        { name: "Image", type: { custom: true, type: PZ.property.type.ASSET, assetType: PZ.asset.type.IMAGE, accept: "image/*", value: null } },
+        { name: "DYNAMIC", category: true },
+        { name: "Number", type: { custom: true, dynamic: true, type: PZ.property.type.NUMBER } },
         {
             name: "2D Vector",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "X", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "X", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
                 ],
                 type: PZ.property.type.VECTOR2,
             },
@@ -17845,13 +17845,13 @@ const PZVERSION = "1.0.102";
         {
             name: "3D Vector",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "X", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "X", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
                 ],
                 type: PZ.property.type.VECTOR3,
             },
@@ -17859,14 +17859,14 @@ const PZVERSION = "1.0.102";
         {
             name: "4D Vector",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "X", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
-                    { dynamic: !0, name: "W", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "X", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Y", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "Z", type: PZ.property.type.NUMBER, value: 0 },
+                    { dynamic: true, name: "W", type: PZ.property.type.NUMBER, value: 0 },
                 ],
                 type: PZ.property.type.VECTOR4,
             },
@@ -17874,13 +17874,13 @@ const PZVERSION = "1.0.102";
         {
             name: "Color",
             type: {
-                custom: !0,
-                group: !0,
-                dynamic: !0,
+                custom: true,
+                group: true,
+                dynamic: true,
                 objects: [
-                    { dynamic: !0, name: "R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                    { dynamic: !0, name: "G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                    { dynamic: !0, name: "B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                    { dynamic: true, name: "R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                    { dynamic: true, name: "G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                    { dynamic: true, name: "B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
                 ],
                 type: PZ.property.type.COLOR,
             },
@@ -17893,7 +17893,7 @@ const PZVERSION = "1.0.102";
         { name: "Custom Material", type: "custom" },
     ]),
     PZ.ui.objectTypes.set(PZ.layer, [
-        { name: "LAYERS", category: !0 },
+        { name: "LAYERS", category: true },
         { name: "Image", desc: "Import an image.", type: 3, data: PZ.ui.edit.importImage },
         { name: "Text", desc: "Custom text.", type: 7 },
         { name: "Preset Shape", desc: "Simple preset shapes.", type: 8 },
@@ -17945,7 +17945,7 @@ const PZVERSION = "1.0.102";
     (PZ.shape.getName = (e) => (e ? e.defaultName : PZ.shape.prototype.defaultName)),
     (PZ.shape.propertyDefinitions = {
         name: {
-            visible: !1,
+            visible: false,
             name: "Name",
             type: PZ.property.type.TEXT,
             value: (e) => {
@@ -17954,26 +17954,26 @@ const PZVERSION = "1.0.102";
             },
         },
         position: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Position.X", type: PZ.property.type.NUMBER, value: 0, step: 10, decimals: 1 },
-                { dynamic: !0, name: "Position.Y", type: PZ.property.type.NUMBER, value: 0, step: 10, decimals: 1 },
+                { dynamic: true, name: "Position.X", type: PZ.property.type.NUMBER, value: 0, step: 10, decimals: 1 },
+                { dynamic: true, name: "Position.Y", type: PZ.property.type.NUMBER, value: 0, step: 10, decimals: 1 },
             ],
             name: "Position",
             type: PZ.property.type.VECTOR2,
         },
-        rotation: { dynamic: !0, name: "Rotation", type: PZ.property.type.NUMBER, scaleFactor: Math.PI / 180, value: 0, step: 3, decimals: 1 },
+        rotation: { dynamic: true, name: "Rotation", type: PZ.property.type.NUMBER, scaleFactor: Math.PI / 180, value: 0, step: 3, decimals: 1 },
         scale: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Scale.X", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, dragstep: 0.001, decimals: 3 },
-                { dynamic: !0, name: "Scale.Y", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, dragstep: 0.001, decimals: 3 },
+                { dynamic: true, name: "Scale.X", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, dragstep: 0.001, decimals: 3 },
+                { dynamic: true, name: "Scale.Y", type: PZ.property.type.NUMBER, value: 1, min: 0.001, step: 0.1, dragstep: 0.001, decimals: 3 },
             ],
             name: "Scale",
             type: PZ.property.type.VECTOR2,
-            linkRatio: !0,
+            linkRatio: true,
         },
     }),
     (PZ.shape.group = class extends PZ.shape {
@@ -18075,12 +18075,12 @@ const PZVERSION = "1.0.102";
     }),
     (PZ.draw.fill.propertyDefinitions = {
         color: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Fill.R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                { dynamic: !0, name: "Fill.B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
-                { dynamic: !0, name: "Fill.G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                { dynamic: true, name: "Fill.R", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                { dynamic: true, name: "Fill.B", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
+                { dynamic: true, name: "Fill.G", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1 },
             ],
             name: "Fill",
             type: PZ.property.type.COLOR,
@@ -18104,16 +18104,16 @@ const PZVERSION = "1.0.102";
     }),
     (PZ.draw.stroke.propertyDefinitions = {
         color: {
-            dynamic: !0,
-            group: !0,
+            dynamic: true,
+            group: true,
             objects: [
-                { dynamic: !0, name: "Stroke.R", type: PZ.property.type.NUMBER, value: 0, min: 0, max: 1 },
-                { dynamic: !0, name: "Stroke.B", type: PZ.property.type.NUMBER, value: 0, min: 0, max: 1 },
-                { dynamic: !0, name: "Stroke.G", type: PZ.property.type.NUMBER, value: 0, min: 0, max: 1 },
+                { dynamic: true, name: "Stroke.R", type: PZ.property.type.NUMBER, value: 0, min: 0, max: 1 },
+                { dynamic: true, name: "Stroke.B", type: PZ.property.type.NUMBER, value: 0, min: 0, max: 1 },
+                { dynamic: true, name: "Stroke.G", type: PZ.property.type.NUMBER, value: 0, min: 0, max: 1 },
             ],
             name: "Stroke",
             type: PZ.property.type.COLOR,
         },
-        size: { dynamic: !0, name: "Stroke width", type: PZ.property.type.NUMBER, value: 1, min: 0.1, decimals: 1, step: 1 },
-        opacity: { dynamic: !0, name: "Stroke opacity", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1, decimals: 2, step: 1 },
+        size: { dynamic: true, name: "Stroke width", type: PZ.property.type.NUMBER, value: 1, min: 0.1, decimals: 1, step: 1 },
+        opacity: { dynamic: true, name: "Stroke opacity", type: PZ.property.type.NUMBER, value: 1, min: 0, max: 1, decimals: 2, step: 1 },
     });

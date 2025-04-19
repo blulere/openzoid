@@ -49,19 +49,19 @@ onmessage = function(e) {
         return: onReturn,
         TOTAL_MEMORY: 16777216
     };
-    if (t.wfiles[0] && void 0 === t.wfiles[0].name && (t.wfiles[0].name = "blob.pz"), !0 === e.data.useDevFile) try {
+    if (t.wfiles[0] && undefined === t.wfiles[0].name && (t.wfiles[0].name = "blob.pz"), true === e.data.useDevFile) try {
         fs = webkitRequestFileSystemSync(PERSISTENT, 104857600);
         try {
             fs.root.getFile("out", {
-                create: !1
+                create: false
             }).remove()
         } catch (e) {} finally {
             fileEntry = fs.root.getFile("out", {
-                create: !0
+                create: true
             }), fileWriter = fileEntry.createWriter()
         }
     } catch (e) {} finally {
-        fs && fileEntry && fileWriter && (t.useDevFile = !0)
+        fs && fileEntry && fileWriter && (t.useDevFile = true)
     }
     postMessage({
         type: "start",

@@ -4,7 +4,7 @@ this.load=function(e) {
         color: 16777215, side:2
     }
     ),
-    this.threeObj.premultipliedAlpha= !0,
+    this.threeObj.premultipliedAlpha= true,
     this.properties.load(e&&e.properties)
 }
 
@@ -29,18 +29,18 @@ this.update=function(e) {
 ,
 this.props= {
     color: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects:[ {
-            dynamic:  !0, name:"Color.R", type:PZ.property.type.NUMBER, value:1, min:0, max:1
+            dynamic:  true, name:"Color.R", type:PZ.property.type.NUMBER, value:1, min:0, max:1
         }
         ,
             {
-            dynamic:  !0, name:"Color.G", type:PZ.property.type.NUMBER, value:1, min:0, max:1
+            dynamic:  true, name:"Color.G", type:PZ.property.type.NUMBER, value:1, min:0, max:1
         }
         ,
             {
-            dynamic:  !0, name:"Color.B", type:PZ.property.type.NUMBER, value:1, min:0, max:1
+            dynamic:  true, name:"Color.B", type:PZ.property.type.NUMBER, value:1, min:0, max:1
         }
         ],
         name:"Color",

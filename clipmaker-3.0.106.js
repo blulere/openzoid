@@ -138,7 +138,7 @@ CM.setUpEditor = function (currentAccount) {
             title: "layer transform controls (t)",
             icon: "transform",
             key: "t",
-            observable: viewport.widget2d ? viewport.widget2d.onEditChanged : void 0,
+            observable: viewport.widget2d ? viewport.widget2d.onEditChanged : undefined,
             update: function (e) {
                 let color = viewport.widget2d.edit ? "#8a2828" : "#acacac";
                 e.children[0].style.fill = color;

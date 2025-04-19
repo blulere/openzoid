@@ -46,13 +46,13 @@ this.props= {
             let e=this.parentObject;
             if(e.texture&&(e.parentProject.assets.unload(e.texture), e.texture=null, e.threeObj.map.dispose(), e.threeObj.map=null), this.value) {
                 e.texture=new PZ.asset.image(e.parentProject.assets.load(this.value));
-                let t=e.texture.getTexture( !0),
+                let t=e.texture.getTexture( true),
                 p=e.properties.wrap.get()||1;
                 t.wrapS=WRAP_VALUES[p],
                 t.wrapT=WRAP_VALUES[p],
                 e.threeObj.map=t
             }
-            e.threeObj.needsUpdate= !0
+            e.threeObj.needsUpdate= true
         }
     }
     ,
@@ -62,39 +62,39 @@ this.props= {
         value:1,
         changed:function() {
             let e=this.parentObject;
-            e.threeObj.map&&(e.threeObj.map.wrapS=WRAP_VALUES[this.value], e.threeObj.map.wrapT=WRAP_VALUES[this.value], e.threeObj.map.needsUpdate= !0)
+            e.threeObj.map&&(e.threeObj.map.wrapS=WRAP_VALUES[this.value], e.threeObj.map.wrapT=WRAP_VALUES[this.value], e.threeObj.map.needsUpdate= true)
         }
         ,
         items:"none;tile;reflect"
     }
     ,
     repeat: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects:[ {
-            dynamic:  !0, name:"Repeat.U", type:PZ.property.type.NUMBER, step:.1, decimals:3, value:1
+            dynamic:  true, name:"Repeat.U", type:PZ.property.type.NUMBER, step:.1, decimals:3, value:1
         }
         ,
             {
-            dynamic:  !0, name:"Repeat.V", type:PZ.property.type.NUMBER, step:.1, decimals:3, value:1
+            dynamic:  true, name:"Repeat.V", type:PZ.property.type.NUMBER, step:.1, decimals:3, value:1
         }
         ],
         name:"Repeat",
         type:PZ.property.type.VECTOR2,
         step:.1,
         decimals:3,
-        linkRatio: !0
+        linkRatio: true
     }
     ,
     offset: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects:[ {
-            dynamic:  !0, name:"Offset.U", type:PZ.property.type.NUMBER, step:.1, decimals:3, value:0
+            dynamic:  true, name:"Offset.U", type:PZ.property.type.NUMBER, step:.1, decimals:3, value:0
         }
         ,
             {
-            dynamic:  !0, name:"Offset.V", type:PZ.property.type.NUMBER, step:.1, decimals:3, value:0
+            dynamic:  true, name:"Offset.V", type:PZ.property.type.NUMBER, step:.1, decimals:3, value:0
         }
         ],
         name:"Offset",
@@ -104,14 +104,14 @@ this.props= {
     }
     ,
     center: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects:[ {
-            dynamic:  !0, name:"Center.U", type:PZ.property.type.NUMBER, step:.1, decimals:3, value:0
+            dynamic:  true, name:"Center.U", type:PZ.property.type.NUMBER, step:.1, decimals:3, value:0
         }
         ,
             {
-            dynamic:  !0, name:"Center.V", type:PZ.property.type.NUMBER, step:.1, decimals:3, value:0
+            dynamic:  true, name:"Center.V", type:PZ.property.type.NUMBER, step:.1, decimals:3, value:0
         }
         ],
         name:"Center",
@@ -121,7 +121,7 @@ this.props= {
     }
     ,
     rotation: {
-        dynamic:  !0, name:"Rotation", type:PZ.property.type.NUMBER, value:0, step:.5, scaleFactor:Math.PI/180
+        dynamic:  true, name:"Rotation", type:PZ.property.type.NUMBER, value:0, step:.5, scaleFactor:Math.PI/180
     }
     ,
     side: {

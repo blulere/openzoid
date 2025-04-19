@@ -81,18 +81,18 @@ this.props= {
     }
     ,
     color: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects:[ {
-            dynamic:  !0, name:"Color.R", type:PZ.property.type.NUMBER, value:1, min:0, max:1
+            dynamic:  true, name:"Color.R", type:PZ.property.type.NUMBER, value:1, min:0, max:1
         }
         ,
             {
-            dynamic:  !0, name:"Color.G", type:PZ.property.type.NUMBER, value:1, min:0, max:1
+            dynamic:  true, name:"Color.G", type:PZ.property.type.NUMBER, value:1, min:0, max:1
         }
         ,
             {
-            dynamic:  !0, name:"Color.B", type:PZ.property.type.NUMBER, value:1, min:0, max:1
+            dynamic:  true, name:"Color.B", type:PZ.property.type.NUMBER, value:1, min:0, max:1
         }
         ],
         name:"Color",
@@ -111,7 +111,7 @@ this.props= {
     }
     ,
     opacity: {
-        dynamic:  !0, name:"Opacity", type:PZ.property.type.NUMBER, value:1, max:1, min:0, step:.01
+        dynamic:  true, name:"Opacity", type:PZ.property.type.NUMBER, value:1, max:1, min:0, step:.01
     }
     ,
     blending: {

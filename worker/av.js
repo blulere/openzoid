@@ -47,7 +47,7 @@ function seekCallback(e, r, t) {
     return fileWriter.seek(r), r
 }
 var _heap, _sync, _callback, _buf_ptrs, _xfer_buffer, _xfer_ptrs, _xfer_ptrs_v, _xfer_ptrs_a, _remux, AV_NUM_DATA_POINTERS = 8,
-    HAS_THREADS = !1;
+    HAS_THREADS = false;
 
 function getAudioSamples(e, r, t) {
     if (_callback = t, _buf_ptrs = new Int32Array(_heap, e, AV_NUM_DATA_POINTERS), HAS_THREADS ? (_sync[0] = -1, _xfer_ptrs[0] = _buf_ptrs[0], _xfer_ptrs[1] = _buf_ptrs[1]) : _xfer_ptrs = _xfer_ptrs_a, postMessage({
@@ -120,15 +120,15 @@ onmessage = function(e) {
             fs = webkitRequestFileSystemSync(PERSISTENT, 104857600);
             try {
                 fs.root.getFile("out", {
-                    create: !1
+                    create: false
                 }).remove()
             } catch (e) {} finally {
                 fileEntry = fs.root.getFile("out", {
-                    create: !0
+                    create: true
                 }), fileWriter = fileEntry.createWriter()
             }
         } catch (e) {} finally {
-            fs && fileEntry && fileWriter && (f.useDevFile = !0)
+            fs && fileEntry && fileWriter && (f.useDevFile = true)
         }
         postMessage({
             type: "start",

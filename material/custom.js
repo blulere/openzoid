@@ -16,27 +16,27 @@ this.load = function(e) {
 }, this.prepare = async function(e) {
     this.texture && await this.texture.loading, this.normalMap && await this.normalMap.loading
 }, this.initReflection = function() {
-    1 !== this.properties.reflection.get() || this.threeObj.envMap ? 0 === this.properties.reflection.get() && this.threeObj.envMap && (this.parentLayer.envMap.releaseTexture(), this.threeObj.envMap = null, this.threeObj.needsUpdate = !0) : (this.threeObj.envMap = this.parentLayer.envMap.getTexture(), this.threeObj.needsUpdate = !0)
+    1 !== this.properties.reflection.get() || this.threeObj.envMap ? 0 === this.properties.reflection.get() && this.threeObj.envMap && (this.parentLayer.envMap.releaseTexture(), this.threeObj.envMap = null, this.threeObj.needsUpdate = true) : (this.threeObj.envMap = this.parentLayer.envMap.getTexture(), this.threeObj.needsUpdate = true)
 }, this.props = {
     color: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Color.R",
             type: PZ.property.type.NUMBER,
             value: 1,
             min: 0,
             max: 1
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Color.G",
             type: PZ.property.type.NUMBER,
             value: 1,
             min: 0,
             max: 1
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Color.B",
             type: PZ.property.type.NUMBER,
             value: 1,
@@ -47,24 +47,24 @@ this.load = function(e) {
         type: PZ.property.type.COLOR
     },
     emissive: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Emissive.R",
             type: PZ.property.type.NUMBER,
             value: 0,
             min: 0,
             max: 1
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Emissive.G",
             type: PZ.property.type.NUMBER,
             value: 0,
             min: 0,
             max: 1
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Emissive.B",
             type: PZ.property.type.NUMBER,
             value: 0,
@@ -106,11 +106,11 @@ this.load = function(e) {
             let e = this.parentObject;
             if (e.texture && (e.parentProject.assets.unload(e.texture), e.texture = null, e.threeObj.map.dispose(), e.threeObj.map = null), this.value) {
                 e.texture = new PZ.asset.image(e.parentProject.assets.load(this.value));
-                let t = e.texture.getTexture(!0),
+                let t = e.texture.getTexture(true),
                     a = e.properties.wrap.get() || 1;
                 t.wrapS = WRAP_VALUES[a], t.wrapT = WRAP_VALUES[a], e.threeObj.map = t
             }
-            e.threeObj.needsUpdate = !0
+            e.threeObj.needsUpdate = true
         }
     },
     transparent: {
@@ -123,7 +123,7 @@ this.load = function(e) {
         items: "off;on"
     },
     opacity: {
-        dynamic: !0,
+        dynamic: true,
         name: "Opacity",
         type: PZ.property.type.NUMBER,
         value: 1,
@@ -159,11 +159,11 @@ this.load = function(e) {
             let e = this.parentObject;
             if (e.normalMap && (e.parentProject.assets.unload(e.normalMap), e.normalMap = null, e.threeObj.normalMap.dispose(), e.threeObj.normalMap = null), this.value) {
                 e.normalMap = new PZ.asset.image(e.parentProject.assets.load(this.value));
-                let t = e.normalMap.getTexture(!0),
+                let t = e.normalMap.getTexture(true),
                     a = e.properties.wrap.get() || 1;
                 t.wrapS = WRAP_VALUES[a], t.wrapT = WRAP_VALUES[a], e.threeObj.normalMap = t
             }
-            e.threeObj.needsUpdate = !0
+            e.threeObj.needsUpdate = true
         }
     },
     normalScale: {
@@ -183,22 +183,22 @@ this.load = function(e) {
         value: 1,
         changed: function() {
             let e = this.parentObject;
-            e.threeObj.map && (e.threeObj.map.wrapS = WRAP_VALUES[this.value], e.threeObj.map.wrapT = WRAP_VALUES[this.value], e.threeObj.map.needsUpdate = !0), e.threeObj.normalMap && (e.threeObj.normalMap.wrapS = WRAP_VALUES[this.value], e.threeObj.normalMap.wrapT = WRAP_VALUES[this.value], e.threeObj.normalMap.needsUpdate = !0)
+            e.threeObj.map && (e.threeObj.map.wrapS = WRAP_VALUES[this.value], e.threeObj.map.wrapT = WRAP_VALUES[this.value], e.threeObj.map.needsUpdate = true), e.threeObj.normalMap && (e.threeObj.normalMap.wrapS = WRAP_VALUES[this.value], e.threeObj.normalMap.wrapT = WRAP_VALUES[this.value], e.threeObj.normalMap.needsUpdate = true)
         },
         items: "none;tile;reflect"
     },
     repeat: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Repeat.U",
             type: PZ.property.type.NUMBER,
             step: .1,
             decimals: 3,
             value: 1
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Repeat.V",
             type: PZ.property.type.NUMBER,
             step: .1,
@@ -209,20 +209,20 @@ this.load = function(e) {
         type: PZ.property.type.VECTOR2,
         step: .1,
         decimals: 3,
-        linkRatio: !0
+        linkRatio: true
     },
     offset: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Offset.U",
             type: PZ.property.type.NUMBER,
             step: .1,
             decimals: 3,
             value: 0
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Offset.V",
             type: PZ.property.type.NUMBER,
             step: .1,
@@ -235,17 +235,17 @@ this.load = function(e) {
         type: PZ.property.type.VECTOR2
     },
     center: {
-        dynamic: !0,
-        group: !0,
+        dynamic: true,
+        group: true,
         objects: [{
-            dynamic: !0,
+            dynamic: true,
             name: "Center.U",
             type: PZ.property.type.NUMBER,
             step: .1,
             decimals: 3,
             value: 0
         }, {
-            dynamic: !0,
+            dynamic: true,
             name: "Center.V",
             type: PZ.property.type.NUMBER,
             step: .1,
@@ -258,7 +258,7 @@ this.load = function(e) {
         type: PZ.property.type.VECTOR2
     },
     rotation: {
-        dynamic: !0,
+        dynamic: true,
         name: "Rotation",
         type: PZ.property.type.NUMBER,
         value: 0,
