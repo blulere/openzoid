@@ -117,7 +117,7 @@ this.update = function (e) {
         return;
     }
     this.pass.uniforms.opacity.value = this.properties.opacity.get(e);
-    let t = this.properties.color.get(e);
-    this.pass.uniforms.color.value.set(t[0], t[1], t[2]);
+    let color = this.properties.color.get(e);
+    this.pass.uniforms.color.value.set(color[0], color[1], color[2]);
     this.pass.enabled = this.properties.enabled.get(e);
 };
