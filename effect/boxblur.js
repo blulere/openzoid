@@ -9,7 +9,6 @@ this.fragShader = this.parentProject.assets.createFromPreset(
     PZ.asset.type.SHADER,
     this.shaderUrl
 );
-
 this.propertyDefinitions = {
     enabled: {
         dynamic: true,
@@ -28,13 +27,12 @@ this.propertyDefinitions = {
         step: 0.1,
     },
 };
-
 this.properties.addAll(this.propertyDefinitions, this);
 
 if (!THREE.BoxBlurPass) {
-    THREE.BoxBlurPass = function (e, t) {
-        this.material_h = e;
-        this.material_v = e.clone();
+    THREE.BoxBlurPass = function (material_h, material_v) {
+        this.material_h = material_h;
+        this.material_v = material_h.clone();
         this.material_h.transparent = true;
         this.material_h.premultipliedAlpha = true;
         this.material_v.transparent = true;
