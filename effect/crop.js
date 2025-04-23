@@ -96,11 +96,11 @@ this.update = function (e) {
     if (!this.pass) {
         return;
     }
-    let t = this.properties.left.get(e);
-    let s = this.properties.right.get(e);
-    let a = this.properties.top.get(e);
-    let r = this.properties.bottom.get(e);
-    this.pass.quad.position.set(t - s, r - a, 0);
-    this.pass.quad.scale.set(1 - t - s, 1 - a - r, 1);
+    let left = this.properties.left.get(e);
+    let right = this.properties.right.get(e);
+    let top = this.properties.top.get(e);
+    let bottom = this.properties.bottom.get(e);
+    this.pass.quad.position.set(left - right, bottom - top, 0);
+    this.pass.quad.scale.set(1 - left - right, 1 - top - bottom, 1);
     this.pass.enabled = this.properties.enabled.get(e);
 };
