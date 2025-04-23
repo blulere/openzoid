@@ -1,12 +1,10 @@
 this.defaultName = "Directional Blur";
 this.shaderfile = "fx_directionalblur";
 this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl";
-
 this.vertShader = this.parentProject.assets.createFromPreset(
     PZ.asset.type.SHADER,
     "/assets/shaders/vertex/common.glsl"
 );
-
 this.fragShader = this.parentProject.assets.createFromPreset(
     PZ.asset.type.SHADER,
     this.shaderUrl
