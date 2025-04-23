@@ -9,7 +9,6 @@ this.fragShader = this.parentProject.assets.createFromPreset(
     PZ.asset.type.SHADER,
     this.shaderUrl
 );
-
 this.propertyDefinitions = {
     enabled: {
         dynamic: true,
@@ -37,7 +36,6 @@ this.propertyDefinitions = {
         step: 0.1,
     },
 };
-
 this.properties.addAll(this.propertyDefinitions, this);
 
 this.load = async function (e) {
