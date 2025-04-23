@@ -5,7 +5,7 @@ this.propertyDefinitions = {
         name: "Enabled",
         type: PZ.property.type.OPTION,
         value: 1,
-        items: "off;on"
+        items: "off;on",
     },
     amount: {
         dynamic: true,
@@ -15,63 +15,71 @@ this.propertyDefinitions = {
         max: 1,
         min: 0,
         step: 0.01,
-        decimals: 2
+        decimals: 2,
     },
     inner: {
         dynamic: true,
         group: true,
-        objects: [{
-            dynamic: true,
-            name: "Inner glow.R",
-            type: PZ.property.type.NUMBER,
-            value: 1,
-            min: 0,
-            max: 1
-        }, {
-            dynamic: true,
-            name: "Inner glow.G",
-            type: PZ.property.type.NUMBER,
-            value: 1,
-            min: 0,
-            max: 1
-        }, {
-            dynamic: true,
-            name: "Inner glow.B",
-            type: PZ.property.type.NUMBER,
-            value: 1,
-            min: 0,
-            max: 1
-        }],
+        objects: [
+            {
+                dynamic: true,
+                name: "Inner glow.R",
+                type: PZ.property.type.NUMBER,
+                value: 1,
+                min: 0,
+                max: 1,
+            },
+            {
+                dynamic: true,
+                name: "Inner glow.G",
+                type: PZ.property.type.NUMBER,
+                value: 1,
+                min: 0,
+                max: 1,
+            },
+            {
+                dynamic: true,
+                name: "Inner glow.B",
+                type: PZ.property.type.NUMBER,
+                value: 1,
+                min: 0,
+                max: 1,
+            },
+        ],
         name: "Inner glow",
-        type: PZ.property.type.COLOR
+        type: PZ.property.type.COLOR,
     },
     outer: {
         dynamic: true,
         group: true,
-        objects: [{
-            dynamic: true,
-            name: "Outer glow.R",
-            type: PZ.property.type.NUMBER,
-            value: 1,
-            min: 0,
-            max: 1
-        }, {
-            dynamic: true,
-            name: "Outer glow.G",
-            type: PZ.property.type.NUMBER,
-            value: 1,
-            min: 0,
-            max: 1
-        }, {
-            dynamic: true,
-            name: "Outer glow.B",
-            type: PZ.property.type.NUMBER,
-            value: 1,
-            min: 0,
-            max: 1
-        }],
+        objects: [
+            {
+                dynamic: true,
+                name: "Outer glow.R",
+                type: PZ.property.type.NUMBER,
+                value: 1,
+                min: 0,
+                max: 1,
+            },
+            {
+                dynamic: true,
+                name: "Outer glow.G",
+                type: PZ.property.type.NUMBER,
+                value: 1,
+                min: 0,
+                max: 1,
+            },
+            {
+                dynamic: true,
+                name: "Outer glow.B",
+                type: PZ.property.type.NUMBER,
+                value: 1,
+                min: 0,
+                max: 1,
+            },
+        ],
         name: "Outer glow",
-        type: PZ.property.type.COLOR
+        type: PZ.property.type.COLOR,
     },
     strength: {
         dynamic: true,
@@ -80,7 +88,7 @@ this.propertyDefinitions = {
         value: 0.75,
         min: 0,
         step: 0.01,
-        decimals: 3
+        decimals: 3,
     },
     radius: {
         dynamic: true,
@@ -89,7 +97,7 @@ this.propertyDefinitions = {
         value: 0.8,
         min: 0,
         step: 0.01,
-        decimals: 3
+        decimals: 3,
     },
     threshold: {
         dynamic: true,
@@ -99,7 +107,7 @@ this.propertyDefinitions = {
         max: 1,
         min: 0,
         step: 0.01,
-        decimals: 3
+        decimals: 3,
     },
     soften: {
         dynamic: true,
@@ -109,17 +117,17 @@ this.propertyDefinitions = {
         max: 1,
         min: 0,
         step: 0.01,
-        decimals: 3
+        decimals: 3,
     },
     blendThreshold: {
         dynamic: true,
         name: "Blend threshold",
         type: PZ.property.type.NUMBER,
-        value: .4,
+        value: 0.4,
         max: 1,
         min: 0,
         step: 0.01,
-        decimals: 3
+        decimals: 3,
     },
     blendSoften: {
         dynamic: true,
@@ -129,245 +137,278 @@ this.propertyDefinitions = {
         max: 1,
         min: 0,
         step: 0.01,
-        decimals: 3
-    }
+        decimals: 3,
+    },
 };
 this.properties.addAll(this.propertyDefinitions, this);
-THREE.LuminosityHighPassShader || (THREE.LuminosityHighPassShader = {
-    shaderID: "luminosityHighPass",
-    uniforms: {
-        uvScale: {
-            type: "v2",
-            value: new THREE.Vector2(1, 1)
+
+if (!THREE.LuminosityHighPassShader) {
+    THREE.LuminosityHighPassShader = {
+        shaderID: "luminosityHighPass",
+        uniforms: {
+            uvScale: { type: "v2", value: new THREE.Vector2(1, 1) },
+            tDiffuse: { type: "t", value: null },
+            luminosityThreshold: { type: "f", value: 1 },
+            smoothWidth: { type: "f", value: 1 },
         },
-        tDiffuse: {
-            type: "t",
-            value: null
-        },
-        luminosityThreshold: {
-            type: "f",
-            value: 1
-        },
-        smoothWidth: {
-            type: "f",
-            value: 1
-        }
-    },
-    vertexShader: [
-        "uniform vec2 uvScale;",
-        "varying vec2 vUv;",
-        "varying vec2 vUvScaled;",
-        "void main() {",
-            "vUv = uv / uvScale;",
-            "vUvScaled = uv;",
-            "gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
-        "}"
-    ].join("\n"),
-    fragmentShader: [
-        "uniform sampler2D tDiffuse;",
-        "uniform float luminosityThreshold;",
-        "uniform float smoothWidth;",
-        "varying vec2 vUvScaled;",
-        "void main() {",
-            "vec4 texel = texture2D( tDiffuse, vUvScaled );",
-            "vec3 luma = vec3( 0.299, 0.587, 0.114 );",
-            "float v = dot( texel.xyz, luma );",
-            "float alpha = smoothstep( luminosityThreshold - smoothWidth, luminosityThreshold + smoothWidth, v );",
-            "gl_FragColor = mix( vec4(0.0), texel, alpha );",
-        "}"
-    ].join("\n")
-});
-THREE.UnrealBloomPass || (THREE.UnrealBloomPass = function(t, e, r, i) {
-    THREE.Pass.call(this);
-    this.strength = undefined !== e ? e : 1;
-    this.radius = r;
-    this.threshold = i;
-    this.soften = 0.01;
-    this.blendThreshold = 1;
-    this.blendSoften = 0.5;
-    this.resolution = undefined !== t ? new THREE.Vector2(t.x, t.y) : new THREE.Vector2(256, 256);
-    this.uniforms = {
-        uvScale: {
-            type: "v2",
-            value: new THREE.Vector2(1, 1)
-        }
+        vertexShader: [
+            "uniform vec2 uvScale;",
+            "varying vec2 vUv;",
+            "varying vec2 vUvScaled;",
+            "void main() {",
+                "vUv = uv / uvScale;",
+                "vUvScaled = uv;",
+                "gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );",
+            "}",
+        ].join("\n"),
+        fragmentShader: [
+            "uniform sampler2D tDiffuse;",
+            "uniform float luminosityThreshold;",
+            "uniform float smoothWidth;",
+            "varying vec2 vUvScaled;",
+            "void main() {",
+                "vec4 texel = texture2D( tDiffuse, vUvScaled );",
+                "vec3 luma = vec3( 0.299, 0.587, 0.114 );",
+                "float v = dot( texel.xyz, luma );",
+                "float alpha = smoothstep( luminosityThreshold - smoothWidth, luminosityThreshold + smoothWidth, v );",
+                "gl_FragColor = mix( vec4(0.0), texel, alpha );",
+            "}",
+        ].join("\n"),
     };
-    var o = {
-        minFilter: THREE.LinearFilter,
-        magFilter: THREE.LinearFilter,
-        format: THREE.RGBAFormat
+}
+if (!THREE.UnrealBloomPass) {
+    THREE.UnrealBloomPass = function (resolution, strength, radius, threshold) {
+        THREE.Pass.call(this);
+        this.strength = undefined !== strength ? strength : 1;
+        this.radius = radius;
+        this.threshold = threshold;
+        this.soften = 0.01;
+        this.blendThreshold = 1;
+        this.blendSoften = 0.5;
+        this.resolution =
+            undefined !== resolution
+                ? new THREE.Vector2(resolution.x, resolution.y)
+                : new THREE.Vector2(256, 256);
+        this.uniforms = {
+            uvScale: { type: "v2", value: new THREE.Vector2(1, 1) },
+        };
+        var o = {
+            minFilter: THREE.LinearFilter,
+            magFilter: THREE.LinearFilter,
+            format: THREE.RGBAFormat,
+        };
+        this.renderTargetsHorizontal = [];
+        this.renderTargetsVertical = [];
+        this.nMips = 5;
+        var s = Math.round(this.resolution.x / 2);
+        var a = Math.round(this.resolution.y / 2);
+        this.renderTargetBright = new THREE.WebGLRenderTarget(s, a, o);
+        this.renderTargetBright.texture.generateMipmaps = false;
+        for (var l = 0; l < this.nMips; l++) {
+            var n;
+            n = new THREE.WebGLRenderTarget(s, a, o);
+            n.texture.generateMipmaps = false;
+            this.renderTargetsHorizontal.push(n);
+            n = new THREE.WebGLRenderTarget(s, a, o);
+            n.texture.generateMipmaps = false;
+            this.renderTargetsVertical.push(n);
+            s = Math.round(s / 2);
+            a = Math.round(a / 2);
+        }
+        if (undefined === THREE.LuminosityHighPassShader) {
+            console.error("THREE.UnrealBloomPass relies on THREE.LuminosityHighPassShader");
+        }
+        var h = THREE.LuminosityHighPassShader;
+        this.highPassUniforms = THREE.UniformsUtils.clone(h.uniforms);
+        this.highPassUniforms.luminosityThreshold.value = threshold;
+        this.highPassUniforms.smoothWidth.value = 0.01;
+        this.highPassUniforms.uvScale.value.copy(this.uniforms.uvScale.value);
+        this.materialHighPassFilter = new THREE.ShaderMaterial({
+            uniforms: this.highPassUniforms,
+            vertexShader: h.vertexShader,
+            fragmentShader: h.fragmentShader,
+            defines: {},
+        });
+        this.separableBlurMaterials = [];
+        var u = [3, 5, 7, 9, 11];
+        s = Math.round(this.resolution.x / 2);
+        a = Math.round(this.resolution.y / 2);
+        for (l = 0; l < this.nMips; l++) {
+            this.separableBlurMaterials.push(
+                this.getSeperableBlurMaterial(u[l])
+            );
+            this.separableBlurMaterials[l].premultipliedAlpha = true;
+            this.separableBlurMaterials[l].uniforms.texSize.value =
+                new THREE.Vector2(s, a);
+            s = Math.round(s / 2);
+            a = Math.round(a / 2);
+        }
+        this.compositeMaterial = this.getCompositeMaterial(this.nMips);
+        this.compositeMaterial.uniforms.blurTexture1.value =
+            this.renderTargetsVertical[0].texture;
+        this.compositeMaterial.uniforms.blurTexture2.value =
+            this.renderTargetsVertical[1].texture;
+        this.compositeMaterial.uniforms.blurTexture3.value =
+            this.renderTargetsVertical[2].texture;
+        this.compositeMaterial.uniforms.blurTexture4.value =
+            this.renderTargetsVertical[3].texture;
+        this.compositeMaterial.uniforms.blurTexture5.value =
+            this.renderTargetsVertical[4].texture;
+        this.compositeMaterial.uniforms.bloomStrength.value = strength;
+        this.compositeMaterial.uniforms.bloomRadius.value = 0.1;
+        this.compositeMaterial.premultipliedAlpha = true;
+        this.compositeMaterial.needsUpdate = true;
+        this.compositeMaterial.uniforms.bloomFactors.value = [
+            1, 0.8, 0.6, 0.4, 0.2,
+        ];
+        this.bloomTintColors = [
+            new THREE.Vector3(1, 1, 1),
+            new THREE.Vector3(1, 1, 1),
+            new THREE.Vector3(1, 1, 1),
+            new THREE.Vector3(1, 1, 1),
+            new THREE.Vector3(1, 1, 1),
+        ];
+        this.compositeMaterial.uniforms.bloomTintColors.value =
+            this.bloomTintColors;
+        if (undefined === THREE.CopyShader) {
+            console.error("THREE.BloomPass relies on THREE.CopyShader");
+        }
+        var m = THREE.CopyShader;
+        this.copyUniforms = THREE.UniformsUtils.clone(m.uniforms);
+        this.copyUniforms.opacity.value = 1;
+        this.materialCopy = new THREE.ShaderMaterial({
+            uniforms: this.copyUniforms,
+            vertexShader: m.vertexShader,
+            fragmentShader: m.fragmentShader,
+            blending: THREE.AdditiveBlending,
+            depthTest: false,
+            depthWrite: false,
+            transparent: true,
+            premultipliedAlpha: true,
+        });
+        this.enabled = true;
+        this.needsSwap = false;
+        this.oldClearColor = new THREE.Color();
+        this.oldClearAlpha = 1;
+        this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
+        this.scene = new THREE.Scene();
+        this.quad = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), null);
+        this.scene.add(this.quad);
     };
-    this.renderTargetsHorizontal = [];
-    this.renderTargetsVertical = [];
-    this.nMips = 5;
-    var s = Math.round(this.resolution.x / 2);
-    var a = Math.round(this.resolution.y / 2);
-    this.renderTargetBright = new THREE.WebGLRenderTarget(s, a, o);
-    this.renderTargetBright.texture.generateMipmaps = false;
 
-    for (var l = 0; l < this.nMips; l++) {
-        var n;
-        n = new THREE.WebGLRenderTarget(s, a, o)
-        n.texture.generateMipmaps = false;
-        this.renderTargetsHorizontal.push(n);
-        n = new THREE.WebGLRenderTarget(s, a, o);
-        n.texture.generateMipmaps = false;
-        this.renderTargetsVertical.push(n);
-        s = Math.round(s / 2);
-        a = Math.round(a / 2);
-    }
-
-    undefined === THREE.LuminosityHighPassShader && console.error("THREE.UnrealBloomPass relies on THREE.LuminosityHighPassShader");
-    var h = THREE.LuminosityHighPassShader;
-    this.highPassUniforms = THREE.UniformsUtils.clone(h.uniforms);
-    this.highPassUniforms.luminosityThreshold.value = i;
-    this.highPassUniforms.smoothWidth.value = .01;
-    this.highPassUniforms.uvScale.value.copy(this.uniforms.uvScale.value);
-    this.materialHighPassFilter = new THREE.ShaderMaterial({
-        uniforms: this.highPassUniforms,
-        vertexShader: h.vertexShader,
-        fragmentShader: h.fragmentShader,
-        defines: {}
-    });
-    this.separableBlurMaterials = [];
-    var u = [3, 5, 7, 9, 11];
-
-    for(s = Math.round(this.resolution.x / 2), a = Math.round(this.resolution.y / 2), l = 0; l < this.nMips; l++) {
-        this.separableBlurMaterials.push(this.getSeperableBlurMaterial(u[l]));
-        this.separableBlurMaterials[l].premultipliedAlpha = true;
-        this.separableBlurMaterials[l].uniforms.texSize.value = new THREE.Vector2(s, a);
-        s = Math.round(s / 2);
-        a = Math.round(a / 2);
-    }
-
-    this.compositeMaterial = this.getCompositeMaterial(this.nMips);
-    this.compositeMaterial.uniforms.blurTexture1.value = this.renderTargetsVertical[0].texture;
-    this.compositeMaterial.uniforms.blurTexture2.value = this.renderTargetsVertical[1].texture;
-    this.compositeMaterial.uniforms.blurTexture3.value = this.renderTargetsVertical[2].texture;
-    this.compositeMaterial.uniforms.blurTexture4.value = this.renderTargetsVertical[3].texture;
-    this.compositeMaterial.uniforms.blurTexture5.value = this.renderTargetsVertical[4].texture;
-    this.compositeMaterial.uniforms.bloomStrength.value = e;
-    this.compositeMaterial.uniforms.bloomRadius.value = .1;
-    this.compositeMaterial.premultipliedAlpha = true;
-    this.compositeMaterial.needsUpdate = true;
-    this.compositeMaterial.uniforms.bloomFactors.value = [1, .8, .6, .4, .2];
-    this.bloomTintColors = [
-        new THREE.Vector3(1, 1, 1),
-        new THREE.Vector3(1, 1, 1),
-        new THREE.Vector3(1, 1, 1),
-        new THREE.Vector3(1, 1, 1),
-        new THREE.Vector3(1, 1, 1)
-    ];
-    this.compositeMaterial.uniforms.bloomTintColors.value = this.bloomTintColors;
-    undefined === THREE.CopyShader && console.error("THREE.BloomPass relies on THREE.CopyShader");
-    var m = THREE.CopyShader;
-    this.copyUniforms = THREE.UniformsUtils.clone(m.uniforms);
-    this.copyUniforms.opacity.value = 1;
-    this.materialCopy = new THREE.ShaderMaterial({
-        uniforms: this.copyUniforms,
-        vertexShader: m.vertexShader,
-        fragmentShader: m.fragmentShader,
-        blending: THREE.AdditiveBlending,
-        depthTest: false,
-        depthWrite: false,
-        transparent: true,
-        premultipliedAlpha: true
-    });
-    this.enabled = true;
-    this.needsSwap = false;
-    this.oldClearColor = new THREE.Color;
-    this.oldClearAlpha = 1;
-    this.camera = new THREE.OrthographicCamera(-1, 1, 1, -1, 0, 1);
-    this.scene = new THREE.Scene;
-    this.quad = new THREE.Mesh(new THREE.PlaneBufferGeometry(2, 2), null);
-    this.scene.add(this.quad);
-},
-THREE.UnrealBloomPass.prototype = Object.assign(Object.create(THREE.Pass.prototype), {
-    constructor: THREE.UnrealBloomPass,
-    dispose: function() {
-        for (var t = 0; t < this.renderTargetsHorizontal.length; t++) {
-            this.renderTargetsHorizontal[t].dispose();
-        }
-        for (t = 0; t < this.renderTargetsVertical.length; t++) {
-            this.renderTargetsVertical[t].dispose();
-        }
-        this.renderTargetBright.dispose();
-    },
-    setSize: function(t, e) {
-        var r = Math.round(t / 2);
-        var i = Math.round(e / 2);
-        this.renderTargetBright.setSize(r, i);
-        for(var o = 0; o < this.nMips; o++) {
-            this.renderTargetsHorizontal[o].setSize(r, i);
-            this.renderTargetsVertical[o].setSize(r, i);
-            this.separableBlurMaterials[o].uniforms.texSize.value = new THREE.Vector2(r, i);
-            r = Math.round(r / 2), i = Math.round(i / 2);
-        }
-    },
-    render: function(t, e, r, i, o) {
-        this.oldClearColor.copy(t.getClearColor());
-        this.oldClearAlpha = t.getClearAlpha();
-        var s = t.autoClear;
-        t.autoClear = false;
-        t.setClearColor(new THREE.Color(0, 0, 0), 0);
-        o && t.context.disable(t.context.STENCIL_TEST);
-        this.highPassUniforms.tDiffuse.value = r.texture;
-        this.highPassUniforms.smoothWidth.value = this.soften;
-        this.highPassUniforms.luminosityThreshold.value = this.threshold;
-        this.quad.material = this.materialHighPassFilter;
-        t.render(this.scene, this.camera, this.renderTargetBright, true);
-        for(var a = this.renderTargetBright, l = 0; l < this.nMips; l++) {
-            this.quad.material = this.separableBlurMaterials[l];
-            this.separableBlurMaterials[l].uniforms.colorTexture.value = a.texture;
-            this.separableBlurMaterials[l].uniforms.direction.value = THREE.UnrealBloomPass.BlurDirectionX;
-            t.render(this.scene, this.camera, this.renderTargetsHorizontal[l], true);
-            this.separableBlurMaterials[l].uniforms.colorTexture.value = this.renderTargetsHorizontal[l].texture;
-            this.separableBlurMaterials[l].uniforms.direction.value = THREE.UnrealBloomPass.BlurDirectionY;
-            t.render(this.scene, this.camera, this.renderTargetsVertical[l], true);
-            a = this.renderTargetsVertical[l];
-        }
-        this.quad.material = this.compositeMaterial;
-        this.compositeMaterial.uniforms.bloomStrength.value = this.strength;
-        this.compositeMaterial.uniforms.bloomRadius.value = this.radius;
-        this.compositeMaterial.uniforms.brightTexture.value = r.texture;
-        this.compositeMaterial.uniforms.bloomTintColors.value = this.bloomTintColors;
-        this.compositeMaterial.uniforms.threshold.value = this.blendThreshold;
-        this.compositeMaterial.uniforms.soften.value = this.blendSoften;
-        t.render(this.scene, this.camera, this.renderTargetsHorizontal[0], true);
-        this.quad.material = this.materialCopy;
-        this.copyUniforms.tDiffuse.value = this.renderTargetsHorizontal[0].texture;
-        o && t.context.enable(t.context.STENCIL_TEST);
-        t.render(this.scene, this.camera, r, false);
-        t.setClearColor(this.oldClearColor, this.oldClearAlpha);
-        t.autoClear = s;
-    },
-    getSeperableBlurMaterial: function(t) {
-        return new THREE.ShaderMaterial({
-            defines: {
-                KERNEL_RADIUS: t,
-                SIGMA: t
+    THREE.UnrealBloomPass.prototype = Object.assign(
+        Object.create(THREE.Pass.prototype),
+        {
+            constructor: THREE.UnrealBloomPass,
+            dispose: function () {
+                for (var t = 0; t < this.renderTargetsHorizontal.length; t++) {
+                    this.renderTargetsHorizontal[t].dispose();
+                }
+                for (t = 0; t < this.renderTargetsVertical.length; t++) {
+                    this.renderTargetsVertical[t].dispose();
+                }
+                this.renderTargetBright.dispose();
             },
-            uniforms: {
-                colorTexture: {
-                    value: null
-                },
-                texSize: {
-                    value: new THREE.Vector2(.5, .5)
-                },
-                direction: {
-                    value: new THREE.Vector2(.5, .5)
+            setSize: function (t, e) {
+                var r = Math.round(t / 2);
+                var i = Math.round(e / 2);
+                this.renderTargetBright.setSize(r, i);
+                for (var o = 0; o < this.nMips; o++) {
+                    this.renderTargetsHorizontal[o].setSize(r, i);
+                    this.renderTargetsVertical[o].setSize(r, i);
+                    this.separableBlurMaterials[o].uniforms.texSize.value =
+                        new THREE.Vector2(r, i);
+                    r = Math.round(r / 2);
+                    i = Math.round(i / 2);
                 }
             },
-            vertexShader:
-            `
+            render: function (t, e, r, i, o) {
+                this.oldClearColor.copy(t.getClearColor());
+                this.oldClearAlpha = t.getClearAlpha();
+                var s = t.autoClear;
+                t.autoClear = false;
+                t.setClearColor(new THREE.Color(0, 0, 0), 0);
+                if (o) {
+                    t.context.disable(t.context.STENCIL_TEST);
+                }
+                this.highPassUniforms.tDiffuse.value = r.texture;
+                this.highPassUniforms.smoothWidth.value = this.soften;
+                this.highPassUniforms.luminosityThreshold.value =
+                    this.threshold;
+                this.quad.material = this.materialHighPassFilter;
+                t.render(
+                    this.scene,
+                    this.camera,
+                    this.renderTargetBright,
+                    true
+                );
+                var a = this.renderTargetBright;
+                for (var l = 0; l < this.nMips; l++) {
+                    this.quad.material = this.separableBlurMaterials[l];
+                    this.separableBlurMaterials[l].uniforms.colorTexture.value =
+                        a.texture;
+                    this.separableBlurMaterials[l].uniforms.direction.value =
+                        THREE.UnrealBloomPass.BlurDirectionX;
+                    t.render(
+                        this.scene,
+                        this.camera,
+                        this.renderTargetsHorizontal[l],
+                        true
+                    );
+                    this.separableBlurMaterials[l].uniforms.colorTexture.value =
+                        this.renderTargetsHorizontal[l].texture;
+                    this.separableBlurMaterials[l].uniforms.direction.value =
+                        THREE.UnrealBloomPass.BlurDirectionY;
+                    t.render(
+                        this.scene,
+                        this.camera,
+                        this.renderTargetsVertical[l],
+                        true
+                    );
+                    a = this.renderTargetsVertical[l];
+                }
+                this.quad.material = this.compositeMaterial;
+                this.compositeMaterial.uniforms.bloomStrength.value =
+                    this.strength;
+                this.compositeMaterial.uniforms.bloomRadius.value = this.radius;
+                this.compositeMaterial.uniforms.brightTexture.value = r.texture;
+                this.compositeMaterial.uniforms.bloomTintColors.value =
+                    this.bloomTintColors;
+                this.compositeMaterial.uniforms.threshold.value =
+                    this.blendThreshold;
+                this.compositeMaterial.uniforms.soften.value = this.blendSoften;
+                t.render(
+                    this.scene,
+                    this.camera,
+                    this.renderTargetsHorizontal[0],
+                    true
+                );
+                this.quad.material = this.materialCopy;
+                this.copyUniforms.tDiffuse.value =
+                    this.renderTargetsHorizontal[0].texture;
+                if (o) {
+                    t.context.enable(t.context.STENCIL_TEST);
+                }
+                t.render(this.scene, this.camera, r, false);
+                t.setClearColor(this.oldClearColor, this.oldClearAlpha);
+                t.autoClear = s;
+            },
+            getSeperableBlurMaterial: function (t) {
+                return new THREE.ShaderMaterial({
+                    defines: { KERNEL_RADIUS: t, SIGMA: t },
+                    uniforms: {
+                        colorTexture: { value: null },
+                        texSize: { value: new THREE.Vector2(0.5, 0.5) },
+                        direction: { value: new THREE.Vector2(0.5, 0.5) },
+                    },
+                    vertexShader: `
             varying vec2 vUv;
             void main() {
                 vUv = uv;
                 gl_Position = projectionMatrix * modelViewMatrix * vec4( position, 1.0 );
             }
             `,
-            fragmentShader:
-            `
+                    fragmentShader: `
             #include <common>
             varying vec2 vUv;
             uniform sampler2D colorTexture;
@@ -392,64 +433,34 @@ THREE.UnrealBloomPass.prototype = Object.assign(Object.create(THREE.Pass.prototy
                 }
                 gl_FragColor = diffuseSum / weightSum;
             }
-            `
-        })
-    },
-    getCompositeMaterial: function(t) {
-        return new THREE.ShaderMaterial({
-            defines: {
-                NUM_MIPS: t
+            `,
+                });
             },
-            uniforms: {
-                blurTexture1: {
-                    value: null
-                },
-                blurTexture2: {
-                    value: null
-                },
-                blurTexture3: {
-                    value: null
-                },
-                blurTexture4: {
-                    value: null
-                },
-                blurTexture5: {
-                    value: null
-                },
-                brightTexture: {
-                    value: null
-                },
-                bloomStrength: {
-                    value: 1
-                },
-                bloomFactors: {
-                    value: null
-                },
-                bloomTintColors: {
-                    value: null
-                },
-                bloomRadius: {
-                    value: 0
-                },
-                threshold: {
-                    type: "f",
-                    value: 0
-                },
-                soften: {
-                    type: "f",
-                    value: 0
-                }
-            },
-            vertexShader:
-            `
+            getCompositeMaterial: function (t) {
+                return new THREE.ShaderMaterial({
+                    defines: { NUM_MIPS: t },
+                    uniforms: {
+                        blurTexture1: { value: null },
+                        blurTexture2: { value: null },
+                        blurTexture3: { value: null },
+                        blurTexture4: { value: null },
+                        blurTexture5: { value: null },
+                        brightTexture: { value: null },
+                        bloomStrength: { value: 1 },
+                        bloomFactors: { value: null },
+                        bloomTintColors: { value: null },
+                        bloomRadius: { value: 0 },
+                        threshold: { type: "f", value: 0 },
+                        soften: { type: "f", value: 0 },
+                    },
+                    vertexShader: `
             varying vec2 vUv;
             void main() {
                 vUv = uv;
                 gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
             }
             `,
-            fragmentShader:
-            `
+                    fragmentShader: `
             varying vec2 vUv;
             uniform sampler2D blurTexture1;
             uniform sampler2D blurTexture2;
@@ -483,26 +494,34 @@ THREE.UnrealBloomPass.prototype = Object.assign(Object.create(THREE.Pass.prototy
                 lerpBloomFactor(bloomFactors[3]) * vec4(bloomTintColors[3], 1.0) * texture2D(blurTexture4, vUv) +
                 lerpBloomFactor(bloomFactors[4]) * vec4(bloomTintColors[4], 1.0) * texture2D(blurTexture5, vUv) );
             }
-            `
-        })
-    }
-}),
-THREE.UnrealBloomPass.BlurDirectionX = new THREE.Vector2(1, 0),
-THREE.UnrealBloomPass.BlurDirectionY = new THREE.Vector2(0, 1)),
-this.load = async function(t) {
-    this.pass = new THREE.UnrealBloomPass(new THREE.Vector2(1, 1), 1.5, .4, .85);
+            `,
+                });
+            },
+        }
+    );
+    THREE.UnrealBloomPass.BlurDirectionX = new THREE.Vector2(1, 0);
+    THREE.UnrealBloomPass.BlurDirectionY = new THREE.Vector2(0, 1);
+}
+
+this.load = async function (t) {
+    this.pass = new THREE.UnrealBloomPass(
+        new THREE.Vector2(1, 1),
+        1.5,
+        0.4,
+        0.85
+    );
     this.properties.load(t && t.properties);
-},
-this.toJSON = function() {
-    return {
-        type: this.type,
-        properties: this.properties
-    }
-},
-this.unload = function() {
+};
+
+this.toJSON = function () {
+    return { type: this.type, properties: this.properties };
+};
+
+this.unload = function () {
     this.pass.dispose();
-},
-this.update = function(t) {
+};
+
+this.update = function (t) {
     let e;
     this.pass.enabled = this.properties.enabled.get(t);
     this.pass.copyUniforms.opacity.value = this.properties.amount.get(t);
@@ -519,8 +538,9 @@ this.update = function(t) {
     e = this.properties.outer.get(t);
     this.pass.bloomTintColors[3].set(e[0], e[1], e[2]);
     this.pass.bloomTintColors[4].set(e[0], e[1], e[2]);
-},
-this.resize = function() {
+};
+
+this.resize = function () {
     let t = this.parentLayer.properties.resolution.get();
     this.pass.setSize(t[0], t[1]);
 };
