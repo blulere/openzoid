@@ -21,30 +21,40 @@ CM.setUpEditor = function (currentAccount) {
         {
             title: "new (ctrl-m)",
             icon: "new",
-            fn: function() { CM.new(); },
+            fn: function () {
+                CM.new();
+            },
         },
         {
             title: "open (ctrl-o)",
             icon: "load",
-            fn: function() { CM.open(); },
+            fn: function () {
+                CM.open();
+            },
         },
         {
             title: "save (ctrl-s)",
             icon: "save",
-            fn: function() { CM.save(); },
+            fn: function () {
+                CM.save();
+            },
         },
-        { 
+        {
             separator: true,
         },
         {
             title: "undo (ctrl-z)",
             icon: "undo",
-            fn: function() { CM.history.undo(); },
+            fn: function () {
+                CM.history.undo();
+            },
         },
         {
             title: "redo (ctrl-y)",
             icon: "redo",
-            fn: function() { CM.history.redo(); },
+            fn: function () {
+                CM.history.redo();
+            },
         },
     ];
     let toolbar = new PZ.ui.toolbar(CM, toolbarIcons);
@@ -57,7 +67,8 @@ CM.setUpEditor = function (currentAccount) {
 
     let menuBarSequence = new PZ.ui.edit(CM, {
         childFilter: (e) => e instanceof PZ.propertyList,
-        keyframePanel: timeline.keyframes });
+        keyframePanel: timeline.keyframes,
+    });
     menuBarSequence.title = "Sequence";
     menuBarSequence.icon = "sequence";
     CM.onSequenceChanged.watch(() => {
@@ -102,17 +113,9 @@ CM.setUpEditor = function (currentAccount) {
     menuBarEffects.icon = "fx";
     menuBarEffectsTop.objects = timeline.tracks.selection;
     menuBarEffectsBottom.objects = menuBarEffectsTop.selection;
-    let menuBar = [
-        new PZ.ui.media(CM),
-        menuBarSequence,
-        menuBarEdit,
-        menuBarObjects,
-        menuBarEffects,
-        new PZ.ui.export(CM),
-        new PZ.ui.about(CM)
-    ];
+    let menuBar = [new PZ.ui.media(CM), menuBarSequence, menuBarEdit, menuBarObjects, menuBarEffects, new PZ.ui.export(CM), new PZ.ui.about(CM)];
     let menuBarElevator = new PZ.ui.elevator(CM, menuBar);
-    let viewport = new PZ.ui.viewport(CM, { 
+    let viewport = new PZ.ui.viewport(CM, {
         helper3dObjects: menuBarObjectsTop.selection,
         widget3dObjects: menuBarObjectsTop.selection,
         widget2dObjects: timeline.tracks.selection,
@@ -281,7 +284,7 @@ CM.setUpEditor = function (currentAccount) {
                 if (closestMarker >= 0) {
                     let currentKeyframe = markers.keyframes[closestMarker];
                     let previousKeyframe = markers.keyframes[closestMarker - 1];
-                
+
                     // If the closest keyframe is at or after the current frame and there's a previous keyframe, adjust the index
                     if (currentKeyframe.frame >= currentFrame && previousKeyframe) {
                         closestMarker -= 1;
@@ -302,7 +305,7 @@ CM.setUpEditor = function (currentAccount) {
                 if (closestMarker >= 0) {
                     let currentKeyframe = markers.keyframes[closestMarker];
                     let nextKeyframe = markers.keyframes[closestMarker + 1];
-                    
+
                     // If the closest keyframe is before or at the current frame and there's a next keyframe, move forward
                     if (currentKeyframe.frame <= currentFrame && nextKeyframe) {
                         closestMarker += 1;
@@ -327,16 +330,15 @@ CM.setUpEditor = function (currentAccount) {
     let transportBarToolbar = new PZ.ui.toolbar(CM, transportBar);
     let audioMeter = new PZ.ui.audioMeter(CM);
     let toolbarMenuBarSplit = new PZ.ui.splitPanel(CM, toolbar, menuBarElevator, 0, 0);
-    
+
     // show ad banner as split panel with viewport only if user has subscription
-    if(currentAccount && currentAccount.hasSubscription) {
+    if (currentAccount && currentAccount.hasSubscription) {
         splitPanelViewport = viewport;
     } else {
         splitPanelViewport = new PZ.ui.splitPanel(CM, adBanner, viewport, 0, 0);
         // viewportOrAds = viewport; // see main branch - blulere 2025-02-14
     }
 
-    // These names aren't and will definitely cause problems later, warned ? - blulere 2025-02-14
     let splitPanelTimeline = new PZ.ui.splitPanel(CM, timeline, audioMeter, 1, 1);
     let splitPanelBottom = new PZ.ui.splitPanel(CM, transportBarToolbar, splitPanelTimeline, 0, 0);
     let splitPanelRight = new PZ.ui.splitPanel(CM, splitPanelViewport, splitPanelBottom, 0.65, 0);
@@ -348,9 +350,7 @@ CM.defaultProject = {
     sequence: {
         properties: { resolution: [1920, 1080], rate: 30 },
         length: 180,
-        videoTracks: [
-            { type: 0, clips: [ { type: 0, start: 0, length: 180, offset: 0, relativeRate: 1, media: null, link: null, properties: { name: "Scene" }, object: { type: 4, effects: [], objects: [ { type: 6, objectType: 1 } ] } } ] },
-        ],
+        videoTracks: [{ type: 0, clips: [{ type: 0, start: 0, length: 180, offset: 0, relativeRate: 1, media: null, link: null, properties: { name: "Scene" }, object: { type: 4, effects: [], objects: [{ type: 6, objectType: 1 }] } }] }],
         audioTracks: [{ type: 1, clips: [] }],
     },
     assets: [],
@@ -400,11 +400,12 @@ CM.defaultProject = {
     ],
 };
 
+/*
 BG.defaultProject = {
     sequence: {
         properties: {
             resolution: [1920, 1080],
-            rate: 1
+            rate: 1,
         },
         length: 1,
         videoTracks: [{ clips: [{ start: 0, length: 1, offset: 0, type: 0, link: null, object: { type: 2, properties: { name: "Image" }, objects: [], effects: [] } }] }],
@@ -413,3 +414,4 @@ BG.defaultProject = {
     assets: {},
     media: [],
 };
+*/
