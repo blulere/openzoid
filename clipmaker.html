@@ -86,8 +86,8 @@
                 credentials: "include",
                 body: body,
             };
-
-            return fetch(url, params);
+            
+            // return fetch(url, params); // stubbed
         };
 
         PZ.ui = PZ.ui || {};
@@ -114,14 +114,24 @@
             if (me && me.hasSubscription) {
                 return;
             }
-
+            
+            // Patched out dead ad link, non functional either way
+            // All the patch does is remove the errors from cons,
+            // should make debugging a little easiur
+            // Also patched out other things that throw
+            // errors but they aren't below this Comment
+            // - blulere 2025-05-08
             !(function (_window, _document) {
                 var element = _document.getElementsByTagName("script")[0];
                 var script = _document.createElement("script");
-                var url = "https://a.pub.network/Panzoid-com"; // This link doesn't exist
-                url += freestar.debug ? "/qa/pubfig.min.js" : "/pubfig.min.js";
+                var url = "https://a.pub.network/Panzoid-com";
+                if(freestar.debug) {
+                    url += "/qa/pubfig.min.js";
+                } else {
+                    url += "/pubfig.min.js";
+                }
                 script.async = true;
-                script.src = url;
+                // script.src = url;
                 element.parentNode.insertBefore(script, element);
             })(window, document);
         };
