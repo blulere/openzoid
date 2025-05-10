@@ -1,5 +1,5 @@
-this.defaultName = "Exposure";
-this.shaderfile = "fx_exposure";
+this.defaultName = "Directional Blur";
+this.shaderfile = "fx_directionalblur";
 this.shaderUrl = "/assets/shaders/fragment/" + this.shaderfile + ".glsl";
 this.vertShader = this.parentProject.assets.createFromPreset(
     PZ.asset.type.SHADER,
@@ -18,26 +18,25 @@ this.propertyDefinitions = {
         value: 1,
         items: "off;on",
     },
-    exposure: {
+    delta: {
         dynamic: true,
-        name: "Exposure",
+        name: "Delta",
         type: PZ.property.type.NUMBER,
-        value: 0,
-        max: 1,
-        min: -1,
+        value: 1,
+        max: 10,
+        min: 0,
         step: 0.1,
     },
-    gamma: {
+    direction: {
         dynamic: true,
-        name: "Gamma",
+        name: "Direction",
         type: PZ.property.type.NUMBER,
         value: 0,
-        max: 1,
-        min: -1,
+        max: 10,
+        min: 0,
         step: 0.1,
     },
 };
-
 this.properties.addAll(this.propertyDefinitions, this);
 
 this.load = async function (e) {
@@ -51,14 +50,15 @@ this.load = async function (e) {
         uniforms: {
             tDiffuse: { type: "t", value: null },
             uvScale: { type: "v2", value: new THREE.Vector2(1, 1) },
-            exposure: { type: "f", value: 0 },
-            gamma: { type: "f", value: 0 },
+            resolution: { type: "v2", value: new THREE.Vector2(1, 1) },
+            direction: { type: "f", value: 0 },
+            delta: { type: "f", value: 1 },
         },
         vertexShader: await this.vertShader.getShader(),
         fragmentShader: await this.fragShader.getShader(),
     });
+    t.premultipliedAlpha = true;
     this.pass = new THREE.ShaderPass(t);
-    this.pass.material.premultipliedAlpha = true;
     this.properties.load(e && e.properties);
 };
 
@@ -73,8 +73,15 @@ this.unload = function (e) {
 
 this.update = function (e) {
     if (this.pass) {
-        this.pass.uniforms.exposure.value = this.properties.exposure.get(e);
-        this.pass.uniforms.gamma.value = this.properties.gamma.get(e);
-        this.pass.enabled = this.properties.enabled.get(e) === 1;
+        this.pass.uniforms.delta.value = this.properties.delta.get(e);
+        this.pass.uniforms.direction.value = this.properties.direction.get(e);
+        this.pass.enabled =
+            this.properties.enabled.get(e) === 1 &&
+            this.pass.uniforms.delta.value !== 0;
     }
+};
+
+this.resize = function () {
+    let e = this.parentLayer.properties.resolution.get();
+    this.pass.uniforms.resolution.value.set(e[0], e[1]);
 };
