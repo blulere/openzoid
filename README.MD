@@ -14,7 +14,7 @@ The unminified project started when the archive project finished. The unminified
 
 **Anything involving connecting to panzoid.com will not work** here due to CORS blocking.
 
-### **Thanks to the team at [panzoid.com](https://panzoid.com/) for creating one of the best (if not the best) web-based video editors available on the Internet right now**
+### This branch is a transformation of the currently publicly available minified Clipmaker 3 source. The rights to the original codebase, which can be found in either the archive branch or links below, remain with the Panzoid team at [panzoid.com](https://panzoid.com/)
 
 ## What is openzoid?
 
