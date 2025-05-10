@@ -16,7 +16,6 @@ CM.setUpEditor = function (currentAccount) {
     CM.playback = new PZ.ui.playback(CM);
     CM.playback.loop = true;
     let mainWindow = CM.createMainWindow();
-    let adBanner = new PZ.ui.ad(CM);
     let toolbarIcons = [
         {
             title: "new (ctrl-m)",
@@ -331,13 +330,7 @@ CM.setUpEditor = function (currentAccount) {
     let audioMeter = new PZ.ui.audioMeter(CM);
     let toolbarMenuBarSplit = new PZ.ui.splitPanel(CM, toolbar, menuBarElevator, 0, 0);
 
-    // show ad banner as split panel with viewport only if user has subscription
-    if (currentAccount && currentAccount.hasSubscription) {
-        splitPanelViewport = viewport;
-    } else {
-        splitPanelViewport = new PZ.ui.splitPanel(CM, adBanner, viewport, 0, 0);
-        // viewportOrAds = viewport; // see main branch - blulere 2025-02-14
-    }
+    splitPanelViewport = viewport;
 
     let splitPanelTimeline = new PZ.ui.splitPanel(CM, timeline, audioMeter, 1, 1);
     let splitPanelBottom = new PZ.ui.splitPanel(CM, transportBarToolbar, splitPanelTimeline, 0, 0);
