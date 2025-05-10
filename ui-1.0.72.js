@@ -5556,20 +5556,20 @@ PZ.ui.viewport.prototype.unload = function () {
 };
 PZ.ui.viewport.prototype.render = function () {
     this.animFrameReq = requestAnimationFrame(this._renderFn);
-    let e = this.editor.playback.currentFrame;
-    this.widget2d.update(e);
-    this.widget3d.update(e);
+    let currentFrame = this.editor.playback.currentFrame;
+    this.widget2d.update(currentFrame);
+    this.widget3d.update(currentFrame);
     this._render();
 };
 PZ.ui.viewport.prototype._render = function () {
-    let e = this.editor.playback.currentFrame;
+    let currentFrame = this.editor.playback.currentFrame;
     if (this.renderMode) {
-        this.layer.update(e - this.layer.parent.start);
+        this.layer.update(currentFrame - this.layer.parent.start);
         this.renderer.render(this.scene, this.camera);
         this.lastFrame = -1;
     } else {
-        this.compositor.renderSequence(e);
-        this.lastFrame = e;
+        this.compositor.renderSequence(currentFrame);
+        this.lastFrame = currentFrame;
     }
 };
 PZ.ui.viewport.prototype.pickColor = function (e, t) {
@@ -13727,8 +13727,7 @@ PZ.ui.query.prototype.toString = function () {
         var t =
             typeof window != "undefined"
                 ? window
-                : typeof WorkerGlobalScope != "undefined" &&
-                  self instanceof WorkerGlobalScope
+                : typeof WorkerGlobalScope != "undefined" && self instanceof WorkerGlobalScope
                 ? self
                 : {};
         var i = (function () {
@@ -13736,16 +13735,11 @@ PZ.ui.query.prototype.toString = function () {
             var i = 0;
             var s = (t.Prism = {
                 manual: t.Prism && t.Prism.manual,
-                disableWorkerMessageHandler:
-                    t.Prism && t.Prism.disableWorkerMessageHandler,
+                disableWorkerMessageHandler: t.Prism && t.Prism.disableWorkerMessageHandler,
                 util: {
                     encode: function (e) {
                         if (e instanceof n) {
-                            return new n(
-                                e.type,
-                                s.util.encode(e.content),
-                                e.alias
-                            );
+                            return new n(e.type, s.util.encode(e.content), e.alias);
                         } else if (s.util.type(e) === "Array") {
                             return e.map(s.util.encode);
                         } else {
@@ -13756,9 +13750,7 @@ PZ.ui.query.prototype.toString = function () {
                         }
                     },
                     type: function (e) {
-                        return Object.prototype.toString
-                            .call(e)
-                            .match(/\[object (\w+)\]/)[1];
+                        return Object.prototype.toString.call(e).match(/\[object (\w+)\]/)[1];
                     },
                     objId: function (e) {
                         if (!e.__id) {
@@ -13836,14 +13828,8 @@ PZ.ui.query.prototype.toString = function () {
                         for (var r in ((n = n || {}), e)) {
                             if (e.hasOwnProperty(r)) {
                                 t.call(e, r, e[r], i || r);
-                                if (
-                                    s.util.type(e[r]) !== "Object" ||
-                                    n[s.util.objId(e[r])]
-                                ) {
-                                    if (
-                                        s.util.type(e[r]) === "Array" &&
-                                        !n[s.util.objId(e[r])]
-                                    ) {
+                                if (s.util.type(e[r]) !== "Object" || n[s.util.objId(e[r])]) {
+                                    if (s.util.type(e[r]) === "Array" && !n[s.util.objId(e[r])]) {
                                         n[s.util.objId(e[r])] = true;
                                         s.languages.DFS(e[r], t, r, n);
                                     }
@@ -13882,27 +13868,14 @@ PZ.ui.query.prototype.toString = function () {
                         a = (l.className.match(e) || [, ""])[1].toLowerCase();
                         o = s.languages[a];
                     }
-                    i.className =
-                        i.className.replace(e, "").replace(/\s+/g, " ") +
-                        " language-" +
-                        a;
+                    i.className = i.className.replace(e, "").replace(/\s+/g, " ") + " language-" + a;
                     if (i.parentNode) {
                         l = i.parentNode;
                         if (/pre/i.test(l.nodeName)) {
-                            l.className =
-                                l.className
-                                    .replace(e, "")
-                                    .replace(/\s+/g, " ") +
-                                " language-" +
-                                a;
+                            l.className = l.className.replace(e, "").replace(/\s+/g, " ") + " language-" + a;
                         }
                     }
-                    var h = {
-                        element: i,
-                        language: a,
-                        grammar: o,
-                        code: i.textContent,
-                    };
+                    var h = { element: i, language: a, grammar: o, code: i.textContent };
                     s.hooks.run("before-sanity-check", h);
                     if (!h.code || !h.grammar) {
                         if (h.code) {
@@ -13926,19 +13899,9 @@ PZ.ui.query.prototype.toString = function () {
                             s.hooks.run("after-highlight", h);
                             s.hooks.run("complete", h);
                         };
-                        c.postMessage(
-                            JSON.stringify({
-                                language: h.language,
-                                code: h.code,
-                                immediateClose: true,
-                            })
-                        );
+                        c.postMessage(JSON.stringify({ language: h.language, code: h.code, immediateClose: true }));
                     } else {
-                        h.highlightedCode = s.highlight(
-                            h.code,
-                            h.grammar,
-                            h.language
-                        );
+                        h.highlightedCode = s.highlight(h.code, h.grammar, h.language);
                         s.hooks.run("before-insert", h);
                         h.element.innerHTML = h.highlightedCode;
                         if (r) {
@@ -13972,21 +13935,12 @@ PZ.ui.query.prototype.toString = function () {
                                 var y = 0;
                                 var g = d.alias;
                                 if (f && !d.pattern.global) {
-                                    var b = d.pattern
-                                        .toString()
-                                        .match(/[imuy]*$/)[0];
-                                    d.pattern = RegExp(
-                                        d.pattern.source,
-                                        b + "g"
-                                    );
+                                    var b = d.pattern.toString().match(/[imuy]*$/)[0];
+                                    d.pattern = RegExp(d.pattern.source, b + "g");
                                 }
                                 d = d.pattern || d;
                                 var v = n;
-                                for (
-                                    var x = r;
-                                    v < t.length;
-                                    x += t[v].length, ++v
-                                ) {
+                                for (var x = r; v < t.length; x += t[v].length, ++v) {
                                     var P = t[v];
                                     if (t.length > e.length) {
                                         return;
@@ -13997,17 +13951,13 @@ PZ.ui.query.prototype.toString = function () {
                                             if (!(T = d.exec(e))) {
                                                 break;
                                             }
-                                            var k =
-                                                T.index + (m ? T[1].length : 0);
+                                            var k = T.index + (m ? T[1].length : 0);
                                             var E = T.index + T[0].length;
                                             var w = v;
                                             var C = x;
                                             for (
                                                 var z = t.length;
-                                                w < z &&
-                                                (C < E ||
-                                                    (!t[w].type &&
-                                                        !t[w - 1].greedy));
+                                                w < z && (C < E || (!t[w].type && !t[w - 1].greedy));
                                                 ++w
                                             ) {
                                                 if (k >= (C += t[w].length)) {
@@ -14030,9 +13980,7 @@ PZ.ui.query.prototype.toString = function () {
                                             if (m) {
                                                 y = T[1] ? T[1].length : 0;
                                             }
-                                            E =
-                                                (k = T.index + y) +
-                                                (T = T[0].slice(y)).length;
+                                            E = (k = T.index + y) + (T = T[0].slice(y)).length;
                                             var _ = P.slice(0, k);
                                             var j = P.slice(E);
                                             var S = [v, Z];
@@ -14041,28 +13989,14 @@ PZ.ui.query.prototype.toString = function () {
                                                 x += _.length;
                                                 S.push(_);
                                             }
-                                            var L = new l(
-                                                h,
-                                                u ? s.tokenize(T, u) : T,
-                                                g,
-                                                T,
-                                                f
-                                            );
+                                            var L = new l(h, u ? s.tokenize(T, u) : T, g, T, f);
                                             S.push(L);
                                             if (j) {
                                                 S.push(j);
                                             }
                                             Array.prototype.splice.apply(t, S);
                                             if (Z != 1) {
-                                                s.matchGrammar(
-                                                    e,
-                                                    t,
-                                                    i,
-                                                    v,
-                                                    x,
-                                                    true,
-                                                    h
-                                                );
+                                                s.matchGrammar(e, t, i, v, x, true, h);
                                             }
                                             if (a) {
                                                 break;
@@ -14134,19 +14068,13 @@ PZ.ui.query.prototype.toString = function () {
                     parent: i,
                 };
                 if (e.alias) {
-                    var a =
-                        s.util.type(e.alias) === "Array" ? e.alias : [e.alias];
+                    var a = s.util.type(e.alias) === "Array" ? e.alias : [e.alias];
                     Array.prototype.push.apply(r.classes, a);
                 }
                 s.hooks.run("wrap", r);
                 var o = Object.keys(r.attributes)
                     .map(function (e) {
-                        return (
-                            e +
-                            '="' +
-                            (r.attributes[e] || "").replace(/"/g, "&quot;") +
-                            '"'
-                        );
+                        return e + '="' + (r.attributes[e] || "").replace(/"/g, "&quot;") + '"';
                     })
                     .join(" ");
                 return (
@@ -14173,9 +14101,7 @@ PZ.ui.query.prototype.toString = function () {
                                 var n = i.language;
                                 var r = i.code;
                                 var a = i.immediateClose;
-                                t.postMessage(
-                                    s.highlight(r, s.languages[n], n)
-                                );
+                                t.postMessage(s.highlight(r, s.languages[n], n));
                                 if (a) {
                                     t.close();
                                 }
@@ -14188,17 +14114,12 @@ PZ.ui.query.prototype.toString = function () {
                     return t.Prism;
                 }
             }
-            var r =
-                document.currentScript ||
-                [].slice.call(document.getElementsByTagName("script")).pop();
+            var r = document.currentScript || [].slice.call(document.getElementsByTagName("script")).pop();
             if (r) {
                 s.filename = r.src;
                 if (!s.manual && !r.hasAttribute("data-manual")) {
                     if (document.readyState === "loading") {
-                        document.addEventListener(
-                            "DOMContentLoaded",
-                            s.highlightAll
-                        );
+                        document.addEventListener("DOMContentLoaded", s.highlightAll);
                     } else if (window.requestAnimationFrame) {
                         window.requestAnimationFrame(s.highlightAll);
                     } else {
@@ -14224,34 +14145,18 @@ PZ.ui.query.prototype.toString = function () {
                     /<\/?(?!\d)[^\s>\/=$<%]+(?:\s+[^\s>\/=]+(?:=(?:("|')(?:\\[\s\S]|(?!\1)[^\\])*\1|[^\s'">=]+))?)*\s*\/?>/i,
                 greedy: true,
                 inside: {
-                    tag: {
-                        pattern: /^<\/?[^\s>\/]+/i,
-                        inside: {
-                            punctuation: /^<\/?/,
-                            namespace: /^[^\s>\/:]+:/,
-                        },
-                    },
+                    tag: { pattern: /^<\/?[^\s>\/]+/i, inside: { punctuation: /^<\/?/, namespace: /^[^\s>\/:]+:/ } },
                     "attr-value": {
-                        pattern:
-                            /=(?:("|')(?:\\[\s\S]|(?!\1)[^\\])*\1|[^\s'">=]+)/i,
-                        inside: {
-                            punctuation: [
-                                /^=/,
-                                { pattern: /(^|[^\\])["']/, lookbehind: true },
-                            ],
-                        },
+                        pattern: /=(?:("|')(?:\\[\s\S]|(?!\1)[^\\])*\1|[^\s'">=]+)/i,
+                        inside: { punctuation: [/^=/, { pattern: /(^|[^\\])["']/, lookbehind: true }] },
                     },
                     punctuation: /\/?>/,
-                    "attr-name": {
-                        pattern: /[^\s>\/]+/,
-                        inside: { namespace: /^[^\s>\/:]+:/ },
-                    },
+                    "attr-name": { pattern: /[^\s>\/]+/, inside: { namespace: /^[^\s>\/:]+:/ } },
                 },
             },
             entity: /&#?[\da-z]{1,8};/i,
         };
-        i.languages.markup.tag.inside["attr-value"].inside.entity =
-            i.languages.markup.entity;
+        i.languages.markup.tag.inside["attr-value"].inside.entity = i.languages.markup.entity;
         i.hooks.add("wrap", function (e) {
             if (e.type === "entity") {
                 e.attributes.title = e.content.replace(/&amp;/, "&");
@@ -14263,16 +14168,10 @@ PZ.ui.query.prototype.toString = function () {
         i.languages.svg = i.languages.markup;
         i.languages.css = {
             comment: /\/\*[\s\S]*?\*\//,
-            atrule: {
-                pattern: /@[\w-]+?.*?(?:;|(?=\s*\{))/i,
-                inside: { rule: /@[\w-]+/ },
-            },
+            atrule: { pattern: /@[\w-]+?.*?(?:;|(?=\s*\{))/i, inside: { rule: /@[\w-]+/ } },
             url: /url\((?:(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1|.*?)\)/i,
             selector: /[^{}\s][^{};]*?(?=\s*\{)/,
-            string: {
-                pattern: /("|')(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,
-                greedy: true,
-            },
+            string: { pattern: /("|')(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/, greedy: true },
             property: /[-_a-z\xA0-\uFFFF][-\w\xA0-\uFFFF]*(?=\s*:)/i,
             important: /\B!important\b/i,
             function: /[-a-z0-9]+(?=\()/i,
@@ -14296,15 +14195,9 @@ PZ.ui.query.prototype.toString = function () {
                     "style-attr": {
                         pattern: /\s*style=("|')(?:\\[\s\S]|(?!\1)[^\\])*\1/i,
                         inside: {
-                            "attr-name": {
-                                pattern: /^\s*style/i,
-                                inside: i.languages.markup.tag.inside,
-                            },
+                            "attr-name": { pattern: /^\s*style/i, inside: i.languages.markup.tag.inside },
                             punctuation: /^\s*=\s*['"]|['"]\s*$/,
-                            "attr-value": {
-                                pattern: /.+/i,
-                                inside: i.languages.css,
-                            },
+                            "attr-value": { pattern: /.+/i, inside: i.languages.css },
                         },
                         alias: "language-css",
                     },
@@ -14314,16 +14207,10 @@ PZ.ui.query.prototype.toString = function () {
         }
         i.languages.clike = {
             comment: [
-                {
-                    pattern: /(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/,
-                    lookbehind: true,
-                },
+                { pattern: /(^|[^\\])\/\*[\s\S]*?(?:\*\/|$)/, lookbehind: true },
                 { pattern: /(^|[^\\:])\/\/.*/, lookbehind: true, greedy: true },
             ],
-            string: {
-                pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/,
-                greedy: true,
-            },
+            string: { pattern: /(["'])(?:\\(?:\r\n|[\s\S])|(?!\1)[^\\\r\n])*\1/, greedy: true },
             "class-name": {
                 pattern:
                     /((?:\b(?:class|interface|extends|implements|trait|instanceof|new)\s+)|(?:catch\s+\())[\w.\\]+/i,
@@ -14343,8 +14230,7 @@ PZ.ui.query.prototype.toString = function () {
                 /\b(?:as|async|await|break|case|catch|class|const|continue|debugger|default|delete|do|else|enum|export|extends|finally|for|from|function|get|if|implements|import|in|instanceof|interface|let|new|null|of|package|private|protected|public|return|set|static|super|switch|this|throw|try|typeof|var|void|while|with|yield)\b/,
             number: /\b(?:0[xX][\dA-Fa-f]+|0[bB][01]+|0[oO][0-7]+|NaN|Infinity)\b|(?:\b\d+\.?\d*|\B\.\d+)(?:[Ee][+-]?\d+)?/,
             function: /[_$a-z\xA0-\uFFFF][$\w\xA0-\uFFFF]*(?=\s*\()/i,
-            operator:
-                /-[-=]?|\+[+=]?|!=?=?|<<?=?|>>?>?=?|=(?:==?|>)?|&[&=]?|\|[|=]?|\*\*?=?|\/=?|~|\^=?|%=?|\?|\.{3}/,
+            operator: /-[-=]?|\+[+=]?|!=?=?|<<?=?|>>?>?=?|=(?:==?|>)?|&[&=]?|\|[|=]?|\*\*?=?|\/=?|~|\^=?|%=?|\?|\.{3}/,
         });
         i.languages.insertBefore("javascript", "keyword", {
             regex: {
@@ -14368,10 +14254,7 @@ PZ.ui.query.prototype.toString = function () {
                     interpolation: {
                         pattern: /\${[^}]+}/,
                         inside: {
-                            "interpolation-punctuation": {
-                                pattern: /^\${|}$/,
-                                alias: "punctuation",
-                            },
+                            "interpolation-punctuation": { pattern: /^\${|}$/, alias: "punctuation" },
                             rest: null,
                         },
                     },
@@ -14379,9 +14262,7 @@ PZ.ui.query.prototype.toString = function () {
                 },
             },
         });
-        i.languages.javascript[
-            "template-string"
-        ].inside.interpolation.inside.rest = i.languages.javascript;
+        i.languages.javascript["template-string"].inside.interpolation.inside.rest = i.languages.javascript;
         if (i.languages.markup) {
             i.languages.insertBefore("markup", "tag", {
                 script: {
@@ -14395,10 +14276,7 @@ PZ.ui.query.prototype.toString = function () {
         }
         i.languages.js = i.languages.javascript;
         i.languages.glsl = i.languages.extend("clike", {
-            comment: [
-                /\/\*[\s\S]*?\*\//,
-                /\/\/(?:\\(?:\r\n|[\s\S])|[^\\\r\n])*/,
-            ],
+            comment: [/\/\*[\s\S]*?\*\//, /\/\/(?:\\(?:\r\n|[\s\S])|[^\\\r\n])*/],
             number: /(?:\b0x[\da-f]+|(?:\b\d+\.?\d*|\B\.\d+)(?:e[+-]?\d+)?)[ulf]*/i,
             keyword:
                 /\b(?:attribute|const|uniform|varying|buffer|shared|coherent|volatile|restrict|readonly|writeonly|atomic_uint|layout|centroid|flat|smooth|noperspective|patch|sample|break|continue|do|for|while|switch|case|default|if|else|subroutine|in|out|inout|float|double|int|void|bool|true|false|invariant|precise|discard|return|d?mat[234](?:x[234])?|[ibdu]?vec[234]|uint|lowp|mediump|highp|precision|[iu]?sampler[123]D|[iu]?samplerCube|sampler[12]DShadow|samplerCubeShadow|[iu]?sampler[12]DArray|sampler[12]DArrayShadow|[iu]?sampler2DRect|sampler2DRectShadow|[iu]?samplerBuffer|[iu]?sampler2DMS(?:Array)?|[iu]?samplerCubeArray|samplerCubeArrayShadow|[iu]?image[123]D|[iu]?image2DRect|[iu]?imageCube|[iu]?imageBuffer|[iu]?image[12]DArray|[iu]?imageCubeArray|[iu]?image2DMS(?:Array)?|struct|common|partition|active|asm|class|union|enum|typedef|template|this|resource|goto|inline|noinline|public|static|extern|external|interface|long|short|half|fixed|unsigned|superp|input|output|hvec[234]|fvec[234]|sampler3DRect|filter|sizeof|cast|namespace|using)\b/,
@@ -14411,12 +14289,7 @@ PZ.ui.query.prototype.toString = function () {
                 alias: "builtin",
             },
         });
-        if (
-            typeof self != "undefined" &&
-            self.Prism &&
-            self.document &&
-            document.querySelector
-        ) {
+        if (typeof self != "undefined" && self.Prism && self.document && document.querySelector) {
             self.Prism.fileHighlight = function () {
                 var e = {
                     js: "javascript",
@@ -14429,95 +14302,71 @@ PZ.ui.query.prototype.toString = function () {
                     h: "c",
                     tex: "latex",
                 };
-                Array.prototype.slice
-                    .call(document.querySelectorAll("pre[data-src]"))
-                    .forEach(function (t) {
-                        var s;
-                        var n = t.getAttribute("data-src");
-                        var r = t;
-                        for (
-                            var a = /\blang(?:uage)?-([\w-]+)\b/i;
-                            r && !a.test(r.className);
-
-                        ) {
-                            r = r.parentNode;
-                        }
-                        if (r) {
-                            s = (t.className.match(a) || [, ""])[1];
-                        }
-                        if (!s) {
-                            var o = (n.match(/\.(\w+)$/) || [, ""])[1];
-                            s = e[o] || o;
-                        }
-                        var l = document.createElement("code");
-                        l.className = "language-" + s;
-                        t.textContent = "";
-                        l.textContent = "Loading\u2026";
-                        t.appendChild(l);
-                        var h = new XMLHttpRequest();
-                        h.open("GET", n, true);
-                        h.onreadystatechange = function () {
-                            if (h.readyState == 4) {
-                                if (h.status < 400 && h.responseText) {
-                                    l.textContent = h.responseText;
-                                    i.highlightElement(l);
-                                } else if (h.status >= 400) {
-                                    l.textContent =
-                                        "\u2716 Error " +
-                                        h.status +
-                                        " while fetching file: " +
-                                        h.statusText;
-                                } else {
-                                    l.textContent =
-                                        "\u2716 Error: File does not exist or is empty";
-                                }
+                Array.prototype.slice.call(document.querySelectorAll("pre[data-src]")).forEach(function (t) {
+                    var s;
+                    var n = t.getAttribute("data-src");
+                    var r = t;
+                    for (var a = /\blang(?:uage)?-([\w-]+)\b/i; r && !a.test(r.className); ) {
+                        r = r.parentNode;
+                    }
+                    if (r) {
+                        s = (t.className.match(a) || [, ""])[1];
+                    }
+                    if (!s) {
+                        var o = (n.match(/\.(\w+)$/) || [, ""])[1];
+                        s = e[o] || o;
+                    }
+                    var l = document.createElement("code");
+                    l.className = "language-" + s;
+                    t.textContent = "";
+                    l.textContent = "Loading\u2026";
+                    t.appendChild(l);
+                    var h = new XMLHttpRequest();
+                    h.open("GET", n, true);
+                    h.onreadystatechange = function () {
+                        if (h.readyState == 4) {
+                            if (h.status < 400 && h.responseText) {
+                                l.textContent = h.responseText;
+                                i.highlightElement(l);
+                            } else if (h.status >= 400) {
+                                l.textContent = "\u2716 Error " + h.status + " while fetching file: " + h.statusText;
+                            } else {
+                                l.textContent = "\u2716 Error: File does not exist or is empty";
                             }
-                        };
-                        h.send(null);
-                    });
+                        }
+                    };
+                    h.send(null);
+                });
                 if (i.plugins.toolbar) {
-                    i.plugins.toolbar.registerButton(
-                        "download-file",
-                        function (e) {
-                            var t = e.element.parentNode;
-                            if (
-                                t &&
-                                /pre/i.test(t.nodeName) &&
-                                t.hasAttribute("data-src") &&
-                                t.hasAttribute("data-download-link")
-                            ) {
-                                var i = t.getAttribute("data-src");
-                                var s = document.createElement("a");
-                                s.textContent =
-                                    t.getAttribute(
-                                        "data-download-link-label"
-                                    ) || "Download";
-                                s.setAttribute("download", "");
-                                s.href = i;
-                                return s;
-                            }
+                    i.plugins.toolbar.registerButton("download-file", function (e) {
+                        var t = e.element.parentNode;
+                        if (
+                            t &&
+                            /pre/i.test(t.nodeName) &&
+                            t.hasAttribute("data-src") &&
+                            t.hasAttribute("data-download-link")
+                        ) {
+                            var i = t.getAttribute("data-src");
+                            var s = document.createElement("a");
+                            s.textContent = t.getAttribute("data-download-link-label") || "Download";
+                            s.setAttribute("download", "");
+                            s.href = i;
+                            return s;
                         }
-                    );
+                    });
                 }
             };
-            document.addEventListener(
-                "DOMContentLoaded",
-                self.Prism.fileHighlight
-            );
+            document.addEventListener("DOMContentLoaded", self.Prism.fileHighlight);
         }
     })();
     var c = h.exports;
     return class {
         constructor(e, t) {
             if (!e) {
-                throw Error(
-                    "CodeFlask expects a parameter which is Element or a String selector"
-                );
+                throw Error("CodeFlask expects a parameter which is Element or a String selector");
             }
             if (!t) {
-                throw Error(
-                    "CodeFlask expects an object containing options as second parameter"
-                );
+                throw Error("CodeFlask expects an object containing options as second parameter");
             }
             if (e.nodeType) {
                 this.editorRoot = e;
@@ -14551,10 +14400,7 @@ PZ.ui.query.prototype.toString = function () {
         }
         createTextarea() {
             this.elTextarea = this.createElement("textarea", this.elWrapper);
-            this.elTextarea.classList.add(
-                "codeflask__textarea",
-                "codeflask__flatten"
-            );
+            this.elTextarea.classList.add("codeflask__textarea", "codeflask__flatten");
         }
         createPre() {
             this.elPre = this.createElement("pre", this.elWrapper);
@@ -14562,10 +14408,7 @@ PZ.ui.query.prototype.toString = function () {
         }
         createCode() {
             this.elCode = this.createElement("code", this.elPre);
-            this.elCode.classList.add(
-                "codeflask__code",
-                `language-${this.opts.language || "html"}`
-            );
+            this.elCode.classList.add("codeflask__code", `language-${this.opts.language || "html"}`);
         }
         createLineNumbers() {
             this.elLineNumbers = this.createElement("div", this.elWrapper);
@@ -14610,10 +14453,7 @@ PZ.ui.query.prototype.toString = function () {
                 this.elTextarea.setAttribute("id", this.opts.areaId);
             }
             if (this.opts.ariaLabelledby) {
-                this.elTextarea.setAttribute(
-                    "aria-labelledby",
-                    this.opts.ariaLabelledby
-                );
+                this.elTextarea.setAttribute("aria-labelledby", this.opts.ariaLabelledby);
             }
             if (this.opts.readonly) {
                 this.enableReadonlyMode();
@@ -14657,9 +14497,7 @@ PZ.ui.query.prototype.toString = function () {
                 e.keyCode;
                 const t = this.elTextarea.selectionStart;
                 const i = this.elTextarea.selectionEnd;
-                const s = `${this.code.substring(0, t)}${" ".repeat(
-                    this.opts.tabSize
-                )}${this.code.substring(i)}`;
+                const s = `${this.code.substring(0, t)}${" ".repeat(this.opts.tabSize)}${this.code.substring(i)}`;
                 this.updateCode(s);
                 this.elTextarea.selectionEnd = i + this.opts.tabSize;
             }
@@ -14694,9 +14532,7 @@ PZ.ui.query.prototype.toString = function () {
         closeCharacter(e) {
             const t = this.elTextarea.selectionStart;
             const i = this.elTextarea.selectionEnd;
-            const s = `${this.code.substring(0, t)}${e}${this.code.substring(
-                i
-            )}`;
+            const s = `${this.code.substring(0, t)}${e}${this.code.substring(i)}`;
             this.updateCode(s);
             this.elTextarea.selectionEnd = i;
         }
@@ -14746,6 +14582,7 @@ PZ.ui.query.prototype.toString = function () {
         }
     };
 });
+
 PZ.ui.expression = function (e, t) {
     PZ.ui.panel.call(this, e);
     this.el.style = "background-color: #242424;";
