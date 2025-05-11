@@ -6,11 +6,17 @@ This is the **main** branch.
 
 This branch builds off of the work being done on the **unminified** branch, which aims to make the minified Panzoid code readable enough to be worked on without issues.
 
-This branch may include **major functional differences** to what you can find on panzoid.com.
+This branch may include **major functional differences** to what you can find on the unminified branch, on the archive branch, and on panzoid.com.
 
-Just like with the unminified branch, **performance may be slightly worse**, as the files being loaded are larger, and take slightly longer for the browser to parse and understand, but also because this branch may have additional features that Clipmaker 3 does not already have.
+Just like with the unminified branch, **performance may be slightly worse**, as the files being loaded are larger, and take slightly longer for the browser to parse and understand, but also because this branch may have additional features that the original Clipmaker 3 does not already have.
 
 **Anything involving connecting to panzoid.com will not work** here due to CORS blocking.
+
+| Branch       | Purpose                                                                    | Functionality                                                             | Broken Features Handling                                            | Development Status                     |
+| ------------ | -------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------- | -------------------------------------- |
+| `archive`    | Preserves the original, minified Clipmaker 3 as a local web archive        | Identical to original; no changes made                                    | Panzoid API access and community project display broken due to CORS | Complete (static)                      |
+| `unminified` | Makes the archived code human-readable while maintaining original behavior | Matches original functionality; code is reformatted and partially renamed | Broken features are stubbed to prevent errors                       | Ongoing (improvement never truly ends) |
+| `main`       | Active development of a new version based on `unminified`                  | Original features modified or replaced; new functionality added           | Broken features removed entirely                                    | In development                         |
 
 ### This branch is a transformation of the currently publicly available minified Clipmaker 3 source. The rights to the original codebase, which can be found in either the archive branch or links below, remain with the Panzoid team at [panzoid.com](https://panzoid.com/)
 
@@ -29,7 +35,7 @@ https://panzoid.com/community/search/85948?q=user%3ARedTubePoop
 https://panzoid.com/community/18345
 
 ## Current issues
-- This branch may rapidly fall out of sync with unminified, its parent branch; right now the most active branch is unminified, not main.
+[None observed so far.]
 
 <!--
 
