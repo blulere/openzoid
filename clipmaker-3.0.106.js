@@ -1,6 +1,6 @@
 const PZTOOLVERSION = "3.0.106";
 var CM = new PZ.ui.editor();
-CM.name = "openzoid (Clipmaker 3)";
+CM.name = "Clipmaker";
 var BG = {}; // What does this do ? only one use, worth removing ? - blulere 2025-02-13
 // Likely a stub from Backgrounder, could be removed in unminified, definitely should be removed in main - blulere 2025-02-14
 
