@@ -11716,7 +11716,8 @@ PZ.ui.about = class extends PZ.ui.panel {
                     PZTOOLVERSION +
                     "<br>Core " +
                     PZVERSION +
-                    "<br>UI 1.0.72",
+                    "<br>UI " +
+                    PZUIVERSION,
             })
         );
         this.el.lastElementChild.style.color = "#aaa";
