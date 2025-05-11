@@ -14,6 +14,12 @@ The unminified project started when the archive project finished. The unminified
 
 **Anything involving connecting to panzoid.com will not work** here due to CORS blocking.
 
+| Branch       | Purpose                                                                    | Functionality                                                             | Broken Features Handling                                            | Development Status                     |
+| ------------ | -------------------------------------------------------------------------- | ------------------------------------------------------------------------- | ------------------------------------------------------------------- | -------------------------------------- |
+| `archive`    | Preserves the original, minified Clipmaker 3 as a local web archive        | Identical to original; no changes made                                    | Panzoid API access and community project display broken due to CORS | Complete (static)                      |
+| `unminified` | Makes the archived code human-readable while maintaining original behavior | Matches original functionality; code is reformatted and partially renamed | Broken features are stubbed to prevent errors                       | Ongoing (improvement never truly ends) |
+| `main`       | Active development of a new version based on `unminified`                  | Original features modified or replaced; new functionality added           | Broken features removed entirely                                    | In development                         |
+
 ### This branch is a transformation of the currently publicly available minified Clipmaker 3 source. The rights to the original codebase, which can be found in either the archive branch or links below, remain with the Panzoid team at [panzoid.com](https://panzoid.com/)
 
 ## What is openzoid?
