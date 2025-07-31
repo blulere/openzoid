@@ -1,0 +1,4 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 35 23"><ns0:path stroke="#555" stroke-width="1.5" d="M1 20h33M1 3h33" />
+        <ns0:path d="M1 20l1.5-.266 1.5-.797 1.5-1.328L7 15.75l1.5-2.39 1.5-2.922 1.5-3.454L13 3l1.5 1.86L16 6.186l1.5.797 1.5.266 1.5-.266 1.5-.796 1.5-1.329L25 3l1.5.797 1.5.265 1.5-.265L31 3l1.5.266L34 3" fill="none" stroke="#aaa" stroke-width="2" />
+    </svg>

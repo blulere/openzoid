@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100"><ns0:g transform="matrix(5 0 0 5 -2850 -3400)">
+            <ns0:path d="M590 694l-2.882-1.441-7.118 3.559-7.118-3.559L570 694l10 5z" />
+            <ns0:path d="M570 690l10 5 10-5-2.882-1.441-7.118 3.559-7.118-3.559z" />
+            <ns0:path d="M590 686l-10-5-10 5 10 5z" />
+        </ns0:g>
+    </svg>

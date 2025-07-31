@@ -1305,6 +1305,11 @@ THREE.EditorControls.prototype.constructor = THREE.EditorControls;
 PZ.ui = PZ.ui || {};
 const PZ_ICONS = "pz.icons29.svg";
 
+// Get the url / href for any panzoid icon, assuming the icon exists.
+PZ.ui.getUrlFromIcon = function(iconName) {
+    return `assets/icons/${iconName}.svg`;
+}
+
 PZ.ui.generateIcon = function (e) {
     let t = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     let i = document.createElementNS("http://www.w3.org/2000/svg", "use");
@@ -1315,10 +1320,11 @@ PZ.ui.generateIcon = function (e) {
     );
     t.appendChild(i);
     return t;
-};
+}
 
-PZ.ui.switchIcon = function (e, t) {
-    e.children[0].setAttribute("href", PZ_ICONS + "#" + t);
+PZ.ui.switchIcon = function (e, iconName) {
+    let url = PZ.ui.getUrlFromIcon(iconName);
+    e.children[0].setAttribute("href", url);
 };
 
 PZ.dateString = function (e) {
@@ -1329,6 +1335,7 @@ PZ.dateString = function (e) {
     });
 };
 
+// FIXME: uproot this
 PZ.ui.ad = function (e) {
     PZ.ui.panel.call(this, e);
     this.el = document.createElement("div");
@@ -8247,6 +8254,7 @@ PZ.ui.media.title = function (e) {
 PZ.ui.media.title.prototype.createButton = function (e, t, i) {
     let s = document.createElement("button");
     s.appendChild(PZ.ui.generateIcon(t));
+    
     s.firstElementChild.style =
         "width:18px;height:18px;fill:#acacac;vertical-align: bottom;";
     s.title = e;
@@ -11353,10 +11361,12 @@ PZ.ui.toolbar.prototype.create = function () {
             i.title = this.buttons[e].title;
             i.cmd = this.buttons[e];
             i.onclick = this.click.bind(this);
+
             var s = PZ.ui.generateIcon(this.buttons[e].icon);
             s.style =
                 "fill:rgb(172, 172, 172);width:25px;height:25px;pointer-events:none";
             i.appendChild(s);
+            
             if (this.buttons[e].observable) {
                 this.buttons[e].observable.watch(
                     this.buttons[e].update.bind(this, i),

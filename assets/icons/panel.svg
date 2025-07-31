@@ -1,0 +1,14 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 100 100"><ns0:g id="dgg14">
+            <ns0:g transform="matrix(.69 0 0 .69 15.5 15.5)" id="dgg12">
+                <ns0:svg viewBox="0 0 222 222" id="dgsvg10" clip-rule="evenodd" fill-rule="evenodd" shape-rendering="geometricPrecision" text-rendering="geometricPrecision" image-rendering="optimizeQuality">
+                    <ns0:defs id="dgdefs4">
+                        <ns0:style id="dgstyle2">.dgfil0{fill:#000;fill-rule:nonzero}</ns0:style>
+                    </ns0:defs>
+                    <ns0:g id="dgg8">
+                        <ns0:path class="dgfil0" d="M222 0v222H0V0h222zm-17 17H17v188h188V17z" id="dgpath6" />
+                    </ns0:g>
+                </ns0:svg>
+            </ns0:g>
+        </ns0:g>
+    </svg>

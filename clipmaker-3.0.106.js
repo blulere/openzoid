@@ -325,6 +325,21 @@ CM.setUpEditor = function (currentAccount) {
                 graphEditorWindow.enabled = true;
             },
         },
+        { separator: true },
+        {
+            title: "action / title safe guides",
+            // icon: "guides",
+            fn: function () {
+                // TODO
+            }
+        },
+        {
+            title: "grid",
+            // icon: "grid",
+            fn: function () {
+                // TODO
+            }
+        },
     ];
     let transportBarToolbar = new PZ.ui.toolbar(CM, transportBar);
     let audioMeter = new PZ.ui.audioMeter(CM);

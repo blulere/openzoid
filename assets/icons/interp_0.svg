@@ -1,0 +1,8 @@
+<?xml version='1.0' encoding='utf-8'?>
+<svg xmlns:ns0="http://www.w3.org/2000/svg" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 35 23"><ns0:g transform="translate(0 -1029.362)" stroke-width="2">
+            <ns0:path d="M5 1047.362l12.457-14.993L30 1047.362" fill="none" fill-rule="evenodd" stroke="#ccc" />
+            <ns0:circle cx="17.5" cy="1032.693" r="2.5" fill="#ccc" />
+            <ns0:circle r="2.5" cy="1048.862" cx="31.5" fill="#6b6b6b" />
+            <ns0:circle cx="3.5" cy="1048.862" r="2.5" fill="#6b6b6b" />
+        </ns0:g>
+    </svg>
