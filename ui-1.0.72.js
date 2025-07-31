@@ -7548,7 +7548,7 @@ PZ.ui.media = class extends PZ.ui.panel.nav {
         if (this.options.showProjectMedia) {
             new PZ.ui.media.list.project(this);
         }
-        new PZ.ui.media.list.community(this);
+        // new PZ.ui.media.list.community(this);
         return e;
     }
     resize() {
