@@ -1310,6 +1310,7 @@ PZ.ui.getUrlFromIcon = function(iconName) {
     return `assets/icons/${iconName}.svg`;
 }
 
+// FIXME: Deprecate this method once loadIcon works.
 PZ.ui.generateIcon = function (e) {
     let t = document.createElementNS("http://www.w3.org/2000/svg", "svg");
     let i = document.createElementNS("http://www.w3.org/2000/svg", "use");
@@ -1322,9 +1323,28 @@ PZ.ui.generateIcon = function (e) {
     return t;
 }
 
-PZ.ui.switchIcon = function (e, iconName) {
-    let url = PZ.ui.getUrlFromIcon(iconName);
-    e.children[0].setAttribute("href", url);
+// async ... kill me
+// hit me with a copper pipe
+// 84 times
+// i need to bleed out on this code
+PZ.ui.loadIcon = async function (iconName) {
+    const path = `assets/icons/${iconName}.svg`;
+
+    const response = await fetch(path);
+    if (!response.ok) throw new Error(`Could not load icon: ${path}`);
+
+    const svgText = await response.text();
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(svgText, "image/svg+xml");
+    const svgElement = doc.documentElement;
+    svgElement.classList.add("icon", `icon-${iconName}`);
+
+    return svgElement;
+};
+
+PZ.ui.switchIcon = function (icon, name) {
+    let url = PZ.ui.getUrlFromIcon(name);
+    icon.children[0].setAttribute("href", url);
 };
 
 PZ.dateString = function (e) {
