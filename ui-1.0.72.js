@@ -1343,7 +1343,7 @@ PZ.ui.loadIcon = async function (iconName) {
 };
 
 PZ.ui.switchIcon = function (icon, name) {
-    let url = PZ.ui.getUrlFromIcon(name);
+    let url = `${PZ_ICONS}#${name}`;
     icon.children[0].setAttribute("href", url);
 };
 
